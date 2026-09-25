@@ -1,0 +1,35 @@
+# Roland FA-06
+# MIDIで音色を切り替えて鳴らし、USBオーディオ（またはオーディオインターフェース）で録音する。
+# ポート名・デバイス名は `synthmatch devices` で確認して、名前の一部を書く。
+#
+# FA本体の準備（リファレンス・マニュアル「パソコンと接続する」「USBオーディオの出力を設定する」）:
+#   - SYSTEM > General > USB Driver = VENDOR（MIDI+AUDIO）→ Write → 電源を入れ直す
+#     （GENERIC だと MIDI のみ。VENDOR には Roland の FA 用ドライバーが必要）
+#   - SYSTEM > System Effects > USB Audio > USB Audio Output Select = MAIN
+#   - 鳴らすパートの Rx Channel を下の channel に合わせる（初期状態のパート1 = 1ch）
+#   - パートに EQ・エフェクトがかかっていると結果に影響するので、INIT に近いスタジオ・セットで録るとよい
+name = "Roland FA-06"
+type = "hardware"
+presets = "fa06_presets.csv"
+
+[midi]
+output_port = "FA-0"      # MIDI出力ポート名の一部
+channel = 1               # 鳴らすパートの受信チャンネル
+
+[audio]
+input_device = "FA-0"     # USBオーディオ。オーディオインターフェース経由ならその名前
+input_channels = [1, 2]   # 録音する入力チャンネル（L, R）
+sample_rate = 44100
+
+[timing]
+preroll = 0.3             # 録音開始から最初の音までの余白(秒)
+program_change_wait = 0.5 # 音色切り替え後の待ち時間(秒)
+
+# ヒントの文中で使う操作子の呼び名（FA-06 パネルのツマミ名）
+[controls]
+cutoff = "CUTOFF ツマミ"
+attack = "ATTACK ツマミ"
+sustain = "TVA エンベロープのサステイン／ディケイ（トーン・エディット）"
+release = "RELEASE ツマミ"
+reverb = "リバーブ／ディレイ（MFX・スタジオ・セットのエフェクト）"
+noise = "ノイズ成分・ドライブ（MFX）"

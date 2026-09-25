@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>synthmatch</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M2 12h3l2-7 3 14 3-10 2 5 2-2h5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span>synthmatch</span>
+  </div>
+  <label class="inst-picker">楽器
+    <select id="instrument"></select>
+  </label>
+  <div id="job-pill" class="job-pill" hidden></div>
+</header>
+
+<nav class="tabs" role="tablist">
+  <button role="tab" data-tab="record" aria-selected="true">① 録音</button>
+  <button role="tab" data-tab="library">② 音色ライブラリ</button>
+  <button role="tab" data-tab="match">③ 曲から探す</button>
+</nav>
+
+<main>
+  <!-- ① 録音 -->
+  <section id="tab-record" class="tab">
+    <div class="grid2">
+      <div class="card">
+        <h2>接続チェック</h2>
+        <div id="conn-status" class="status-row"></div>
+        <p class="muted">楽器設定: <code id="inst-file"></code></p>
+        <dl id="inst-settings" class="kv"></dl>
+        <details id="devices-box">
+          <summary>見つかった機器 <button class="link" id="refresh-devices" type="button">更新</button></summary>
+          <div id="devices"></div>
+        </details>
+        <div class="row">
+          <input id="test-preset-q" list="test-preset-list" placeholder="テストする音色（空欄なら1番目）">
+          <datalist id="test-preset-list"></datalist>
+          <button id="test-btn" class="primary">テスト録音</button>
+        </div>
+        <div id="test-result"></div>
+      </div>
+
+      <div class="card">
+        <h2>音色ライブラリを録音</h2>
+        <p class="muted">全音色で同じフレーズを鳴らして録音し、比較用のデータを作ります。1音色あたり約15秒。止めても続きから再開できます。</p>
+        <div class="overall">
+          <div class="bar"><span id="overall-bar"></span></div>
+          <span id="overall-text"></span>
+        </div>
+        <div class="row">
+          <select id="build-category"><option value="">すべてのカテゴリ</option></select>
+          <input id="build-limit" type="number" min="1" placeholder="最大数" title="お試しで先頭N音色だけ録るとき">
+        </div>
+        <label class="check"><input type="checkbox" id="build-overwrite"> 録音済みの音色も録り直す</label>
+        <div class="row">
+          <button id="build-btn" class="primary">録音開始</button>
+          <span id="build-estimate" class="muted"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="build-run" hidden>
+      <div class="run-head">
+        <h2>録音中</h2>
+        <button class="danger" data-cancel>中止</button>
+      </div>
+      <div class="bar big"><span id="build-bar"></span></div>
+      <div class="run-meta">
+        <span id="build-progress"></span>
+        <span id="build-current"></span>
+        <span id="build-eta"></span>
+      </div>
+      <ul id="build-recent" class="recent"></ul>
+    </div>
+
+    <div class="card">
+      <h2>カテゴリ別の録音状況</h2>
+      <div id="cat-table" class="cat-table"></div>
+    </div>
+  </section>
+
+  <!-- ② 音色ライブラリ -->
+  <section id="tab-library" class="tab" hidden>
+    <div class="card">
+      <div class="row wrap">
+        <input id="lib-q" type="search" placeholder="音色名で検索">
+        <select id="lib-category"><option value="">すべてのカテゴリ</option></select>
+        <select id="lib-recorded">
+          <option value="">すべて</option>
+          <option value="true">録音済み</option>
+          <option value="false">未録音</option>
+        </select>
+        <span id="lib-count" class="muted"></span>
+      </div>
+      <table class="presets">
+        <thead><tr><th>音色</th><th>カテゴリ</th><th>録音</th><th></th></tr></thead>
+        <tbody id="lib-rows"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ③ 曲から探す -->
+  <section id="tab-match" class="tab" hidden>
+    <div class="grid2">
+      <form class="card" id="match-form">
+        <h2>曲から音色を探す</h2>
+        <label class="drop" id="song-drop">
+          <input type="file" name="song" accept="audio/*" required>
+          <span>曲ファイルをドロップ、またはクリックして選択<br><small class="muted">mp3 / wav など</small></span>
+        </label>
+        <label class="field">MIDI（任意・採譜の代わりに使う。あると精度が上がる）
+          <input type="file" name="midi" accept=".mid,.midi">
+        </label>
+        <div class="fields">
+          <label class="field">分離
+            <select name="separator">
+              <option value="demucs">Demucs（曲からキーボードを取り出す）</option>
+              <option value="none">しない（キーボードだけの音源）</option>
+            </select>
+          </label>
+          <label class="field">採譜
+            <select name="transcriber">
+              <option value="auto">自動</option>
+              <option value="basic-pitch">basic-pitch（和音OK）</option>
+              <option value="pyin">pyin（単音のみ）</option>
+            </select>
+          </label>
+          <label class="field">比べる長さ（秒・0で全体）<input name="clip" type="number" value="30" min="0"></label>
+          <label class="field">実際に鳴らして比べ直す数<input name="rerank" type="number" value="3" min="0" max="20"></label>
+          <label class="field">候補の数<input name="top" type="number" value="5" min="1" max="20"></label>
+        </div>
+        <p class="muted small">「実際に鳴らして比べ直す」はハードの楽器では実機で録音します（1音色につき比べる長さぶん）。</p>
+        <button class="primary" type="submit" id="match-btn">探す</button>
+      </form>
+
+      <div class="card">
+        <h2>これまでの結果</h2>
+        <ul id="history" class="history"></ul>
+      </div>
+    </div>
+
+    <div class="card" id="match-run" hidden>
+      <div class="run-head">
+        <h2>処理中</h2>
+        <button class="danger" data-cancel>中止</button>
+      </div>
+      <pre id="match-log" class="log"></pre>
+    </div>
+
+    <div id="match-result"></div>
+  </section>
+</main>
+
+<div id="toast" class="toast" hidden></div>
+<script src="app.js"></script>
+</body>
+</html>

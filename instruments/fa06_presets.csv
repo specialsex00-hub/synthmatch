@@ -1,0 +1,2115 @@
+# Roland FA-06 プリセット音色（サウンド・リストから scripts/parse_fa_soundlist.py で生成）
+# category は「種類:カテゴリ」。SN-A = SuperNATURAL Acoustic, SN-S = SuperNATURAL Synth, PCM = PCM Synth
+name,category,msb,lsb,pc
+128voicePno,PCM:Ac.Piano,87,64,1
+Bright Piano,PCM:Ac.Piano,87,64,2
+Classique,PCM:Ac.Piano,87,64,3
+Nice Piano,PCM:Ac.Piano,87,64,4
+Piano Thang,PCM:Ac.Piano,87,64,5
+Power Grand,PCM:Pop Piano,87,64,6
+House Piano,PCM:Pop Piano,87,64,7
+E.Grand,PCM:Pop Piano,87,64,8
+MIDIed Grand,PCM:Pop Piano,87,64,9
+Piano Blend,PCM:Pop Piano,87,64,10
+West Coast,PCM:Pop Piano,87,64,11
+PianoStrings,PCM:Ac.Piano,87,64,12
+Bs/Pno+Brs,PCM:Ac.Piano,87,64,13
+Water EP,PCM:E.Piano1,87,64,14
+S.A.E.P.,PCM:E.Piano2,87,64,15
+SA EP 1,PCM:E.Piano1,87,64,16
+SA EP 2,PCM:E.Piano1,87,64,17
+Stiky EP,PCM:E.Piano2,87,64,18
+Dig EP,PCM:E.Piano2,87,64,19
+Nylon EPiano,PCM:E.Piano2,87,64,20
+Nylon EP,PCM:E.Piano2,87,64,21
+EP Mix,PCM:E.Piano1,87,64,22
+Psycho EP,PCM:E.Piano1,87,64,23
+Tremo EP,PCM:E.Piano1,87,64,24
+MK-80 EP,PCM:E.Piano2,87,64,25
+MK-80 Phaser,PCM:E.Piano2,87,64,26
+Delicate EP,PCM:E.Piano2,87,64,27
+Octa EP 1,PCM:E.Piano2,87,64,28
+Octa EP 2,PCM:E.Piano2,87,64,29
+JV EP+,PCM:E.Piano2,87,64,30
+EP+Mod Pad,PCM:E.Piano2,87,64,31
+Mr.Mellow,PCM:E.Piano2,87,64,32
+Comp Clav,PCM:Clav,87,64,33
+Klavinet,PCM:Clav,87,64,34
+Winger Clav,PCM:Clav,87,64,35
+Phaze Clav 1,PCM:Clav,87,64,36
+Phaze Clav 2,PCM:Clav,87,64,37
+Phuzz Clav,PCM:Clav,87,64,38
+Chorus Clav,PCM:Clav,87,64,39
+Claviduck,PCM:Clav,87,64,40
+Velo-Rez Clv,PCM:Clav,87,64,41
+Clavicembalo,PCM:Clav,87,64,42
+Analog Clav1,PCM:Clav,87,64,43
+Analog Clav2,PCM:Clav,87,64,44
+Metal Clav,PCM:Clav,87,64,45
+Full Stops,PCM:E.Organ,87,64,46
+Ballad B,PCM:E.Organ,87,64,47
+Mellow Bars,PCM:E.Organ,87,64,48
+AugerMentive,PCM:E.Organ,87,64,49
+Perky B,PCM:E.Organ,87,64,50
+The Big Spin,PCM:E.Organ,87,64,51
+Gospel Spin,PCM:E.Organ,87,64,52
+Roller Spin,PCM:E.Organ,87,64,53
+Rocker Spin,PCM:E.Organ,87,64,54
+Tone Wh.Solo,PCM:E.Organ,87,64,55
+Purple Spin,PCM:E.Organ,87,64,56
+60’s LeadORG,PCM:E.Organ,87,64,57
+Assalt Organ,PCM:E.Organ,87,64,58
+D-50 Organ,PCM:E.Organ,87,64,59
+Cathedral,PCM:Pipe Organ,87,64,60
+Church Pipes,PCM:Pipe Organ,87,64,61
+Poly Key,PCM:Synth PolyKey,87,64,62
+Poly Saws,PCM:Synth PolyKey,87,64,63
+Poly Pulse,PCM:Synth PolyKey,87,64,64
+Dual Profs,PCM:Synth PolyKey,87,64,65
+Saw Mass,PCM:Synth PolyKey,87,64,66
+Poly Split,PCM:Synth PolyKey,87,64,67
+Poly Brass,PCM:Synth Brass,87,64,68
+Stackoid,PCM:Synth PolyKey,87,64,69
+Poly Rock,PCM:Synth PolyKey,87,64,70
+D-50 Stack,PCM:Synth Bellpad,87,64,71
+Fantasia JV,PCM:Synth Bellpad,87,64,72
+Jimmee Dee,PCM:Synth Bellpad,87,64,73
+Heavenals,PCM:Synth Bellpad,87,64,74
+Mallet Pad,PCM:Synth Bellpad,87,64,75
+Huff N Stuff,PCM:Synth Bellpad,87,64,76
+Puff 1080,PCM:Synth PolyKey,87,64,77
+BellVox 1080,PCM:Synth Bellpad,87,64,78
+Fantasy Vox,PCM:Synth Bellpad,87,64,79
+Square Keys,PCM:Synth PolyKey,87,64,80
+Childlike,PCM:Bell,87,64,81
+Music Box,PCM:Bell,87,64,82
+Toy Box,PCM:Bell,87,64,83
+Wave Bells,PCM:Bell,87,64,84
+Tria Bells,PCM:Bell,87,64,85
+Beauty Bells,PCM:Bell,87,64,86
+Music Bells,PCM:Bell,87,64,87
+Pretty Bells,PCM:Bell,87,64,88
+Pulse Key,PCM:Synth PolyKey,87,64,89
+Wide Tubular,PCM:Bell,87,64,90
+AmbienceVibe,PCM:Mallet,87,64,91
+Warm Vibes,PCM:Mallet,87,64,92
+Dyna Marimba,PCM:Mallet,87,64,93
+Bass Marimba,PCM:Mallet,87,64,94
+Nomad Perc,PCM:Mallet,87,64,95
+Ethno Metals,PCM:Bell,87,64,96
+Islands Mlt,PCM:Mallet,87,64,97
+Steelin Keys,PCM:Mallet,87,64,98
+Steel Drums,PCM:Mallet,87,64,99
+Voicey Pizz,PCM:Solo Strings,87,64,100
+Sitar,PCM:Plucked/Stroke,87,64,101
+Drone Split,PCM:Plucked/Stroke,87,64,102
+Ethnopluck,PCM:Plucked/Stroke,87,64,103
+Jamisen,PCM:Plucked/Stroke,87,64,104
+Dulcimer,PCM:Plucked/Stroke,87,64,105
+East Melody,PCM:Plucked/Stroke,87,64,106
+MandolinTrem,PCM:Plucked/Stroke,87,64,107
+Nylon Gtr,PCM:Ac.Guitar,87,64,108
+Gtr Strings,PCM:Ac.Guitar,87,64,109
+Steel Away,PCM:Ac.Guitar,87,64,110
+Heavenly Gtr,PCM:Ac.Guitar,87,64,111
+12str Gtr 1,PCM:Ac.Guitar,87,64,112
+12str Gtr 2,PCM:Ac.Guitar,87,64,113
+Jz Gtr Hall,PCM:E.Guitar,87,64,114
+LetterFrmPat,PCM:E.Guitar,87,64,115
+Jazz Scat,PCM:E.Guitar,87,64,116
+Lounge Gig,PCM:E.Guitar,87,64,117
+JC Strat,PCM:E.Guitar,87,64,118
+Twin Strats,PCM:E.Guitar,87,64,119
+JV Strat,PCM:E.Guitar,87,64,120
+Syn Strat,PCM:E.Guitar,87,64,121
+Rotary Gtr,PCM:E.Guitar,87,64,122
+Muted Gtr,PCM:E.Guitar,87,64,123
+SwitchOnMute,PCM:E.Guitar,87,64,124
+Power Trip,PCM:Dist.Guitar,87,64,125
+Crunch Split,PCM:Dist.Guitar,87,64,126
+Rezodrive,PCM:Dist.Guitar,87,64,127
+RockYurSocks,PCM:Dist.Guitar,87,64,128
+Dist Gtr 1,PCM:Dist.Guitar,87,65,1
+Dist Gtr 2,PCM:Dist.Guitar,87,65,2
+R&R Chunk,PCM:Dist.Guitar,87,65,3
+Phripphuzz,PCM:Dist.Guitar,87,65,4
+Grungeroni,PCM:Dist.Guitar,87,65,5
+Black Widow,PCM:Dist.Guitar,87,65,6
+Velo-Wah Gtr,PCM:E.Guitar,87,65,7
+Mod-Wah Gtr,PCM:Dist.Guitar,87,65,8
+Pick Bass,PCM:E.Bass,87,65,9
+Hip Bass,PCM:E.Bass,87,65,10
+Perc.Bass,PCM:E.Bass,87,65,11
+Homey Bass,PCM:E.Bass,87,65,12
+Finger Bass,PCM:E.Bass,87,65,13
+Nylon Bass,PCM:Ac.Bass,87,65,14
+Ac.Upright,PCM:Ac.Bass,87,65,15
+Wet Fretls,PCM:E.Bass,87,65,16
+Fretls Dry,PCM:E.Bass,87,65,17
+Slap Bass 1,PCM:E.Bass,87,65,18
+Slap Bass 2,PCM:E.Bass,87,65,19
+Slap Bass 3,PCM:E.Bass,87,65,20
+Slap Bass 4,PCM:E.Bass,87,65,21
+4 Pole Bass,PCM:Synth Bass,87,65,22
+Tick Bass,PCM:Synth Bass,87,65,23
+House Bass,PCM:Synth Bass,87,65,24
+Mondo Bass,PCM:Synth Bass,87,65,25
+Clk AnalogBs,PCM:Synth Bass,87,65,26
+Bass In Face,PCM:Synth Bass,87,65,27
+101 Bass,PCM:Synth Bass,87,65,28
+Noiz Bass,PCM:Synth Bass,87,65,29
+Super Jup Bs,PCM:Synth Bass,87,65,30
+Occitan Bass,PCM:Synth Bass,87,65,31
+Hugo Bass,PCM:Synth Bass,87,65,32
+Multi Bass,PCM:Synth Bass,87,65,33
+Moist Bass,PCM:Synth Bass,87,65,34
+BritelowBass,PCM:Synth Bass,87,65,35
+Untamed Bass,PCM:Synth Bass,87,65,36
+Rubber Bass,PCM:Synth Bass,87,65,37
+Stereoww Bs,PCM:Synth Bass,87,65,38
+Wonder Bass,PCM:Synth Bass,87,65,39
+Deep Bass,PCM:Synth Bass,87,65,40
+Super JX Bs,PCM:Synth Bass,87,65,41
+W<RED>-Bass,PCM:Synth Bass,87,65,42
+HI-Ring Bass,PCM:Synth Bass,87,65,43
+Euro Bass,PCM:Synth Bass,87,65,44
+SinusoidRave,PCM:Synth Bass,87,65,45
+Alternative,PCM:Pulsating,87,65,46
+Acid Line,PCM:Pulsating,87,65,47
+Auto TB-303,PCM:Synth Lead,87,65,48
+Hihat Tekno,PCM:Synth FX,87,65,49
+Velo Tekno 1,PCM:Synth Lead,87,65,50
+Raggatronic,PCM:Pulsating,87,65,51
+Blade Racer,PCM:Pulsating,87,65,52
+S&H Pad,PCM:Pulsating,87,65,53
+Syncrosonix,PCM:Pulsating,87,65,54
+Fooled Again,PCM:Pulsating,87,65,55
+Alive,PCM:Pulsating,87,65,56
+Velo Tekno 2,PCM:Synth Seq/Pop,87,65,57
+Rezoid,PCM:Synth PolyKey,87,65,58
+Raverborg,PCM:Synth Lead,87,65,59
+Blow Hit,PCM:Hit,87,65,60
+Hammer Bell,PCM:Bell,87,65,61
+Seq Mallet,PCM:Synth Seq/Pop,87,65,62
+Intentions,PCM:Synth PolyKey,87,65,63
+Pick It,PCM:Synth PolyKey,87,65,64
+Analog Seq,PCM:Synth Seq/Pop,87,65,65
+Impact Vox,PCM:Synth PolyKey,87,65,66
+TeknoSoloVox,PCM:Synth PolyKey,87,65,67
+X-Mod Man,PCM:Pulsating,87,65,68
+Paz <==> Zap,PCM:Pulsating,87,65,69
+4 Hits 4 You,PCM:Hit,87,65,70
+Impact,PCM:Hit,87,65,71
+Phase Hit,PCM:Hit,87,65,72
+Tekno Hit 1,PCM:Hit,87,65,73
+Tekno Hit 2,PCM:Hit,87,65,74
+Tekno Hit 3,PCM:Hit,87,65,75
+Reverse Hit,PCM:Hit,87,65,76
+SquareLead 1,PCM:Synth Lead,87,65,77
+SquareLead 2,PCM:Synth Lead,87,65,78
+You and Luck,PCM:Synth Lead,87,65,79
+Belly Lead,PCM:Synth Lead,87,65,80
+WhistlinAtom,PCM:Synth Lead,87,65,81
+Edye Boost,PCM:Synth Lead,87,65,82
+MG Solo,PCM:Synth Lead,87,65,83
+FXM Saw Lead,PCM:Synth Lead,87,65,84
+Sawteeth,PCM:Synth Lead,87,65,85
+Smoothe,PCM:Synth Lead,87,65,86
+MG Lead,PCM:Synth Lead,87,65,87
+MG Interval,PCM:Synth Lead,87,65,88
+Pulse Lead 1,PCM:Synth Lead,87,65,89
+Pulse Lead 2,PCM:Synth Lead,87,65,90
+Little Devil,PCM:Synth Lead,87,65,91
+Loud SynLead,PCM:Synth Lead,87,65,92
+Analog Lead,PCM:Synth Lead,87,65,93
+5th Lead,PCM:Synth Lead,87,65,94
+Flute,PCM:Flute,87,65,95
+Piccolo,PCM:Flute,87,65,96
+VOX Flute,PCM:Flute,87,65,97
+Air Lead,PCM:Flute,87,65,98
+Pan Pipes,PCM:Flute,87,65,99
+Airplaaane,PCM:Synth PolyKey,87,65,100
+Taj Mahal,PCM:Flute,87,65,101
+Raya Shaku,PCM:Flute,87,65,102
+Oboe mf,PCM:Wind,87,65,103
+Oboe Express,PCM:Wind,87,65,104
+Clarinet mp,PCM:Wind,87,65,105
+ClariExpress,PCM:Wind,87,65,106
+Mitzva Split,PCM:Wind,87,65,107
+ChamberWinds,PCM:Wind,87,65,108
+ChamberWoods,PCM:Wind,87,65,109
+Film Orch,PCM:Orchestral,87,65,110
+Sop.Sax mf,PCM:Sax,87,65,111
+Alto Sax,PCM:Sax,87,65,112
+AltoLead Sax,PCM:Sax,87,65,113
+Tenor Sax,PCM:Sax,87,65,114
+Baritone Sax,PCM:Sax,87,65,115
+Take A Tenor,PCM:Sax,87,65,116
+Sax Section,PCM:Sax,87,65,117
+Bigband Sax,PCM:Sax,87,65,118
+Harmonica,PCM:Harmonica,87,65,119
+Harmo Blues,PCM:Harmonica,87,65,120
+BluesHarp,PCM:Harmonica,87,65,121
+Hillbillys,PCM:Harmonica,87,65,122
+French Bags,PCM:Wind,87,65,123
+Majestic Tpt,PCM:Solo Brass,87,65,124
+Voluntare,PCM:Solo Brass,87,65,125
+2Trumpets,PCM:Ensemble Brass,87,65,126
+Tpt Sect,PCM:Ensemble Brass,87,65,127
+Mute TP mod,PCM:Solo Brass,87,65,128
+Harmon Mute,PCM:Solo Brass,87,66,1
+Tp&Sax Sect,PCM:Ensemble Brass,87,66,2
+Sax+Tp+Tb,PCM:Ensemble Brass,87,66,3
+Brass Sect,PCM:Ensemble Brass,87,66,4
+Trombone,PCM:Solo Brass,87,66,5
+Hybrid Bones,PCM:Ensemble Brass,87,66,6
+Noble Horns,PCM:Ensemble Brass,87,66,7
+Massed Horns,PCM:Ensemble Brass,87,66,8
+Horn Swell,PCM:Ensemble Brass,87,66,9
+Brass It!,PCM:Synth Brass,87,66,10
+Brass Attack,PCM:Synth Brass,87,66,11
+Archimede,PCM:Synth Brass,87,66,12
+Rugby Horn,PCM:Synth Brass,87,66,13
+MKS-80 Brass,PCM:Synth Brass,87,66,14
+True ANALOG,PCM:Synth Brass,87,66,15
+Dark Vox,PCM:Vox/Choir,87,66,16
+RandomVowels,PCM:Vox/Choir,87,66,17
+Angels Sing,PCM:Vox/Choir,87,66,18
+Pvox Oooze,PCM:Vox/Choir,87,66,19
+Longing...,PCM:Vox/Choir,87,66,20
+Arasian Morn,PCM:Vox/Choir,87,66,21
+Beauty Vox,PCM:Vox/Choir,87,66,22
+Mary-AnneVox,PCM:Vox/Choir,87,66,23
+Belltree Vox,PCM:Vox/Choir,87,66,24
+Vox Panner,PCM:Vox/Choir,87,66,25
+Spaced Voxx,PCM:Vox/Choir,87,66,26
+Glass Voices,PCM:Vox/Choir,87,66,27
+Tubular Vox,PCM:Vox/Choir,87,66,28
+Velo Voxx,PCM:Vox/Choir,87,66,29
+Wavox,PCM:Vox/Choir,87,66,30
+Doos,PCM:Vox/Choir,87,66,31
+Synvox Comps,PCM:Vox/Choir,87,66,32
+Vocal Oohz,PCM:Vox/Choir,87,66,33
+LFO Vox,PCM:Pulsating,87,66,34
+St.Strings,PCM:Ensemble Strings,87,66,35
+Warm Strings,PCM:Ensemble Strings,87,66,36
+Somber Str,PCM:Ensemble Strings,87,66,37
+Marcato,PCM:Ensemble Strings,87,66,38
+Bright Str,PCM:Ensemble Strings,87,66,39
+String Ens,PCM:Ensemble Strings,87,66,40
+TremoloStrng,PCM:Ensemble Strings,87,66,41
+Chambers,PCM:Ensemble Strings,87,66,42
+ViolinCello,PCM:Solo Strings,87,66,43
+Symphonique,PCM:Orchestral,87,66,44
+Film Octaves,PCM:Ensemble Strings,87,66,45
+Film Layers,PCM:Orchestral,87,66,46
+Bass Pizz,PCM:Ensemble Strings,87,66,47
+Real Pizz,PCM:Ensemble Strings,87,66,48
+Harp On It,PCM:Plucked/Stroke,87,66,49
+Harp,PCM:Plucked/Stroke,87,66,50
+JP-8 Str 1,PCM:Synth Pad/Strings,87,66,51
+JP-8 Str 2,PCM:Synth Pad/Strings,87,66,52
+E-Motion Pad,PCM:Synth Pad/Strings,87,66,53
+JP-8 Str 3,PCM:Synth Pad/Strings,87,66,54
+Vintage Orch,PCM:Synth Pad/Strings,87,66,55
+JUNO Strings,PCM:Synth Pad/Strings,87,66,56
+Gigantalog,PCM:Synth Pad/Strings,87,66,57
+PWM Strings,PCM:Synth Pad/Strings,87,66,58
+Warmth,PCM:Synth Pad/Strings,87,66,59
+ORBit Pad,PCM:Synth Pad/Strings,87,66,60
+Deep Strings,PCM:Synth Pad/Strings,87,66,61
+Pulsify,PCM:Synth Pad/Strings,87,66,62
+Pulse Pad,PCM:Synth Pad/Strings,87,66,63
+Greek Power,PCM:Synth Pad/Strings,87,66,64
+Harmonicum,PCM:Synth Pad/Strings,87,66,65
+D-50 Heaven,PCM:Synth Pad/Strings,87,66,66
+Afro Horns,PCM:Synth Brass,87,66,67
+Pop Pad,PCM:Synth Pad/Strings,87,66,68
+Dreamesque,PCM:Synth Pad/Strings,87,66,69
+Square Pad,PCM:Synth Pad/Strings,87,66,70
+JP-8 Hollow,PCM:Synth Pad/Strings,87,66,71
+JP-8Haunting,PCM:Synth Pad/Strings,87,66,72
+Heirborne,PCM:Synth Pad/Strings,87,66,73
+Hush Pad,PCM:Synth Pad/Strings,87,66,74
+Jet Pad 1,PCM:Synth Pad/Strings,87,66,75
+Jet Pad 2,PCM:Synth Pad/Strings,87,66,76
+Phaze Pad,PCM:Synth Pad/Strings,87,66,77
+Phaze Str,PCM:Synth Pad/Strings,87,66,78
+Jet Str Ens,PCM:Synth Pad/Strings,87,66,79
+Pivotal Pad,PCM:Synth Pad/Strings,87,66,80
+3D Flanged,PCM:Synth Pad/Strings,87,66,81
+Fantawine,PCM:Synth Pad/Strings,87,66,82
+Glassy Pad,PCM:Synth Pad/Strings,87,66,83
+Moving Glass,PCM:Synth Pad/Strings,87,66,84
+Glasswaves,PCM:Synth Pad/Strings,87,66,85
+Shiny Pad,PCM:Synth Pad/Strings,87,66,86
+ShiftedGlass,PCM:Synth Pad/Strings,87,66,87
+Chime Pad,PCM:Synth Bellpad,87,66,88
+Spin Pad,PCM:Synth Pad/Strings,87,66,89
+Rotary Pad,PCM:Synth Pad/Strings,87,66,90
+Dawn 2 Dusk,PCM:Synth Pad/Strings,87,66,91
+Aurora,PCM:Synth Pad/Strings,87,66,92
+Strobe Mode,PCM:Pulsating,87,66,93
+Albion,PCM:Pulsating,87,66,94
+Running Pad,PCM:Pulsating,87,66,95
+Stepped Pad,PCM:Pulsating,87,66,96
+Random Pad,PCM:Pulsating,87,66,97
+SoundtrkDANC,PCM:Pulsating,87,66,98
+Flying Waltz,PCM:Pulsating,87,66,99
+Vanishing,PCM:Synth FX,87,66,100
+5th Sweep,PCM:Synth Pad/Strings,87,66,101
+Phazweep,PCM:Pulsating,87,66,102
+Big BPF,PCM:Synth PolyKey,87,66,103
+MG Sweep,PCM:Synth PolyKey,87,66,104
+CeremonyTimp,PCM:Percussion,87,66,105
+Dyno Toms,PCM:Drums,87,66,106
+Sands ofTime,PCM:Synth FX,87,66,107
+Inertia,PCM:Synth FX,87,66,108
+Vektogram,PCM:Synth FX,87,66,109
+Crash Pad,PCM:Synth Pad/Strings,87,66,110
+Feedback VOX,PCM:Synth Pad/Strings,87,66,111
+Cascade,PCM:Synth FX,87,66,112
+Shattered,PCM:Synth FX,87,66,113
+NextFrontier,PCM:Synth FX,87,66,114
+Pure Tibet,PCM:Synth FX,87,66,115
+Chime Wash,PCM:Synth FX,87,66,116
+Night Shade,PCM:Synth FX,87,66,117
+Tortured,PCM:Synth FX,87,66,118
+Dissimilate,PCM:Synth FX,87,66,119
+Dunes,PCM:Synth FX,87,66,120
+Ocean Floor,PCM:Synth FX,87,66,121
+Cyber Space,PCM:Synth FX,87,66,122
+Biosphere,PCM:Synth FX,87,66,123
+Variable Run,PCM:Beat&Groove,87,66,124
+Ice Hall,PCM:Synth Pad/Strings,87,66,125
+ComputerRoom,PCM:Synth FX,87,66,126
+Inverted,PCM:Synth FX,87,66,127
+Terminate,PCM:Synth FX,87,66,128
+Echo Piano,PCM:Ac.Piano,87,67,1
+Upright Pno,PCM:Ac.Piano,87,67,2
+RD-1000,PCM:Pop Piano,87,67,3
+Player’s EP,PCM:E.Piano1,87,67,4
+D-50 EP,PCM:E.Piano2,87,67,5
+Innocent EP,PCM:E.Piano2,87,67,6
+Echo EP,PCM:E.Piano2,87,67,7
+See-Thru EP,PCM:E.Piano2,87,67,8
+FM BellPiano,PCM:E.Piano2,87,67,9
+Ring E.Piano,PCM:E.Piano2,87,67,10
+Soap Opera,PCM:E.Organ,87,67,11
+Dirty Organ,PCM:E.Organ,87,67,12
+Surf’s Up!,PCM:E.Organ,87,67,13
+Organesque,PCM:E.Organ,87,67,14
+pp Harmonium,PCM:Pipe Organ,87,67,15
+PieceOfCheez,PCM:Clav,87,67,16
+Harpsy Clav,PCM:Clav,87,67,17
+Exotic Velo,PCM:Mallet,87,67,18
+HolidayCheer,PCM:Synth Bellpad,87,67,19
+Morning Lite,PCM:Synth Bellpad,87,67,20
+Prefab Chime,PCM:Bell,87,67,21
+Belfry Chime,PCM:Bell,87,67,22
+Stacc.Heaven,PCM:Synth Bellpad,87,67,23
+2.2 Bell Pad,PCM:Synth Bellpad,87,67,24
+Far East,PCM:Synth PolyKey,87,67,25
+Wire Pad,PCM:Synth PolyKey,87,67,26
+PhaseBlipper,PCM:Synth PolyKey,87,67,27
+Sweep Clav,PCM:Synth PolyKey,87,67,28
+Glider,PCM:Synth PolyKey,87,67,29
+Solo Steel,PCM:Ac.Guitar,87,67,30
+DesertCrystl,PCM:Ac.Guitar,87,67,31
+Clear Guitar,PCM:E.Guitar,87,67,32
+Solo Strat,PCM:E.Guitar,87,67,33
+Feed Me!,PCM:Dist.Guitar,87,67,34
+Tube Smoke,PCM:Dist.Guitar,87,67,35
+Creamy,PCM:Dist.Guitar,87,67,36
+Blusey OD,PCM:Dist.Guitar,87,67,37
+Grindstone,PCM:Dist.Guitar,87,67,38
+OD 5ths,PCM:Dist.Guitar,87,67,39
+East Europe,PCM:Plucked/Stroke,87,67,40
+Dulcitar,PCM:Plucked/Stroke,87,67,41
+Atmos Harp,PCM:Plucked/Stroke,87,67,42
+Pilgrimage,PCM:Plucked/Stroke,87,67,43
+202 Rude Bs,PCM:Synth Bass,87,67,44
+2pole Bass,PCM:Synth Bass,87,67,45
+4pole Bass,PCM:Synth Bass,87,67,46
+Phaser MC,PCM:Synth Bass,87,67,47
+Miniphaser,PCM:Synth Bass,87,67,48
+Acid TB,PCM:Synth Bass,87,67,49
+Full Orchest,PCM:Orchestral,87,67,50
+Str + Winds,PCM:Orchestral,87,67,51
+Flute 2080,PCM:Flute,87,67,52
+Scat Flute,PCM:Scat,87,67,53
+Sax Choir,PCM:Sax,87,67,54
+Ballad Trump,PCM:Solo Brass,87,67,55
+Sm.Brass Grp,PCM:Ensemble Brass,87,67,56
+Royale,PCM:Ensemble Brass,87,67,57
+Brass Mutes,PCM:Ensemble Brass,87,67,58
+Breathy Brs,PCM:Synth Brass,87,67,59
+3 Osc Brass,PCM:Synth Brass,87,67,60
+P5 Polymod,PCM:Synth Brass,87,67,61
+Triumph Brs,PCM:Synth Brass,87,67,62
+Techno Dream,PCM:Synth PolyKey,87,67,63
+Organizer,PCM:Synth PolyKey,87,67,64
+Civilization,PCM:Synth PolyKey,87,67,65
+Mental Chord,PCM:Synth Lead,87,67,66
+House Chord,PCM:Synth Lead,87,67,67
+Sequalog,PCM:Synth PolyKey,87,67,68
+Booster Bips,PCM:Synth Lead,87,67,69
+VintagePlunk,PCM:Synth Lead,87,67,70
+Plik-Plok,PCM:Synth Seq/Pop,87,67,71
+RingSequence,PCM:Synth Seq/Pop,87,67,72
+Cyber Swing,PCM:Synth Seq/Pop,87,67,73
+Keep :-),PCM:Synth PolyKey,87,67,74
+Resojuice,PCM:Synth Lead,87,67,75
+B’on d’moov!,PCM:Synth PolyKey,87,67,76
+Dist TB-303,PCM:Synth Lead,87,67,77
+Temple of JV,PCM:Pulsating,87,67,78
+Planet Asia,PCM:Pulsating,87,67,79
+Afterlife,PCM:Pulsating,87,67,80
+Trancing Pad,PCM:Pulsating,87,67,81
+Pulsatronic,PCM:Pulsating,87,67,82
+Cyber Dreams,PCM:Pulsating,87,67,83
+Warm Pipe,PCM:Synth Lead,87,67,84
+Pure Pipe,PCM:Synth Lead,87,67,85
+SH-2000,PCM:Synth Lead,87,67,86
+X..? Whistle,PCM:Synth Lead,87,67,87
+Jay Vee Solo,PCM:Synth Lead,87,67,88
+Progresso Ld,PCM:Synth Lead,87,67,89
+Adrenaline,PCM:Synth Lead,87,67,90
+Enlighten,PCM:Vox/Choir,87,67,91
+Glass Blower,PCM:Synth Bellpad,87,67,92
+Earth Blow,PCM:Synth Pad/Strings,87,67,93
+JX SqrCarpet,PCM:Synth Pad/Strings,87,67,94
+Dimensional,PCM:Synth Pad/Strings,87,67,95
+Jupiterings,PCM:Synth Pad/Strings,87,67,96
+Analog Drama,PCM:Synth Pad/Strings,87,67,97
+Rich Dynapad,PCM:Synth Pad/Strings,87,67,98
+Silky Way,PCM:Synth Pad/Strings,87,67,99
+Gluey Pad,PCM:Synth Pad/Strings,87,67,100
+BandPass Mod,PCM:Synth Pad/Strings,87,67,101
+Soundtraque,PCM:Synth Pad/Strings,87,67,102
+Translucence,PCM:Synth Pad/Strings,87,67,103
+Darkshine,PCM:Synth Pad/Strings,87,67,104
+D’light,PCM:Synth Bellpad,87,67,105
+December Sky,PCM:Synth Pad/Strings,87,67,106
+Octapad,PCM:Synth Pad/Strings,87,67,107
+JUNO Power!,PCM:Synth Pad/Strings,87,67,108
+Spectrum Mod,PCM:Synth Pad/Strings,87,67,109
+Stringsheen,PCM:Synth Pad/Strings,87,67,110
+GR500 TmpDly,PCM:Synth Pad/Strings,87,67,111
+Mod DirtyWav,PCM:Synth Pad/Strings,87,67,112
+Silicon Str,PCM:Synth Pad/Strings,87,67,113
+D50FantaPerc,PCM:Synth Pad/Strings,87,67,114
+Rotodreams,PCM:Synth Pad/Strings,87,67,115
+Blue Notes,PCM:Sax,87,67,116
+RiversOfTime,PCM:Synth FX,87,67,117
+Phobos,PCM:Synth FX,87,67,118
+2 0 8 0,PCM:Synth FX,87,67,119
+Unearthly,PCM:Synth FX,87,67,120
+Glistening,PCM:Synth FX,87,67,121
+Sci-Fi Str,PCM:Synth FX,87,67,122
+Shadows,PCM:Synth FX,87,67,123
+Helium Queen,PCM:Synth FX,87,67,124
+Sci-Fi FX x4,PCM:Synth FX,87,67,125
+Perky Noize,PCM:Percussion,87,67,126
+Droplet,PCM:Sound FX,87,67,127
+Rain Forest,PCM:Sound FX,87,67,128
+Grand XV,PCM:Ac.Piano,87,68,1
+Contemplate,PCM:Ac.Piano,87,68,2
+Rock Piano,PCM:Ac.Piano,87,68,3
+RockPiano Ch,PCM:Ac.Piano,87,68,4
+Pianomonics,PCM:Ac.Piano,87,68,5
+Piano+SftPad,PCM:Ac.Piano,87,68,6
+WarmVoxPiano,PCM:Ac.Piano,87,68,7
+Y2K Concerto,PCM:Ac.Piano,87,68,8
+Piano+AirPad,PCM:Ac.Piano,87,68,9
+ChoraLeader,PCM:Ac.Piano,87,68,10
+SparklePiano,PCM:E.Piano2,87,68,11
+Retro EP,PCM:E.Piano1,87,68,12
+Fat EP,PCM:E.Piano1,87,68,13
+EP Trem,PCM:E.Piano1,87,68,14
+Phaser Dyno,PCM:E.Piano1,87,68,15
+Hit EP,PCM:E.Piano1,87,68,16
+Sweet Tynes,PCM:E.Piano1,87,68,17
+Pluk EP,PCM:E.Piano2,87,68,18
+EP Trip,PCM:E.Piano2,87,68,19
+Ambi EP,PCM:E.Piano1,87,68,20
+Rholitzer,PCM:E.Piano1,87,68,21
+Wurlie,PCM:E.Piano1,87,68,22
+FM Delight,PCM:E.Piano2,87,68,23
+Cutter Clav,PCM:Clav,87,68,24
+Mute Clav D6,PCM:Clav,87,68,25
+PhazeWahClav,PCM:Clav,87,68,26
+St.Harpsichd,PCM:Harpsichord,87,68,27
+3PartInventn,PCM:Harpsichord,87,68,28
+Soft Perky,PCM:E.Organ,87,68,29
+Fullness,PCM:E.Organ,87,68,30
+Paleface 1,PCM:E.Organ,87,68,31
+Paleface 2,PCM:E.Organ,87,68,32
+Soft B,PCM:E.Organ,87,68,33
+British B,PCM:E.Organ,87,68,34
+Rocker Org,PCM:E.Organ,87,68,35
+Split B,PCM:E.Organ,87,68,36
+PercInterval,PCM:E.Organ,87,68,37
+Happy 60s,PCM:E.Organ,87,68,38
+96 Years,PCM:E.Organ,87,68,39
+Glory Us Rok,PCM:E.Organ,87,68,40
+Church Harmn,PCM:Pipe Organ,87,68,41
+Cathdr Harmn,PCM:Pipe Organ,87,68,42
+Morph Pad,PCM:Synth Pad/Strings,87,68,43
+Air Pad,PCM:Synth Pad/Strings,87,68,44
+Soft Padding,PCM:Synth Pad/Strings,87,68,45
+Warmth Pad,PCM:Synth Pad/Strings,87,68,46
+ClassicJPpad,PCM:Synth Pad/Strings,87,68,47
+Jupiter Str,PCM:Synth Pad/Strings,87,68,48
+Fat Pad,PCM:Synth Pad/Strings,87,68,49
+GR700 Pad,PCM:Synth Pad/Strings,87,68,50
+Paradise,PCM:Synth Bellpad,87,68,51
+Moonchimes,PCM:Synth Bellpad,87,68,52
+SusPed Swap,PCM:Synth Pad/Strings,87,68,53
+PhasingPad,PCM:Synth Pad/Strings,87,68,54
+Ethereal Str,PCM:Synth Pad/Strings,87,68,55
+Velcropad,PCM:Synth Pad/Strings,87,68,56
+NothrnLights,PCM:Synth Pad/Strings,87,68,57
+Sun Dive,PCM:Synth Pad/Strings,87,68,58
+Brite Vox 1,PCM:Vox/Choir,87,68,59
+Brite Vox 2,PCM:Vox/Choir,87,68,60
+Ooh)Aah Mod,PCM:Vox/Choir,87,68,61
+Vocals: Ooh,PCM:Vox/Choir,87,68,62
+Vocals: Scat,PCM:Scat,87,68,63
+Vocals: Boys,PCM:Vox/Choir,87,68,64
+St. Choir,PCM:Vox/Choir,87,68,65
+SampleThe80s,PCM:Vox/Choir,87,68,66
+Sacred Tree,PCM:Vox/Choir,87,68,67
+VP330 OctEko,PCM:Vox/Choir,87,68,68
+XV Strings,PCM:Ensemble Strings,87,68,69
+Fat Strings,PCM:Ensemble Strings,87,68,70
+Dolce p/m/f,PCM:Ensemble Strings,87,68,71
+Sad Strings,PCM:Ensemble Strings,87,68,72
+Lush Strings,PCM:Ensemble Strings,87,68,73
+Strings4Film,PCM:Ensemble Strings,87,68,74
+Marcato Str,PCM:Ensemble Strings,87,68,75
+End Titles,PCM:Ensemble Strings,87,68,76
+ChmbrQuartet,PCM:Ensemble Strings,87,68,77
+ChamberSect.,PCM:Ensemble Strings,87,68,78
+FullChmbrStr,PCM:Ensemble Strings,87,68,79
+Tape Strings,PCM:Ensemble Strings,87,68,80
+Henry VIII,PCM:Orchestral,87,68,81
+Prelude,PCM:Orchestral,87,68,82
+Str&Brs Orch,PCM:Orchestral,87,68,83
+Hornz,PCM:Orchestral,87,68,84
+TudorFanfare,PCM:Orchestral,87,68,85
+ChamberPlyrs,PCM:Orchestral,87,68,86
+Flute/Clari,PCM:Wind,87,68,87
+Orch Reeds,PCM:Wind,87,68,88
+Dual Flutes,PCM:Flute,87,68,89
+Jazzer Flute,PCM:Flute,87,68,90
+LegatoBamboo,PCM:Flute,87,68,91
+Ambience Flt,PCM:Flute,87,68,92
+The Andes,PCM:Flute,87,68,93
+Deja Vlute,PCM:Flute,87,68,94
+Simply Brass,PCM:Ensemble Brass,87,68,95
+FullSt Brass,PCM:Ensemble Brass,87,68,96
+Dragnet,PCM:Ensemble Brass,87,68,97
+NewR&RBrass,PCM:Ensemble Brass,87,68,98
+Tower Trumps,PCM:Ensemble Brass,87,68,99
+BigBrassBand,PCM:Ensemble Brass,87,68,100
+Lil’BigHornz,PCM:Ensemble Brass,87,68,101
+VoyagerBrass,PCM:Ensemble Brass,87,68,102
+Symph Horns,PCM:Ensemble Brass,87,68,103
+Trombone Atm,PCM:Solo Brass,87,68,104
+XV Trombone,PCM:Solo Brass,87,68,105
+XV Trumpet,PCM:Solo Brass,87,68,106
+JupiterHorns,PCM:Synth Brass,87,68,107
+Solo SoprSax,PCM:Sax,87,68,108
+Solo AltoSax,PCM:Sax,87,68,109
+XV DynoTenor,PCM:Sax,87,68,110
+Honker Bari,PCM:Sax,87,68,111
+Full Saxz,PCM:Sax,87,68,112
+Soaring Hrns,PCM:Synth Brass,87,68,113
+Glass Orbit,PCM:Synth Bellpad,87,68,114
+5th Atm /Aft,PCM:Synth Pad/Strings,87,68,115
+Lo-fi Sweep,PCM:Synth Pad/Strings,87,68,116
+Modular Life,PCM:Synth Pad/Strings,87,68,117
+Oscillations,PCM:Synth PolyKey,87,68,118
+Combing,PCM:Synth Pad/Strings,87,68,119
+Rolling 5ths,PCM:Synth Pad/Strings,87,68,120
+Analogue Str,PCM:Synth Pad/Strings,87,68,121
+Lunar Strngs,PCM:Synth Pad/Strings,87,68,122
+BPFsweep Mod,PCM:Synth PolyKey,87,68,123
+Queen V,PCM:Synth PolyKey,87,68,124
+SkinnyBounce,PCM:Synth PolyKey,87,68,125
+SquareBounce,PCM:Synth PolyKey,87,68,126
+Galactic,PCM:Synth PolyKey,87,68,127
+Powerwiggle,PCM:Synth PolyKey,87,68,128
+80s Retrosyn,PCM:Synth PolyKey,87,69,1
+Power Stack,PCM:Synth PolyKey,87,69,2
+Don’t Jump,PCM:Synth PolyKey,87,69,3
+Big Bubbles,PCM:Synth PolyKey,87,69,4
+X-mod Sweep,PCM:Synth PolyKey,87,69,5
+Bag O’ Bones,PCM:Synth PolyKey,87,69,6
+AirSoThin,PCM:Synth PolyKey,87,69,7
+Analogical,PCM:Synth PolyKey,87,69,8
+Waspy Pulse,PCM:Synth PolyKey,87,69,9
+Soaring Saws,PCM:Synth Lead,87,69,10
+Square Roots,PCM:Synth Lead,87,69,11
+BOG,PCM:Synth Lead,87,69,12
+Talking Box,PCM:Synth Lead,87,69,13
+Retro Lead,PCM:Synth Lead,87,69,14
+LivingInSync,PCM:Synth Lead,87,69,15
+Leads United,PCM:Synth Lead,87,69,16
+Dirty Sync,PCM:Synth Lead,87,69,17
+DistortaSync,PCM:Synth Lead,87,69,18
+Blistering,PCM:Synth Lead,87,69,19
+Guttural,PCM:Synth Lead,87,69,20
+Flyin’ High,PCM:Synth Lead,87,69,21
+Soft Tooth,PCM:Synth Lead,87,69,22
+Soaring Sqr,PCM:Synth Lead,87,69,23
+Soaring Sync,PCM:Synth Lead,87,69,24
+Nasal Spray,PCM:Synth Lead,87,69,25
+Lamb Lead,PCM:Synth Lead,87,69,26
+Creamer,PCM:Synth Lead,87,69,27
+Sine System,PCM:Synth Lead,87,69,28
+Soft Nylon,PCM:Ac.Guitar,87,69,29
+Nylozzicato,PCM:Ac.Guitar,87,69,30
+Mutezzicato,PCM:Ac.Guitar,87,69,31
+Hybrid Nylon,PCM:Ac.Guitar,87,69,32
+XV SteelGt 1,PCM:Ac.Guitar,87,69,33
+XV SteelGt 2,PCM:Ac.Guitar,87,69,34
+Comp’Steel,PCM:Ac.Guitar,87,69,35
+Double Steel,PCM:Ac.Guitar,87,69,36
+Folk Guitar,PCM:Ac.Guitar,87,69,37
+SpanishNight,PCM:Ac.Guitar,87,69,38
+Plug n’ Play,PCM:E.Guitar,87,69,39
+Fab 4 Guitar,PCM:E.Guitar,87,69,40
+Searing Lead,PCM:Dist.Guitar,87,69,41
+Punker,PCM:Dist.Guitar,87,69,42
+LouderPlease,PCM:Dist.Guitar,87,69,43
+XV Upright,PCM:Ac.Bass,87,69,44
+XV Ac.Bass,PCM:Ac.Bass,87,69,45
+LookMaNoFret,PCM:E.Bass,87,69,46
+XV Fretless,PCM:E.Bass,87,69,47
+Basic F’less,PCM:E.Bass,87,69,48
+8-str F’less,PCM:E.Bass,87,69,49
+Tap Bass,PCM:E.Bass,87,69,50
+Pop Bass,PCM:E.Bass,87,69,51
+P.Bs Chorus,PCM:E.Bass,87,69,52
+TremCho Bs,PCM:E.Bass,87,69,53
+Creamy Bass,PCM:Synth Bass,87,69,54
+Buster Bass,PCM:Synth Bass,87,69,55
+TB Squelch,PCM:Synth Bass,87,69,56
+Ticker Bass,PCM:Synth Bass,87,69,57
+Muscle Bass,PCM:Synth Bass,87,69,58
+Grounded Bs,PCM:Synth Bass,87,69,59
+West End Bs,PCM:Synth Bass,87,69,60
+Snap Bass,PCM:Synth Bass,87,69,61
+700 Bassboy,PCM:Synth Bass,87,69,62
+8VCO MonoSyn,PCM:Synth Bass,87,69,63
+ResoMoist Bs,PCM:Synth Bass,87,69,64
+Kickin’ Bass,PCM:Synth Bass,87,69,65
+Sub Zero,PCM:Synth Bass,87,69,66
+Liquid Bass,PCM:Synth Bass,87,69,67
+Hefty Bass,PCM:Synth Bass,87,69,68
+Severe Ow Bs,PCM:Synth Bass,87,69,69
+Chime Bells,PCM:Bell,87,69,70
+Celestabox,PCM:Celesta,87,69,71
+Brass Tubes,PCM:Solo Brass,87,69,72
+Dreams East,PCM:Synth PolyKey,87,69,73
+Synergistic,PCM:Synth PolyKey,87,69,74
+Andreas Cave,PCM:Plucked/Stroke,87,69,75
+AmbiPizza,PCM:Plucked/Stroke,87,69,76
+Voxy Nylon,PCM:Plucked/Stroke,87,69,77
+EastrnEurope,PCM:Plucked/Stroke,87,69,78
+Celtic Harp,PCM:Plucked/Stroke,87,69,79
+Reso Sitar,PCM:Plucked/Stroke,87,69,80
+The Ganges,PCM:Plucked/Stroke,87,69,81
+MountainFolk,PCM:Plucked/Stroke,87,69,82
+Byzantine,PCM:Plucked/Stroke,87,69,83
+AsiaPlectrum,PCM:Plucked/Stroke,87,69,84
+VelHarp)Harm,PCM:Plucked/Stroke,87,69,85
+Pluckaphone,PCM:Plucked/Stroke,87,69,86
+Slap Timps,PCM:Percussion,87,69,87
+Suite Combo,PCM:Vox/Choir,87,69,88
+Jet Voxs,PCM:Vox/Choir,87,69,89
+Dirty Hit,PCM:Hit,87,69,90
+MOVE!,PCM:Hit,87,69,91
+Reel Slam,PCM:Hit,87,69,92
+OffTheRecord,PCM:Hit,87,69,93
+2ndRateChord,PCM:Synth Lead,87,69,94
+RageInYouth,PCM:Synth Lead,87,69,95
+MinorIncidnt,PCM:Synth Lead,87,69,96
+Phunky DC,PCM:Synth Lead,87,69,97
+Agent X,PCM:Synth Lead,87,69,98
+Winky,PCM:Synth Seq/Pop,87,69,99
+Looney 2nz,PCM:Synth Lead,87,69,100
+Shortrave,PCM:Synth PolyKey,87,69,101
+DeeperBeeper,PCM:Synth Lead,87,69,102
+Percolator,PCM:Synth PolyKey,87,69,103
+Filter Morph,PCM:Synth PolyKey,87,69,104
+Choir Bounce,PCM:Synth PolyKey,87,69,105
+Rippling,PCM:Pulsating,87,69,106
+SteppingPhsr,PCM:Pulsating,87,69,107
+Trance Fair,PCM:Pulsating,87,69,108
+GermanBounce,PCM:Pulsating,87,69,109
+Acid JaZZ,PCM:Pulsating,87,69,110
+Cutter>ModWh,PCM:Pulsating,87,69,111
+Blades,PCM:Pulsating,87,69,112
+Mad Bender,PCM:Pulsating,87,69,113
+Shapeshifter,PCM:Synth FX,87,69,114
+ForestMoon,PCM:Synth FX,87,69,115
+Predator 2,PCM:Synth FX,87,69,116
+Dark Side,PCM:Synth FX,87,69,117
+The Beast,PCM:Synth FX,87,69,118
+X-mod Reso,PCM:Synth FX,87,69,119
+Planet Meta,PCM:Synth FX,87,69,120
+Nexus,PCM:Synth FX,87,69,121
+Halographix,PCM:Synth FX,87,69,122
+Moon Rise,PCM:Synth FX,87,69,123
+Gruvacious,PCM:Synth FX,87,69,124
+Windy Dunes,PCM:Synth FX,87,69,125
+Ice Blasts,PCM:Synth FX,87,69,126
+Ringy Thingy,PCM:Synth FX,87,69,127
+Atmospherics,PCM:Synth FX,87,69,128
+Power Octs,PCM:Ac.Piano,87,70,1
+WaterPiano2,PCM:Pop Piano,87,70,2
+Swimming EP,PCM:E.Piano2,87,70,3
+XV Crystal,PCM:E.Piano2,87,70,4
+Cold Roadz,PCM:E.Piano2,87,70,5
+Back EP,PCM:E.Piano1,87,70,6
+Amped Wurlie,PCM:E.Piano1,87,70,7
+Dirty Wurlie,PCM:E.Piano1,87,70,8
+Musicbox XV,PCM:Bell,87,70,9
+Klubb Organ,PCM:E.Organ,87,70,10
+Drew’s Bee,PCM:E.Organ,87,70,11
+Velvet Organ,PCM:E.Organ,87,70,12
+Distorted B,PCM:E.Organ,87,70,13
+Radikal B,PCM:E.Organ,87,70,14
+Boogie Organ,PCM:E.Organ,87,70,15
+Mood Ringz,PCM:Pulsating,87,70,16
+Wedo-Wodo,PCM:Pulsating,87,70,17
+S.O.S.trings,PCM:Pulsating,87,70,18
+Syncronicity,PCM:Pulsating,87,70,19
+DanceMachina,PCM:Pulsating,87,70,20
+Vox Chopper,PCM:Pulsating,87,70,21
+SlicingSyVox,PCM:Pulsating,87,70,22
+PressureDome,PCM:Pulsating,87,70,23
+Quasar /Aft,PCM:Pulsating,87,70,24
+Ionizer,PCM:Pulsating,87,70,25
+MilleniumStr,PCM:Pulsating,87,70,26
+Bounce Baby!,PCM:Pulsating,87,70,27
+Bounce Daddy,PCM:Pulsating,87,70,28
+Bounce Mama!,PCM:Pulsating,87,70,29
+Bounce Noize,PCM:Pulsating,87,70,30
+What a Gate!,PCM:Pulsating,87,70,31
+Mini Sequenz,PCM:Pulsating,87,70,32
+Slice & Dice,PCM:Pulsating,87,70,33
+BrushingSaw1,PCM:Pulsating,87,70,34
+BrushingSaw2,PCM:Pulsating,87,70,35
+Cultivate,PCM:Pulsating,87,70,36
+5080 Random,PCM:Pulsating,87,70,37
+XV Stepping,PCM:Synth Pad/Strings,87,70,38
+India Garden,PCM:Synth Pad/Strings,87,70,39
+Belly Pad,PCM:Synth Bellpad,87,70,40
+Spectre,PCM:Synth Bellpad,87,70,41
+SoaringHrns2,PCM:Synth Brass,87,70,42
+Sabbath Day,PCM:Synth Pad/Strings,87,70,43
+XV BlowPad,PCM:Synth Pad/Strings,87,70,44
+White Arcade,PCM:Synth Pad/Strings,87,70,45
+Borealis,PCM:Synth Pad/Strings,87,70,46
+OvertoneScan,PCM:Synth Pad/Strings,87,70,47
+Whisper Vox,PCM:Vox/Choir,87,70,48
+Jupiter 21,PCM:Ensemble Strings,87,70,49
+Filt Strings,PCM:Ensemble Strings,87,70,50
+HybStringsXV,PCM:Ensemble Strings,87,70,51
+Soft Symphny,PCM:Orchestral,87,70,52
+Wood Symphny,PCM:Orchestral,87,70,53
+HybOrchestra,PCM:Orchestral,87,70,54
+Brassy Symph,PCM:Orchestral,87,70,55
+Biggie Brass,PCM:Ensemble Brass,87,70,56
+BiggieBrass2,PCM:Ensemble Brass,87,70,57
+LA Sax’s,PCM:Sax,87,70,58
+Wind Wood,PCM:Wind,87,70,59
+Lonely Oboe,PCM:Wind,87,70,60
+Harmonica XV,PCM:Harmonica,87,70,61
+Tooters Lead,PCM:Flute,87,70,62
+Digi Phased,PCM:Synth PolyKey,87,70,63
+Synth Ethics,PCM:Synth PolyKey,87,70,64
+Harm is Fine,PCM:Synth PolyKey,87,70,65
+D-2000,PCM:Synth Bellpad,87,70,66
+Ackward East,PCM:Synth PolyKey,87,70,67
+Powersoaker,PCM:Synth Lead,87,70,68
+Mean Thing,PCM:Synth Lead,87,70,69
+Jet Sync,PCM:Synth Lead,87,70,70
+Crying Solo,PCM:Dist.Guitar,87,70,71
+Southern Fry,PCM:Dist.Guitar,87,70,72
+Strum Distrt,PCM:Dist.Guitar,87,70,73
+Match Drive,PCM:Dist.Guitar,87,70,74
+Stacked,PCM:Dist.Guitar,87,70,75
+2-Stack Over,PCM:Dist.Guitar,87,70,76
+COSM Searing,PCM:Dist.Guitar,87,70,77
+COSM Loud Gt,PCM:Dist.Guitar,87,70,78
+Blue Mutes,PCM:Dist.Guitar,87,70,79
+Metal 5150,PCM:Dist.Guitar,87,70,80
+Crunch Phase,PCM:Dist.Guitar,87,70,81
+Alt Dist Gtr,PCM:Dist.Guitar,87,70,82
+So nice!,PCM:Ac.Guitar,87,70,83
+Punch Bass,PCM:Ac.Bass,87,70,84
+COSM Bass,PCM:E.Bass,87,70,85
+Stream Bell,PCM:Bell,87,70,86
+Shuffle Bell,PCM:Bell,87,70,87
+Echo Vibe,PCM:Mallet,87,70,88
+Tremolo Vibe,PCM:Mallet,87,70,89
+True Vibe,PCM:Mallet,87,70,90
+Marimbula,PCM:Mallet,87,70,91
+Hit Bitz,PCM:Hit,87,70,92
+80s LoFi Hit,PCM:Hit,87,70,93
+Auto Chord,PCM:Hit,87,70,94
+3rdTeenChord,PCM:Hit,87,70,95
+Bend a Chord,PCM:Hit,87,70,96
+DiscreteChrd,PCM:Hit,87,70,97
+Ambi Voices,PCM:Synth Seq/Pop,87,70,98
+Say Yeah !,PCM:Synth PolyKey,87,70,99
+Xcuse me,PCM:Synth FX,87,70,100
+5ths in 4ths,PCM:Synth FX,87,70,101
+Pretty Ugly,PCM:Synth PolyKey,87,70,102
+Con Sequence,PCM:Synth Seq/Pop,87,70,103
+BermudaShort,PCM:Synth Seq/Pop,87,70,104
+Saw n’ 202,PCM:Synth PolyKey,87,70,105
+Technoheadz,PCM:Synth PolyKey,87,70,106
+Boss’d Synth,PCM:Synth Lead,87,70,107
+Cross Fire,PCM:Synth Lead,87,70,108
+Techno Cave,PCM:Synth Lead,87,70,109
+Generator,PCM:Synth Lead,87,70,110
+GenderBender,PCM:Synth Lead,87,70,111
+Xtremities,PCM:Synth Lead,87,70,112
+AM 05:59,PCM:Synth Lead,87,70,113
+Happy Brass,PCM:Ensemble Brass,87,70,114
+Runaway Rez,PCM:Synth FX,87,70,115
+Dropplets,PCM:Synth FX,87,70,116
+Indian Guru,PCM:Synth FX,87,70,117
+Cosmic Rain,PCM:Synth FX,87,70,118
+Trying Winds,PCM:Synth FX,87,70,119
+Space Whiz,PCM:Synth FX,87,70,120
+DigitalDrone,PCM:Synth FX,87,70,121
+Space Race,PCM:Synth FX,87,70,122
+Bowed Bell,PCM:Synth FX,87,70,123
+X-Tension,PCM:Synth FX,87,70,124
+DUB!!!,PCM:Synth FX,87,70,125
+Dream Diver,PCM:Synth FX,87,70,126
+Flashback,PCM:Synth FX,87,70,127
+St.LoFiNoise,PCM:E.Piano1,87,70,128
+Metalic EP,PCM:E.Piano2,87,71,1
+Full Grand 1,SN-A:Ac.Piano,89,64,1
+Full Grand 2,SN-A:Ac.Piano,89,64,2
+Full Grand 3,SN-A:Ac.Piano,89,64,3
+Deep Grand,SN-A:Ac.Piano,89,64,4
+BrightGrand,SN-A:Ac.Piano,89,64,5
+UprightPiano,SN-A:Ac.Piano,89,64,6
+Mono Grand,SN-A:Ac.Piano,89,64,7
+Rock Grand,SN-A:Ac.Piano,89,64,8
+HonkyTonk Pf,SN-A:Ac.Piano,89,64,9
+‘76 Pure,SN-A:E.Piano1,89,64,10
+‘73 Pure,SN-A:E.Piano1,89,64,11
+‘76 Stage,SN-A:E.Piano1,89,64,12
+‘73 Stage,SN-A:E.Piano1,89,64,13
+‘76 Tine,SN-A:E.Piano1,89,64,14
+‘73 Tine,SN-A:E.Piano1,89,64,15
+‘81 Tine,SN-A:E.Piano1,89,64,16
+Felt Tine,SN-A:E.Piano1,89,64,17
+Dyno Tine,SN-A:E.Piano1,89,64,18
+Tea Time,SN-A:E.Piano1,89,64,19
+Small Space,SN-A:E.Piano1,89,64,20
+Phaser Dyno,SN-A:E.Piano1,89,64,21
+90 Shift EP,SN-A:E.Piano1,89,64,22
+SlowSpin EP,SN-A:E.Piano1,89,64,23
+Phaser Tine,SN-A:E.Piano1,89,64,24
+TcDlyEP CC18,SN-A:E.Piano1,89,64,25
+Flanger Tine,SN-A:E.Piano1,89,64,26
+Chorus Tine,SN-A:E.Piano1,89,64,27
+JC ChorusEP,SN-A:E.Piano1,89,64,28
+Dirty Tine,SN-A:E.Piano1,89,64,29
+Pure Reed,SN-A:E.Piano1,89,64,30
+‘68 Reed,SN-A:E.Piano1,89,64,31
+Vibrato Reed,SN-A:E.Piano1,89,64,32
+Dirty Reed,SN-A:E.Piano1,89,64,33
+Super Clav,SN-A:Clav,89,64,34
+Pure ClavCA1,SN-A:Clav,89,64,35
+Pure ClavCA2,SN-A:Clav,89,64,36
+Pure ClavCB1,SN-A:Clav,89,64,37
+Pure ClavCB2,SN-A:Clav,89,64,38
+Deep Clav,SN-A:Clav,89,64,39
+Drive Clav,SN-A:Clav,89,64,40
+Dist Clav,SN-A:Clav,89,64,41
+Phaser Clav1,SN-A:Clav,89,64,42
+Phaser Clav2,SN-A:Clav,89,64,43
+Spacy Clav,SN-A:Clav,89,64,44
+SoftSpinClav,SN-A:Clav,89,64,45
+Twah Clav,SN-A:Clav,89,64,46
+Awah Clav,SN-A:Clav,89,64,47
+PwahClv1CC18,SN-A:Clav,89,64,48
+PwahClv2CC18,SN-A:Clav,89,64,49
+B3 Jazz 1,SN-A:E.Organ,89,64,50
+B3 Jazz 2,SN-A:E.Organ,89,64,51
+B3 Jazz 3,SN-A:E.Organ,89,64,52
+B3 Jazz 4,SN-A:E.Organ,89,64,53
+B3 Jazz 5,SN-A:E.Organ,89,64,54
+B3 Jazz 6,SN-A:E.Organ,89,64,55
+B3 Jazz 7,SN-A:E.Organ,89,64,56
+B3 Full D,SN-A:E.Organ,89,64,57
+B3 Bossa,SN-A:E.Organ,89,64,58
+C3 Rock 1,SN-A:E.Organ,89,64,59
+C3 Rock 2,SN-A:E.Organ,89,64,60
+C3 Rock 3,SN-A:E.Organ,89,64,61
+C3 Rock 4,SN-A:E.Organ,89,64,62
+C3 Rock 5,SN-A:E.Organ,89,64,63
+C3 Rock 6,SN-A:E.Organ,89,64,64
+Pure Wheel 1,SN-A:E.Organ,89,64,65
+Pure Wheel 2,SN-A:E.Organ,89,64,66
+Pure Wheel 3,SN-A:E.Organ,89,64,67
+Nostalgie 1,SN-A:E.Organ,89,64,68
+Nostalgie 2,SN-A:E.Organ,89,64,69
+Nostalgie 3,SN-A:E.Organ,89,64,70
+Nostalgie 4,SN-A:E.Organ,89,64,71
+Ac Bass 1,SN-A:Ac.Bass,89,64,72
+Ac Bass 2,SN-A:Ac.Bass,89,64,73
+Fing Bass 1,SN-A:E.Bass,89,64,74
+Fing Bass 2,SN-A:E.Bass,89,64,75
+Comp FingBs,SN-A:E.Bass,89,64,76
+Phaser Fing1,SN-A:E.Bass,89,64,77
+Phaser Fing2,SN-A:E.Bass,89,64,78
+Slap Bass,SN-A:E.Bass,89,64,79
+Pick Bass,SN-A:E.Bass,89,64,80
+Muted Bass,SN-A:E.Bass,89,64,81
+LowBoostPick,SN-A:E.Bass,89,64,82
+OD Pick Bass,SN-A:E.Bass,89,64,83
+Classic Gtr,SN-A:Ac.Guitar,89,64,84
+Solid GutGt,SN-A:Ac.Guitar,89,64,85
+Gut Guitar,SN-A:Ac.Guitar,89,64,86
+ArpegSteelGt,SN-A:Ac.Guitar,89,64,87
+StrumSteelGt,SN-A:Ac.Guitar,89,64,88
+StringsSect1,SN-A:Ensemble Strings,89,64,89
+StringsSect2,SN-A:Ensemble Strings,89,64,90
+5th Down Str,SN-A:Ensemble Strings,89,64,91
+Slow Strings,SN-A:Ensemble Strings,89,64,92
+Tape Strings,SN-A:Ensemble Strings,89,64,93
+Marcato Str,SN-A:Ensemble Strings,89,64,94
+MarcatoWarm,SN-A:Ensemble Strings,89,64,95
+Strings Stac,SN-A:Ensemble Strings,89,64,96
+Strings Pizz,SN-A:Ensemble Strings,89,64,97
+Strings Trem,SN-A:Ensemble Strings,89,64,98
+Deep Grand 2,SN-A:Ac.Piano,89,64,99
+Hex-Cho Tine,SN-A:E.Piano1,89,64,100
+JP8 Strings1,SN-S:Synth Pad/Strings,95,64,1
+JP8 Strings2,SN-S:Synth Pad/Strings,95,64,2
+JP8 Strings3,SN-S:Synth Pad/Strings,95,64,3
+JP8 Strings4,SN-S:Synth Pad/Strings,95,64,4
+JP8 Strings5,SN-S:Synth Pad/Strings,95,64,5
+JP8 Strings6,SN-S:Synth Pad/Strings,95,64,6
+JP8 Strings7,SN-S:Synth Pad/Strings,95,64,7
+JP8 Strings8,SN-S:Synth Pad/Strings,95,64,8
+JP8 Strings9,SN-S:Synth Pad/Strings,95,64,9
+JP8Strings10,SN-S:Synth Pad/Strings,95,64,10
+JP8Strings11,SN-S:Synth Pad/Strings,95,64,11
+JP8Strings12,SN-S:Synth Pad/Strings,95,64,12
+JP8Strings13,SN-S:Synth Pad/Strings,95,64,13
+JP8Strings14,SN-S:Synth Pad/Strings,95,64,14
+JP8Strings15,SN-S:Synth Pad/Strings,95,64,15
+JP8Strings16,SN-S:Synth Pad/Strings,95,64,16
+JP-8 Pad 1,SN-S:Synth Pad/Strings,95,64,17
+JP-8 Pad 2,SN-S:Synth Pad/Strings,95,64,18
+JP-8 Pad 3,SN-S:Synth Pad/Strings,95,64,19
+JP-8 Pad 4,SN-S:Synth Pad/Strings,95,64,20
+JUNO Str 1,SN-S:Synth Pad/Strings,95,64,21
+JUNO Str 2,SN-S:Synth Pad/Strings,95,64,22
+JUNO Str 3,SN-S:Synth Pad/Strings,95,64,23
+JX Strings,SN-S:Synth Pad/Strings,95,64,24
+OB Strings 1,SN-S:Synth Pad/Strings,95,64,25
+OB Strings 2,SN-S:Synth Pad/Strings,95,64,26
+OB Strings 3,SN-S:Synth Pad/Strings,95,64,27
+OB Strings 4,SN-S:Synth Pad/Strings,95,64,28
+OB Strings 5,SN-S:Synth Pad/Strings,95,64,29
+OB Strings 6,SN-S:Synth Pad/Strings,95,64,30
+Vintage 1,SN-S:Synth Pad/Strings,95,64,31
+Vintage 2,SN-S:Synth Pad/Strings,95,64,32
+Vintage 3,SN-S:Synth Pad/Strings,95,64,33
+Vintage 4,SN-S:Synth Pad/Strings,95,64,34
+Vintage 5,SN-S:Synth Pad/Strings,95,64,35
+Vintage 6,SN-S:Synth Pad/Strings,95,64,36
+Vintage 7,SN-S:Synth Pad/Strings,95,64,37
+Vintage 8,SN-S:Synth Pad/Strings,95,64,38
+Vintage 9,SN-S:Synth Pad/Strings,95,64,39
+Vintage 10,SN-S:Synth Pad/Strings,95,64,40
+Vintage 11,SN-S:Synth Pad/Strings,95,64,41
+Soft Pad 1,SN-S:Synth Pad/Strings,95,64,42
+Soft Pad 2,SN-S:Synth Pad/Strings,95,64,43
+Soft Pad 3,SN-S:Synth Pad/Strings,95,64,44
+Soft Pad 4,SN-S:Synth Pad/Strings,95,64,45
+Soft Pad 5,SN-S:Synth Pad/Strings,95,64,46
+Soft Pad 6,SN-S:Synth Pad/Strings,95,64,47
+Soft Pad 7,SN-S:Synth Pad/Strings,95,64,48
+Soft Pad 8,SN-S:Synth Pad/Strings,95,64,49
+Soft Pad 9,SN-S:Synth Pad/Strings,95,64,50
+Soft Pad 10,SN-S:Synth Pad/Strings,95,64,51
+Soft Pad 11,SN-S:Synth Pad/Strings,95,64,52
+Soft Pad 12,SN-S:Synth Pad/Strings,95,64,53
+Soft Pad 13,SN-S:Synth Pad/Strings,95,64,54
+Soft Pad 14,SN-S:Synth Pad/Strings,95,64,55
+Soft Pad 15,SN-S:Synth Pad/Strings,95,64,56
+Soft Pad 16,SN-S:Synth Pad/Strings,95,64,57
+Soft Pad 17,SN-S:Synth Pad/Strings,95,64,58
+Oct Str 1,SN-S:Synth Pad/Strings,95,64,59
+Oct Str 2,SN-S:Synth Pad/Strings,95,64,60
+Oct Str 3,SN-S:Synth Pad/Strings,95,64,61
+Oct Str 4,SN-S:Synth Pad/Strings,95,64,62
+Oct Str 5,SN-S:Synth Pad/Strings,95,64,63
+Oct Str 6,SN-S:Synth Pad/Strings,95,64,64
+Oct Str 7,SN-S:Synth Pad/Strings,95,64,65
+Cloud Pad,SN-S:Synth Pad/Strings,95,64,66
+Slow Pad 1,SN-S:Synth Pad/Strings,95,64,67
+Slow Pad 2,SN-S:Synth Pad/Strings,95,64,68
+Brite Str 1,SN-S:Synth Pad/Strings,95,64,69
+Brite Str 2,SN-S:Synth Pad/Strings,95,64,70
+Brite Str 3,SN-S:Synth Pad/Strings,95,64,71
+Brite Str 4,SN-S:Synth Pad/Strings,95,64,72
+Boreal Pad,SN-S:Synth Pad/Strings,95,64,73
+Flange Str,SN-S:Synth Pad/Strings,95,64,74
+Organ Pad 1,SN-S:Synth Pad/Strings,95,64,75
+Organ Pad 2,SN-S:Synth Pad/Strings,95,64,76
+Organ Pad 3,SN-S:Synth Pad/Strings,95,64,77
+Organ Pad 4,SN-S:Synth Pad/Strings,95,64,78
+Digi Str 1,SN-S:Synth Pad/Strings,95,64,79
+Digi Str 2,SN-S:Synth Pad/Strings,95,64,80
+Digi Pad 1,SN-S:Synth Pad/Strings,95,64,81
+Digi Pad 2,SN-S:Synth Pad/Strings,95,64,82
+Digi Pad 3,SN-S:Synth Pad/Strings,95,64,83
+Digi Pad 4,SN-S:Synth Pad/Strings,95,64,84
+Heaven Pad 1,SN-S:Synth Pad/Strings,95,64,85
+Heaven Pad 2,SN-S:Synth Pad/Strings,95,64,86
+Heaven Pad 3,SN-S:Synth Pad/Strings,95,64,87
+Heaven Pad 4,SN-S:Synth Pad/Strings,95,64,88
+Voice Heaven,SN-S:Synth Pad/Strings,95,64,89
+ChordOfCnada,SN-S:Synth Pad/Strings,95,64,90
+Awakening,SN-S:Synth Pad/Strings,95,64,91
+JP8 Hollow 1,SN-S:Synth Pad/Strings,95,64,92
+JP8 Hollow 2,SN-S:Synth Pad/Strings,95,64,93
+JP8 Hollow 3,SN-S:Synth Pad/Strings,95,64,94
+Hollow Pad 1,SN-S:Synth Pad/Strings,95,64,95
+Hollow Pad 2,SN-S:Synth Pad/Strings,95,64,96
+Simple Air,SN-S:Synth Pad/Strings,95,64,97
+Air Pad,SN-S:Synth Pad/Strings,95,64,98
+Glass Pad,SN-S:Synth Pad/Strings,95,64,99
+Flute Pad,SN-S:Synth Pad/Strings,95,64,100
+Seek Flute,SN-S:Synth Pad/Strings,95,64,101
+Syn Pad 1,SN-S:Synth Pad/Strings,95,64,102
+Syn Pad 2,SN-S:Synth Pad/Strings,95,64,103
+Syn Pad 3,SN-S:Synth Pad/Strings,95,64,104
+Syn Pad 4,SN-S:Synth Pad/Strings,95,64,105
+Syn Pad 5,SN-S:Synth Pad/Strings,95,64,106
+Syn Pad 6,SN-S:Synth Pad/Strings,95,64,107
+Syn Pad 7,SN-S:Synth Pad/Strings,95,64,108
+Syn Pad 8,SN-S:Synth Pad/Strings,95,64,109
+Syn Pad 9,SN-S:Synth Pad/Strings,95,64,110
+Syn Pad 10,SN-S:Synth Pad/Strings,95,64,111
+Syn Pad 11,SN-S:Synth Pad/Strings,95,64,112
+Syn Pad 12,SN-S:Synth Pad/Strings,95,64,113
+Syn Pad 13,SN-S:Synth Pad/Strings,95,64,114
+Syn Pad 14,SN-S:Synth Pad/Strings,95,64,115
+Syn Pad 15,SN-S:Synth Pad/Strings,95,64,116
+Syn Pad 16,SN-S:Synth Pad/Strings,95,64,117
+Syn Pad 17,SN-S:Synth Pad/Strings,95,64,118
+Syn Pad 18,SN-S:Synth Pad/Strings,95,64,119
+Syn Pad 19,SN-S:Synth Pad/Strings,95,64,120
+Syn Pad 20,SN-S:Synth Pad/Strings,95,64,121
+Syn Pad 21,SN-S:Synth Pad/Strings,95,64,122
+Syn Pad 22,SN-S:Synth Pad/Strings,95,64,123
+Syn Pad 23,SN-S:Synth Pad/Strings,95,64,124
+Hybrid Str 1,SN-S:Synth Pad/Strings,95,64,125
+Hybrid Str 2,SN-S:Synth Pad/Strings,95,64,126
+Hybrid Str 3,SN-S:Synth Pad/Strings,95,64,127
+LFO Pad 1,SN-S:Synth Pad/Strings,95,64,128
+LFO Pad 2,SN-S:Synth Pad/Strings,95,65,1
+RETROX 139,SN-S:Synth Pad/Strings,95,65,2
+I Sync So,SN-S:Synth Pad/Strings,95,65,3
+Sea Waves,SN-S:Synth Pad/Strings,95,65,4
+FireFlies,SN-S:Synth Pad/Strings,95,65,5
+Particles,SN-S:Synth Pad/Strings,95,65,6
+Phr Str 1,SN-S:Synth Pad/Strings,95,65,7
+Phr Str 2,SN-S:Synth Pad/Strings,95,65,8
+Phr Str 3,SN-S:Synth Pad/Strings,95,65,9
+Phr Str 4,SN-S:Synth Pad/Strings,95,65,10
+Phr Str 5,SN-S:Synth Pad/Strings,95,65,11
+Phr Str 6,SN-S:Synth Pad/Strings,95,65,12
+Phr Str 7,SN-S:Synth Pad/Strings,95,65,13
+Phr Str 8,SN-S:Synth Pad/Strings,95,65,14
+Phr Str 9,SN-S:Synth Pad/Strings,95,65,15
+Phr Str 10,SN-S:Synth Pad/Strings,95,65,16
+Phr Str 11,SN-S:Synth Pad/Strings,95,65,17
+Stone Pad,SN-S:Synth Pad/Strings,95,65,18
+JP8 Stone 1,SN-S:Synth Pad/Strings,95,65,19
+JP8 Stone 2,SN-S:Synth Pad/Strings,95,65,20
+Sweep Pad 1,SN-S:Synth Pad/Strings,95,65,21
+Sweep Pad 2,SN-S:Synth Pad/Strings,95,65,22
+Sweep Pad 3,SN-S:Synth Pad/Strings,95,65,23
+Sweep Pad 4,SN-S:Synth Pad/Strings,95,65,24
+Sweep Pad 5,SN-S:Synth Pad/Strings,95,65,25
+Sweep Pad 6,SN-S:Synth Pad/Strings,95,65,26
+Sweep Pad 7,SN-S:Synth Pad/Strings,95,65,27
+Sweep Pad 8,SN-S:Synth Pad/Strings,95,65,28
+Sweep Pad 9,SN-S:Synth Pad/Strings,95,65,29
+Sweep Pad 10,SN-S:Synth Pad/Strings,95,65,30
+Sweep Pad 11,SN-S:Synth Pad/Strings,95,65,31
+Sweep Pad 12,SN-S:Synth Pad/Strings,95,65,32
+Sweep Pad 13,SN-S:Synth Pad/Strings,95,65,33
+Sweep Pad 14,SN-S:Synth Pad/Strings,95,65,34
+Sweep Pad 15,SN-S:Synth Pad/Strings,95,65,35
+Sweep Pad 16,SN-S:Synth Pad/Strings,95,65,36
+Sweep Pad 17,SN-S:Synth Pad/Strings,95,65,37
+Chronic Pad,SN-S:Synth Pad/Strings,95,65,38
+Sweep JD,SN-S:Synth Pad/Strings,95,65,39
+SweepNz Pad,SN-S:Synth Pad/Strings,95,65,40
+HPF Pad,SN-S:Synth Pad/Strings,95,65,41
+Iso Pad,SN-S:Synth Pad/Strings,95,65,42
+Reverie Pad,SN-S:Synth Pad/Strings,95,65,43
+PWM Pad 1,SN-S:Synth Pad/Strings,95,65,44
+PWM Pad 2,SN-S:Synth Pad/Strings,95,65,45
+Stack Pad,SN-S:Synth Pad/Strings,95,65,46
+Fanta Synth,SN-S:Synth Pad/Strings,95,65,47
+Deepity,SN-S:Synth Pad/Strings,95,65,48
+Fair Pad,SN-S:Synth Pad/Strings,95,65,49
+Revalation,SN-S:Synth Pad/Strings,95,65,50
+Trance Pad,SN-S:Synth Pad/Strings,95,65,51
+Alan’s Pad,SN-S:Synth Pad/Strings,95,65,52
+Dreamwarp,SN-S:Synth Pad/Strings,95,65,53
+Emote String,SN-S:Synth Pad/Strings,95,65,54
+PortamentPad,SN-S:Synth Pad/Strings,95,65,55
+Cincosoft,SN-S:Synth Pad/Strings,95,65,56
+5th Pad 1,SN-S:Synth Pad/Strings,95,65,57
+5th Pad 2,SN-S:Synth Pad/Strings,95,65,58
+5th Pad 3,SN-S:Synth Pad/Strings,95,65,59
+Metal Pad,SN-S:Synth Pad/Strings,95,65,60
+Legend Pad,SN-S:Synth Pad/Strings,95,65,61
+GlassFx Pad,SN-S:Synth Pad/Strings,95,65,62
+Glass Forest,SN-S:Synth Pad/Strings,95,65,63
+Jungle-Pool,SN-S:Synth Pad/Strings,95,65,64
+Xadecimal,SN-S:Synth Pad/Strings,95,65,65
+HPF Strings,SN-S:Synth Pad/Strings,95,65,66
+Gate Game,SN-S:Synth Pad/Strings,95,65,67
+Horror Pad,SN-S:Synth Pad/Strings,95,65,68
+PLS Pad 1,SN-S:Pulsating,95,65,69
+PLS Pad 2,SN-S:Pulsating,95,65,70
+PLS Pad 3,SN-S:Pulsating,95,65,71
+PLS Pad 4,SN-S:Pulsating,95,65,72
+PLS Pad 5,SN-S:Pulsating,95,65,73
+PLS Pad 6,SN-S:Pulsating,95,65,74
+PLS Pad 7,SN-S:Pulsating,95,65,75
+PLS Pad 8,SN-S:Pulsating,95,65,76
+PLS Pad 9,SN-S:Pulsating,95,65,77
+PLS Pad 10,SN-S:Pulsating,95,65,78
+PLS Pad 11,SN-S:Pulsating,95,65,79
+PLS Pad 12,SN-S:Pulsating,95,65,80
+PLS Pad 13,SN-S:Pulsating,95,65,81
+PLS Pad 14,SN-S:Pulsating,95,65,82
+PLS Pad 15,SN-S:Pulsating,95,65,83
+PLS Pad 16,SN-S:Pulsating,95,65,84
+PLS Strings,SN-S:Pulsating,95,65,85
+LFO Hollow,SN-S:Pulsating,95,65,86
+Goes A Pad,SN-S:Pulsating,95,65,87
+Metal PLS,SN-S:Pulsating,95,65,88
+Trip 2 Mars,SN-S:Pulsating,95,65,89
+Fist Pumper1,SN-S:Pulsating,95,65,90
+Fist Pumper2,SN-S:Pulsating,95,65,91
+Pulsatron,SN-S:Pulsating,95,65,92
+LFO Poly,SN-S:Pulsating,95,65,93
+LFO Saw 1,SN-S:Pulsating,95,65,94
+LFO Saw 2,SN-S:Pulsating,95,65,95
+Thick Pans,SN-S:Pulsating,95,65,96
+LFO Ripple,SN-S:Pulsating,95,65,97
+JayMeJay,SN-S:Pulsating,95,65,98
+Karmalog,SN-S:Pulsating,95,65,99
+MINIM-L,SN-S:Pulsating,95,65,100
+Trance Staff,SN-S:Pulsating,95,65,101
+Radanceky,SN-S:Pulsating,95,65,102
+12303,SN-S:Pulsating,95,65,103
+Experiment,SN-S:Pulsating,95,65,104
+Pulserelay,SN-S:Pulsating,95,65,105
+Jazz Bubbles,SN-S:Pulsating,95,65,106
+Psychoscilo,SN-S:Pulsating,95,65,107
+PXZoon,SN-S:Pulsating,95,65,108
+Welding Bell,SN-S:Pulsating,95,65,109
+Glassphemia,SN-S:Pulsating,95,65,110
+Strobe Bell,SN-S:Pulsating,95,65,111
+Sawflutter,SN-S:Pulsating,95,65,112
+Dronified,SN-S:Pulsating,95,65,113
+Tri-Vector,SN-S:Pulsating,95,65,114
+Syn Vox 1,SN-S:Vox/Choir,95,65,115
+Syn Vox 2,SN-S:Vox/Choir,95,65,116
+Syn Vox 3,SN-S:Vox/Choir,95,65,117
+JD80 SoftVox,SN-S:Vox/Choir,95,65,118
+Valley Air,SN-S:Vox/Choir,95,65,119
+Vox Pad 1,SN-S:Vox/Choir,95,65,120
+Vox Pad 2,SN-S:Vox/Choir,95,65,121
+Vox Pad 3,SN-S:Vox/Choir,95,65,122
+Vox Pad 4,SN-S:Vox/Choir,95,65,123
+Vox Pad 5,SN-S:Vox/Choir,95,65,124
+5th Vox Pad,SN-S:Vox/Choir,95,65,125
+Moving Chr,SN-S:Vox/Choir,95,65,126
+VP-330 Chr,SN-S:Vox/Choir,95,65,127
+HyperVentChr,SN-S:Vox/Choir,95,65,128
+Vento Choir,SN-S:Vox/Choir,95,66,1
+Scat Dow,SN-S:Vox/Choir,95,66,2
+JP8 Brs 1,SN-S:Synth Brass,95,66,3
+JP8 Brs 2,SN-S:Synth Brass,95,66,4
+JP8 Brs 3,SN-S:Synth Brass,95,66,5
+JP8 Brs 4,SN-S:Synth Brass,95,66,6
+JP8 Brs 5,SN-S:Synth Brass,95,66,7
+JP8 Brs 6,SN-S:Synth Brass,95,66,8
+JUNO Brs 1,SN-S:Synth Brass,95,66,9
+JUNO Brs 2,SN-S:Synth Brass,95,66,10
+JUNO Brs 3,SN-S:Synth Brass,95,66,11
+JUNO Brs 4,SN-S:Synth Brass,95,66,12
+JUNO Brs 5,SN-S:Synth Brass,95,66,13
+JUNO Brs 6,SN-S:Synth Brass,95,66,14
+JUNO Brs 7,SN-S:Synth Brass,95,66,15
+JUNO Brs 8,SN-S:Synth Brass,95,66,16
+JUNO Brs 9,SN-S:Synth Brass,95,66,17
+JUNO Brs 10,SN-S:Synth Brass,95,66,18
+JP8000 Brs 1,SN-S:Synth Brass,95,66,19
+JP8000 Brs 2,SN-S:Synth Brass,95,66,20
+80s Brs 1,SN-S:Synth Brass,95,66,21
+80s Brs 2,SN-S:Synth Brass,95,66,22
+80s Brs 3,SN-S:Synth Brass,95,66,23
+80s Brs 4,SN-S:Synth Brass,95,66,24
+80s Brs 5,SN-S:Synth Brass,95,66,25
+80s Brs 6,SN-S:Synth Brass,95,66,26
+80s Brs 7,SN-S:Synth Brass,95,66,27
+80s Brs 8,SN-S:Synth Brass,95,66,28
+80s Brs 9,SN-S:Synth Brass,95,66,29
+80s Brs 10,SN-S:Synth Brass,95,66,30
+80s Brs 11,SN-S:Synth Brass,95,66,31
+SynBrs Str,SN-S:Synth Brass,95,66,32
+Analog Brs 1,SN-S:Synth Brass,95,66,33
+Analog Brs 2,SN-S:Synth Brass,95,66,34
+Analog Brs 3,SN-S:Synth Brass,95,66,35
+Analog Brs 4,SN-S:Synth Brass,95,66,36
+OB Brs,SN-S:Synth Brass,95,66,37
+Euro Express,SN-S:Synth Brass,95,66,38
+Syn Brs 1,SN-S:Synth Brass,95,66,39
+Syn Brs 2,SN-S:Synth Brass,95,66,40
+Syn Brs 3,SN-S:Synth Brass,95,66,41
+Syn Brs 4,SN-S:Synth Brass,95,66,42
+Syn Brs 5,SN-S:Synth Brass,95,66,43
+Syn Brs 6,SN-S:Synth Brass,95,66,44
+Syn Brs 7,SN-S:Synth Brass,95,66,45
+Syn Brs 8,SN-S:Synth Brass,95,66,46
+Syn Brs 9,SN-S:Synth Brass,95,66,47
+Syn Brs 10,SN-S:Synth Brass,95,66,48
+Syn Brs 11,SN-S:Synth Brass,95,66,49
+Syn Brs 12,SN-S:Synth Brass,95,66,50
+Syn Brs 13,SN-S:Synth Brass,95,66,51
+Soft SynBrs1,SN-S:Synth Brass,95,66,52
+Soft SynBrs2,SN-S:Synth Brass,95,66,53
+Soft SynBrs3,SN-S:Synth Brass,95,66,54
+Soft SynBrs4,SN-S:Synth Brass,95,66,55
+Soft SynBrs5,SN-S:Synth Brass,95,66,56
+Dyn SynBrs,SN-S:Synth Brass,95,66,57
+Quiet Brs,SN-S:Synth Brass,95,66,58
+Brassrub,SN-S:Synth Brass,95,66,59
+Poly Brass 1,SN-S:Synth Brass,95,66,60
+Poly Brass 2,SN-S:Synth Brass,95,66,61
+Poly Brass 3,SN-S:Synth Brass,95,66,62
+Poly Brass 4,SN-S:Synth Brass,95,66,63
+Poly Brass 5,SN-S:Synth Brass,95,66,64
+Octa Brass,SN-S:Synth Brass,95,66,65
+Reso Brs 1,SN-S:Synth Brass,95,66,66
+Reso Brs 2,SN-S:Synth Brass,95,66,67
+Slow Brs 1,SN-S:Synth Brass,95,66,68
+Slow Brs 2,SN-S:Synth Brass,95,66,69
+FM Brass,SN-S:Synth Brass,95,66,70
+Hybrid Brass,SN-S:Synth Brass,95,66,71
+Power JP,SN-S:Synth Brass,95,66,72
+Power SynBrs,SN-S:Synth Brass,95,66,73
+Love Brs,SN-S:Synth Brass,95,66,74
+LoveBrs Pad,SN-S:Synth Brass,95,66,75
+42 Brass,SN-S:Synth Brass,95,66,76
+80sBrsScoop1,SN-S:Synth Brass,95,66,77
+80sBrsScoop2,SN-S:Synth Brass,95,66,78
+ResoSweepBrs,SN-S:Synth Brass,95,66,79
+Porta Brs,SN-S:Synth Brass,95,66,80
+Xpand Brs 1,SN-S:Synth Brass,95,66,81
+Xpand Brs 2,SN-S:Synth Brass,95,66,82
+Saws Key 1,SN-S:Synth PolyKey,95,66,83
+Saws Key 2,SN-S:Synth PolyKey,95,66,84
+Saws Key 3,SN-S:Synth PolyKey,95,66,85
+Saws Key 4,SN-S:Synth PolyKey,95,66,86
+Saws Key 5,SN-S:Synth PolyKey,95,66,87
+Saws Key 6,SN-S:Synth PolyKey,95,66,88
+Saws Key 7,SN-S:Synth PolyKey,95,66,89
+Saws Key 8,SN-S:Synth PolyKey,95,66,90
+Saws Key 9,SN-S:Synth PolyKey,95,66,91
+Saws Key 10,SN-S:Synth PolyKey,95,66,92
+Laserthroat,SN-S:Synth PolyKey,95,66,93
+Poly Key 1,SN-S:Synth PolyKey,95,66,94
+Poly Key 2,SN-S:Synth PolyKey,95,66,95
+Poly Key 3,SN-S:Synth PolyKey,95,66,96
+Poly Key 4,SN-S:Synth PolyKey,95,66,97
+JP80 WaveSyn,SN-S:Synth PolyKey,95,66,98
+Poly Syn 1,SN-S:Synth PolyKey,95,66,99
+Poly Syn 2,SN-S:Synth PolyKey,95,66,100
+Poly Syn 3,SN-S:Synth PolyKey,95,66,101
+Poly Syn 4,SN-S:Synth PolyKey,95,66,102
+Poly Syn 5,SN-S:Synth PolyKey,95,66,103
+Poly Syn 6,SN-S:Synth PolyKey,95,66,104
+Poly Syn 7,SN-S:Synth PolyKey,95,66,105
+Poly Syn 8,SN-S:Synth PolyKey,95,66,106
+Poly Syn 9,SN-S:Synth PolyKey,95,66,107
+Poly Syn 10,SN-S:Synth PolyKey,95,66,108
+Poly Syn 11,SN-S:Synth PolyKey,95,66,109
+Poly Syn 12,SN-S:Synth PolyKey,95,66,110
+Poly Syn 13,SN-S:Synth PolyKey,95,66,111
+Poly Syn 14,SN-S:Synth PolyKey,95,66,112
+Poly Syn 15,SN-S:Synth PolyKey,95,66,113
+Poly Syn 16,SN-S:Synth PolyKey,95,66,114
+Poly Syn 17,SN-S:Synth PolyKey,95,66,115
+Poly Syn 18,SN-S:Synth PolyKey,95,66,116
+Poly Syn 19,SN-S:Synth PolyKey,95,66,117
+Poly Syn 20,SN-S:Synth PolyKey,95,66,118
+Poly Syn 21,SN-S:Synth PolyKey,95,66,119
+Poly Syn 22,SN-S:Synth PolyKey,95,66,120
+Poly Syn 23,SN-S:Synth PolyKey,95,66,121
+Poly Syn 24,SN-S:Synth PolyKey,95,66,122
+Poly Syn 25,SN-S:Synth PolyKey,95,66,123
+Poly Syn 26,SN-S:Synth PolyKey,95,66,124
+Saw Dtune,SN-S:Synth PolyKey,95,66,125
+Jester,SN-S:Synth PolyKey,95,66,126
+Fusion Decay,SN-S:Synth PolyKey,95,66,127
+Polysubito,SN-S:Synth PolyKey,95,66,128
+Wave Scan,SN-S:Synth PolyKey,95,67,1
+Wire String,SN-S:Synth PolyKey,95,67,2
+Brusky Key,SN-S:Synth PolyKey,95,67,3
+Cutter Key,SN-S:Synth PolyKey,95,67,4
+PolySyn Atk,SN-S:Synth PolyKey,95,67,5
+Harpsitone,SN-S:Synth PolyKey,95,67,6
+Digi Key 1,SN-S:Synth PolyKey,95,67,7
+Digi Key 2,SN-S:Synth PolyKey,95,67,8
+Digi Key 3,SN-S:Synth PolyKey,95,67,9
+Digi Key 4,SN-S:Synth PolyKey,95,67,10
+Digi Key 5,SN-S:Synth PolyKey,95,67,11
+Digi Key 6,SN-S:Synth PolyKey,95,67,12
+Digi Poly 1,SN-S:Synth PolyKey,95,67,13
+Digi Poly 2,SN-S:Synth PolyKey,95,67,14
+Bit Poly 1,SN-S:Synth PolyKey,95,67,15
+Bit Poly 2,SN-S:Synth PolyKey,95,67,16
+Bit Poly 3,SN-S:Synth PolyKey,95,67,17
+Bit Poly 4,SN-S:Synth PolyKey,95,67,18
+Bit Poly 5,SN-S:Synth PolyKey,95,67,19
+Bit Poly 6,SN-S:Synth PolyKey,95,67,20
+Bit Poly 7,SN-S:Synth PolyKey,95,67,21
+Bit Poly 8,SN-S:Synth PolyKey,95,67,22
+Bit Poly 9,SN-S:Synth PolyKey,95,67,23
+Bit Poly 10,SN-S:Synth PolyKey,95,67,24
+5th Poly 1,SN-S:Synth PolyKey,95,67,25
+5th Poly 2,SN-S:Synth PolyKey,95,67,26
+5th Poly 3,SN-S:Synth PolyKey,95,67,27
+Poly Aug 5th,SN-S:Synth PolyKey,95,67,28
+5th Key,SN-S:Synth PolyKey,95,67,29
+HPF Poly 1,SN-S:Synth PolyKey,95,67,30
+HPF Poly 2,SN-S:Synth PolyKey,95,67,31
+BPF Poly 1,SN-S:Synth PolyKey,95,67,32
+BPF Poly 2,SN-S:Synth PolyKey,95,67,33
+Sweep Poly 1,SN-S:Synth PolyKey,95,67,34
+Sweep Poly 2,SN-S:Synth PolyKey,95,67,35
+Sweep Poly 3,SN-S:Synth PolyKey,95,67,36
+Scoop Poly 1,SN-S:Synth PolyKey,95,67,37
+Scoop Poly 2,SN-S:Synth PolyKey,95,67,38
+Scoop Poly 3,SN-S:Synth PolyKey,95,67,39
+Scoop Poly 4,SN-S:Synth PolyKey,95,67,40
+Scoop Poly 5,SN-S:Synth PolyKey,95,67,41
+Scoop Poly 6,SN-S:Synth PolyKey,95,67,42
+Tekno Poly 1,SN-S:Synth PolyKey,95,67,43
+Tekno Poly 2,SN-S:Synth PolyKey,95,67,44
+Tekno Poly 3,SN-S:Synth PolyKey,95,67,45
+J-Pop Kira 1,SN-S:Synth PolyKey,95,67,46
+J-Pop Kira 2,SN-S:Synth PolyKey,95,67,47
+Square Poly,SN-S:Synth PolyKey,95,67,48
+Slow Poly,SN-S:Synth PolyKey,95,67,49
+Vox Poly,SN-S:Synth PolyKey,95,67,50
+S-SawPoly 1,SN-S:Synth PolyKey,95,67,51
+S-SawPoly 2,SN-S:Synth PolyKey,95,67,52
+S-SawPoly 3,SN-S:Synth PolyKey,95,67,53
+S-SawPoly 4,SN-S:Synth PolyKey,95,67,54
+S-SawPoly 5,SN-S:Synth PolyKey,95,67,55
+S-SawPoly 6,SN-S:Synth PolyKey,95,67,56
+S-SawPoly 7,SN-S:Synth PolyKey,95,67,57
+S-SawPoly 8,SN-S:Synth PolyKey,95,67,58
+S-SawPoly 9,SN-S:Synth PolyKey,95,67,59
+S-SawPoly 10,SN-S:Synth PolyKey,95,67,60
+S-SawPoly 11,SN-S:Synth PolyKey,95,67,61
+S-SawPoly 12,SN-S:Synth PolyKey,95,67,62
+S-SawPoly 13,SN-S:Synth PolyKey,95,67,63
+Trance Key 1,SN-S:Synth PolyKey,95,67,64
+Trance Key 2,SN-S:Synth PolyKey,95,67,65
+Trance Key 3,SN-S:Synth PolyKey,95,67,66
+Trance Key 4,SN-S:Synth PolyKey,95,67,67
+Trance Key 5,SN-S:Synth PolyKey,95,67,68
+Trance Key 6,SN-S:Synth PolyKey,95,67,69
+Delay Reso,SN-S:Synth PolyKey,95,67,70
+3Delay Poly,SN-S:Synth PolyKey,95,67,71
+JP80 FatPoly,SN-S:Synth PolyKey,95,67,72
+Poly Fat,SN-S:Synth PolyKey,95,67,73
+Trance Saw,SN-S:Synth PolyKey,95,67,74
+SoHo Lucky,SN-S:Synth PolyKey,95,67,75
+DLM SUM,SN-S:Synth PolyKey,95,67,76
+H@sWillFall,SN-S:Synth PolyKey,95,67,77
+A Log 4 Ana,SN-S:Synth PolyKey,95,67,78
+Log An A,SN-S:Synth PolyKey,95,67,79
+Androdrops,SN-S:Synth PolyKey,95,67,80
+Vntg Stack,SN-S:Synth PolyKey,95,67,81
+ANORMANALOG,SN-S:Synth PolyKey,95,67,82
+Don’t you,SN-S:Synth PolyKey,95,67,83
+Nailbiter,SN-S:Synth PolyKey,95,67,84
+EinsZweiDry,SN-S:Synth PolyKey,95,67,85
+Analog Key 1,SN-S:Synth PolyKey,95,67,86
+Analog Key 2,SN-S:Synth PolyKey,95,67,87
+Paperclip,SN-S:Synth PolyKey,95,67,88
+Sqr Key,SN-S:Synth PolyKey,95,67,89
+Tri Key,SN-S:Synth PolyKey,95,67,90
+JP-8 PatchF2,SN-S:Synth PolyKey,95,67,91
+Fantasy 1,SN-S:Synth Bellpad,95,67,92
+Fantasy 2,SN-S:Synth Bellpad,95,67,93
+Fantasy 3,SN-S:Synth Bellpad,95,67,94
+Fantasy 4,SN-S:Synth Bellpad,95,67,95
+Fantasy 5,SN-S:Synth Bellpad,95,67,96
+Fantasy Pad,SN-S:Synth Bellpad,95,67,97
+What Key!,SN-S:Synth Bellpad,95,67,98
+EP-Cool Pad,SN-S:Synth Bellpad,95,67,99
+D50 Stack,SN-S:Synth Bellpad,95,67,100
+D-52 Babe,SN-S:Synth Bellpad,95,67,101
+Dreaming 1,SN-S:Synth Bellpad,95,67,102
+Dreaming 2,SN-S:Synth Bellpad,95,67,103
+Dreaming 3,SN-S:Synth Bellpad,95,67,104
+Dreaming 4,SN-S:Synth Bellpad,95,67,105
+Dreaming 5,SN-S:Synth Bellpad,95,67,106
+Dreaming 6,SN-S:Synth Bellpad,95,67,107
+Dreaming 7,SN-S:Synth Bellpad,95,67,108
+Dreambell,SN-S:Synth Bellpad,95,67,109
+DreamingBox,SN-S:Synth Bellpad,95,67,110
+New Jupiter,SN-S:Synth Bellpad,95,67,111
+Analog Dream,SN-S:Synth Bellpad,95,67,112
+Huge MIDI 1,SN-S:Synth Bellpad,95,67,113
+Huge MIDI 2,SN-S:Synth Bellpad,95,67,114
+Huge MIDI 3,SN-S:Synth Bellpad,95,67,115
+MIDI Key,SN-S:Synth Bellpad,95,67,116
+Pipe Key,SN-S:Synth Bellpad,95,67,117
+Vox Key,SN-S:Synth Bellpad,95,67,118
+Magichand,SN-S:Synth Bellpad,95,67,119
+AnalogBell 1,SN-S:Synth Bellpad,95,67,120
+AnalogBell 2,SN-S:Synth Bellpad,95,67,121
+AnalogBell 3,SN-S:Synth Bellpad,95,67,122
+AnalogBell 4,SN-S:Synth Bellpad,95,67,123
+Synth Sniper,SN-S:Synth Bellpad,95,67,124
+Temper Bell,SN-S:Synth Bellpad,95,67,125
+Icycle,SN-S:Synth Bellpad,95,67,126
+Pipe Chatter,SN-S:Synth Bellpad,95,67,127
+Spring Wind,SN-S:Synth Bellpad,95,67,128
+JP80 SynHarp,SN-S:Synth Bellpad,95,68,1
+Bell 1,SN-S:Bell,95,68,2
+Bell 2,SN-S:Bell,95,68,3
+Bell 3,SN-S:Bell,95,68,4
+Bell 4,SN-S:Bell,95,68,5
+Bell 5,SN-S:Bell,95,68,6
+Bell 6,SN-S:Bell,95,68,7
+Bell 7,SN-S:Bell,95,68,8
+Bell 8,SN-S:Bell,95,68,9
+Bell 9,SN-S:Bell,95,68,10
+Bell 10,SN-S:Bell,95,68,11
+Bell 11,SN-S:Bell,95,68,12
+Bell 12,SN-S:Bell,95,68,13
+Bell 13,SN-S:Bell,95,68,14
+Bell 14,SN-S:Bell,95,68,15
+Bell 15,SN-S:Bell,95,68,16
+Bell 16,SN-S:Bell,95,68,17
+Bell 17,SN-S:Bell,95,68,18
+Bell 18,SN-S:Bell,95,68,19
+Bell 19,SN-S:Bell,95,68,20
+Bell 20,SN-S:Bell,95,68,21
+Bell 21,SN-S:Bell,95,68,22
+Bell 22,SN-S:Bell,95,68,23
+Tower Bell,SN-S:Bell,95,68,24
+Tubular Bell,SN-S:Bell,95,68,25
+OrganBell 1,SN-S:Bell,95,68,26
+OrganBell 2,SN-S:Bell,95,68,27
+OrganBell 3,SN-S:Bell,95,68,28
+Kalimbell,SN-S:Bell,95,68,29
+JP80 Bell,SN-S:Bell,95,68,30
+Glass Amb,SN-S:Bell,95,68,31
+Digi Crystal,SN-S:Bell,95,68,32
+Icy Keys,SN-S:Bell,95,68,33
+JP-8 PatchH1,SN-S:Bell,95,68,34
+SEQ 1,SN-S:Synth Seq/Pop,95,68,35
+SEQ 2,SN-S:Synth Seq/Pop,95,68,36
+SEQ 3,SN-S:Synth Seq/Pop,95,68,37
+SEQ 4,SN-S:Synth Seq/Pop,95,68,38
+SEQ 5,SN-S:Synth Seq/Pop,95,68,39
+SEQ 6,SN-S:Synth Seq/Pop,95,68,40
+SEQ 7,SN-S:Synth Seq/Pop,95,68,41
+SEQ 8,SN-S:Synth Seq/Pop,95,68,42
+SEQ 9,SN-S:Synth Seq/Pop,95,68,43
+SEQ 10,SN-S:Synth Seq/Pop,95,68,44
+SEQ 11,SN-S:Synth Seq/Pop,95,68,45
+SEQ 12,SN-S:Synth Seq/Pop,95,68,46
+SEQ 13,SN-S:Synth Seq/Pop,95,68,47
+SEQ 14,SN-S:Synth Seq/Pop,95,68,48
+SEQ 15,SN-S:Synth Seq/Pop,95,68,49
+SEQ 16,SN-S:Synth Seq/Pop,95,68,50
+SEQ 17,SN-S:Synth Seq/Pop,95,68,51
+SEQ 18,SN-S:Synth Seq/Pop,95,68,52
+SEQ 19,SN-S:Synth Seq/Pop,95,68,53
+SEQ 20,SN-S:Synth Seq/Pop,95,68,54
+SEQ 21,SN-S:Synth Seq/Pop,95,68,55
+SEQ 22,SN-S:Synth Seq/Pop,95,68,56
+SEQ 23,SN-S:Synth Seq/Pop,95,68,57
+SEQ 24,SN-S:Synth Seq/Pop,95,68,58
+SEQ 25,SN-S:Synth Seq/Pop,95,68,59
+SEQ 26,SN-S:Synth Seq/Pop,95,68,60
+SEQ 27,SN-S:Synth Seq/Pop,95,68,61
+SEQ 28,SN-S:Synth Seq/Pop,95,68,62
+SEQ 29,SN-S:Synth Seq/Pop,95,68,63
+SEQ 30,SN-S:Synth Seq/Pop,95,68,64
+SEQ 31,SN-S:Synth Seq/Pop,95,68,65
+SEQ 32,SN-S:Synth Seq/Pop,95,68,66
+SEQ 33,SN-S:Synth Seq/Pop,95,68,67
+SEQ 34,SN-S:Synth Seq/Pop,95,68,68
+SEQ 35,SN-S:Synth Seq/Pop,95,68,69
+SEQ 36,SN-S:Synth Seq/Pop,95,68,70
+SEQ 37,SN-S:Synth Seq/Pop,95,68,71
+SEQ 38,SN-S:Synth Seq/Pop,95,68,72
+SEQ 39,SN-S:Synth Seq/Pop,95,68,73
+Stubby Mono,SN-S:Synth Seq/Pop,95,68,74
+Scrt Decay,SN-S:Synth Seq/Pop,95,68,75
+R&B Bs 1,SN-S:Synth Bass,95,68,76
+R&B Bs 2,SN-S:Synth Bass,95,68,77
+R&B Bs 3,SN-S:Synth Bass,95,68,78
+R&B Bs 4,SN-S:Synth Bass,95,68,79
+R&B Bs 5,SN-S:Synth Bass,95,68,80
+R&B Bs 6,SN-S:Synth Bass,95,68,81
+R&B Bs 7,SN-S:Synth Bass,95,68,82
+R&B Bs 8,SN-S:Synth Bass,95,68,83
+R&B Bs 9,SN-S:Synth Bass,95,68,84
+MG Bs 1,SN-S:Synth Bass,95,68,85
+MG Bs 2,SN-S:Synth Bass,95,68,86
+MG Bs 3,SN-S:Synth Bass,95,68,87
+MG Bs 4,SN-S:Synth Bass,95,68,88
+MG Bs 5,SN-S:Synth Bass,95,68,89
+MG Bs 6,SN-S:Synth Bass,95,68,90
+MG Bs 7,SN-S:Synth Bass,95,68,91
+MG Bs 8,SN-S:Synth Bass,95,68,92
+MG Bs 9,SN-S:Synth Bass,95,68,93
+MG Bs 10,SN-S:Synth Bass,95,68,94
+MG Bs 11,SN-S:Synth Bass,95,68,95
+MG Bs 12,SN-S:Synth Bass,95,68,96
+MG Bs 13,SN-S:Synth Bass,95,68,97
+MG Bs 14,SN-S:Synth Bass,95,68,98
+MG Bs 15,SN-S:Synth Bass,95,68,99
+MG Bs 16,SN-S:Synth Bass,95,68,100
+MG Bs 17,SN-S:Synth Bass,95,68,101
+MG Bs 18,SN-S:Synth Bass,95,68,102
+MG Bs 19,SN-S:Synth Bass,95,68,103
+MG Bs 20,SN-S:Synth Bass,95,68,104
+MG Bs 21,SN-S:Synth Bass,95,68,105
+MG Bs 22,SN-S:Synth Bass,95,68,106
+MG Bs 23,SN-S:Synth Bass,95,68,107
+MG Bs 24,SN-S:Synth Bass,95,68,108
+MG Bs 25,SN-S:Synth Bass,95,68,109
+MG Bs 26,SN-S:Synth Bass,95,68,110
+Thickness Bs,SN-S:Synth Bass,95,68,111
+Plastic Bs,SN-S:Synth Bass,95,68,112
+Alpha Bs 1,SN-S:Synth Bass,95,68,113
+Alpha Bs 2,SN-S:Synth Bass,95,68,114
+Alpha Bs 3,SN-S:Synth Bass,95,68,115
+Flat6Bs,SN-S:Synth Bass,95,68,116
+Decay Bs 1,SN-S:Synth Bass,95,68,117
+Decay Bs 2,SN-S:Synth Bass,95,68,118
+Decay Bs 3,SN-S:Synth Bass,95,68,119
+Decay Bs 4,SN-S:Synth Bass,95,68,120
+106 Bass 1,SN-S:Synth Bass,95,68,121
+106 Bass 2,SN-S:Synth Bass,95,68,122
+106 Bass 3,SN-S:Synth Bass,95,68,123
+106 Bass 4,SN-S:Synth Bass,95,68,124
+106 Bass 5,SN-S:Synth Bass,95,68,125
+Breakdown Bs,SN-S:Synth Bass,95,68,126
+Dopebass,SN-S:Synth Bass,95,68,127
+MC202 Bs 1,SN-S:Synth Bass,95,68,128
+MC202 Bs 2,SN-S:Synth Bass,95,69,1
+Pulse Bs 1,SN-S:Synth Bass,95,69,2
+Pulse Bs 2,SN-S:Synth Bass,95,69,3
+Pulse Bs 3,SN-S:Synth Bass,95,69,4
+Pulse Bs 4,SN-S:Synth Bass,95,69,5
+FM Bs 1,SN-S:Synth Bass,95,69,6
+FM Bs 2,SN-S:Synth Bass,95,69,7
+JP Bs,SN-S:Synth Bass,95,69,8
+Compu Bass 1,SN-S:Synth Bass,95,69,9
+Compu Bass 2,SN-S:Synth Bass,95,69,10
+Detune Bs 1,SN-S:Synth Bass,95,69,11
+Detune Bs 2,SN-S:Synth Bass,95,69,12
+Detune Bs 3,SN-S:Synth Bass,95,69,13
+Detune Bs 4,SN-S:Synth Bass,95,69,14
+Intrusive Bs,SN-S:Synth Bass,95,69,15
+SH-101 Bs 1,SN-S:Synth Bass,95,69,16
+SH-101 Bs 2,SN-S:Synth Bass,95,69,17
+Sweep Bs 1,SN-S:Synth Bass,95,69,18
+Sweep Bs 2,SN-S:Synth Bass,95,69,19
+Sweep Bs 3,SN-S:Synth Bass,95,69,20
+Sweep Bs 4,SN-S:Synth Bass,95,69,21
+Sweep Bs 5,SN-S:Synth Bass,95,69,22
+Sweep Bs 6,SN-S:Synth Bass,95,69,23
+Sweep Bs 7,SN-S:Synth Bass,95,69,24
+Rubbertouch,SN-S:Synth Bass,95,69,25
+P5 Bs 1,SN-S:Synth Bass,95,69,26
+P5 Bs 2,SN-S:Synth Bass,95,69,27
+P5 Bs 3,SN-S:Synth Bass,95,69,28
+P5 Bs 4,SN-S:Synth Bass,95,69,29
+P5 Bs 5,SN-S:Synth Bass,95,69,30
+Juno60 Bs,SN-S:Synth Bass,95,69,31
+D-50 Bs,SN-S:Synth Bass,95,69,32
+MKS-50 Bs,SN-S:Synth Bass,95,69,33
+Wide Bs 1,SN-S:Synth Bass,95,69,34
+Wide Bs 2,SN-S:Synth Bass,95,69,35
+Wide Bs 3,SN-S:Synth Bass,95,69,36
+Wide Bs 4,SN-S:Synth Bass,95,69,37
+BASSH 10,SN-S:Synth Bass,95,69,38
+Chow Bs 1,SN-S:Synth Bass,95,69,39
+Chow Bs 2,SN-S:Synth Bass,95,69,40
+House Bs,SN-S:Synth Bass,95,69,41
+JP-4 Bs,SN-S:Synth Bass,95,69,42
+SH Square Bs,SN-S:Synth Bass,95,69,43
+JunoSqr Bs 1,SN-S:Synth Bass,95,69,44
+JunoSqr Bs 2,SN-S:Synth Bass,95,69,45
+TB Bass 1,SN-S:Synth Bass,95,69,46
+TB Bass 2,SN-S:Synth Bass,95,69,47
+TB Dist Bs 1,SN-S:Synth Bass,95,69,48
+TB Dist Bs 2,SN-S:Synth Bass,95,69,49
+Agresso Bass,SN-S:Synth Bass,95,69,50
+Show Me Low,SN-S:Synth Bass,95,69,51
+Organ Bs,SN-S:Synth Bass,95,69,52
+Muffled Bass,SN-S:Synth Bass,95,69,53
+Garage Bs 1,SN-S:Synth Bass,95,69,54
+Garage Bs 2,SN-S:Synth Bass,95,69,55
+Low Bs 1,SN-S:Synth Bass,95,69,56
+Low Bs 2,SN-S:Synth Bass,95,69,57
+Low Bs 3,SN-S:Synth Bass,95,69,58
+Low Bs 4,SN-S:Synth Bass,95,69,59
+Low Bs 5,SN-S:Synth Bass,95,69,60
+Low Bs 6,SN-S:Synth Bass,95,69,61
+Tri Bass 1,SN-S:Synth Bass,95,69,62
+Tri Bass 2,SN-S:Synth Bass,95,69,63
+Fat Analog 1,SN-S:Synth Bass,95,69,64
+Fat Analog 2,SN-S:Synth Bass,95,69,65
+Reso Bs 1,SN-S:Synth Bass,95,69,66
+Reso Bs 2,SN-S:Synth Bass,95,69,67
+Reso Bs 3,SN-S:Synth Bass,95,69,68
+Reso Bs 4,SN-S:Synth Bass,95,69,69
+Reso Bs 5,SN-S:Synth Bass,95,69,70
+Reso Bs 6,SN-S:Synth Bass,95,69,71
+Reso Bs 7,SN-S:Synth Bass,95,69,72
+Reso Bs 8,SN-S:Synth Bass,95,69,73
+Reso Bs 9,SN-S:Synth Bass,95,69,74
+Reso Bs 10,SN-S:Synth Bass,95,69,75
+Reso Bs 11,SN-S:Synth Bass,95,69,76
+Reso Bs 12,SN-S:Synth Bass,95,69,77
+Reso Bs 13,SN-S:Synth Bass,95,69,78
+Reso Bs 14,SN-S:Synth Bass,95,69,79
+Reso Bs 15,SN-S:Synth Bass,95,69,80
+Reso Bs 16,SN-S:Synth Bass,95,69,81
+Reso Bs 17,SN-S:Synth Bass,95,69,82
+Reso Bs 18,SN-S:Synth Bass,95,69,83
+Reso Bs 19,SN-S:Synth Bass,95,69,84
+Reso Bs 20,SN-S:Synth Bass,95,69,85
+Reso Bs 21,SN-S:Synth Bass,95,69,86
+Reso Bs 22,SN-S:Synth Bass,95,69,87
+Reso Bs 23,SN-S:Synth Bass,95,69,88
+Reso Bs 24,SN-S:Synth Bass,95,69,89
+Camblast,SN-S:Synth Bass,95,69,90
+LA SynBs,SN-S:Synth Bass,95,69,91
+Fat SynBs,SN-S:Synth Bass,95,69,92
+Syn Bs 1,SN-S:Synth Bass,95,69,93
+Syn Bs 2,SN-S:Synth Bass,95,69,94
+Syn Bs 3,SN-S:Synth Bass,95,69,95
+Rubber Bs 1,SN-S:Synth Bass,95,69,96
+Rubber Bs 2,SN-S:Synth Bass,95,69,97
+Dynamic Bs 1,SN-S:Synth Bass,95,69,98
+Dynamic Bs 2,SN-S:Synth Bass,95,69,99
+Round Bs,SN-S:Synth Bass,95,69,100
+Acid Bs 1,SN-S:Synth Bass,95,69,101
+Acid Bs 2,SN-S:Synth Bass,95,69,102
+Acid Bs 3,SN-S:Synth Bass,95,69,103
+Acid Bs 4,SN-S:Synth Bass,95,69,104
+Acid Bs 5,SN-S:Synth Bass,95,69,105
+Acid Bs 6,SN-S:Synth Bass,95,69,106
+Spike Bs 1,SN-S:Synth Bass,95,69,107
+Spike Bs 2,SN-S:Synth Bass,95,69,108
+H&S Bass,SN-S:Synth Bass,95,69,109
+Short Bs 1,SN-S:Synth Bass,95,69,110
+Short Bs 2,SN-S:Synth Bass,95,69,111
+Short Bs 3,SN-S:Synth Bass,95,69,112
+HH Bs 1,SN-S:Synth Bass,95,69,113
+HH Bs 2,SN-S:Synth Bass,95,69,114
+HH Bs 3,SN-S:Synth Bass,95,69,115
+HH Bs 4,SN-S:Synth Bass,95,69,116
+HH Bs 5,SN-S:Synth Bass,95,69,117
+HH Bs 6,SN-S:Synth Bass,95,69,118
+Arpaccio,SN-S:Synth Bass,95,69,119
+Carmelcorn,SN-S:Synth Bass,95,69,120
+NoiseBs,SN-S:Synth Bass,95,69,121
+Soft Bs,SN-S:Synth Bass,95,69,122
+Slow Bs,SN-S:Synth Bass,95,69,123
+Square Bs 1,SN-S:Synth Bass,95,69,124
+Square Bs 2,SN-S:Synth Bass,95,69,125
+Square Bs 3,SN-S:Synth Bass,95,69,126
+Square Bs 4,SN-S:Synth Bass,95,69,127
+Squaresville,SN-S:Synth Bass,95,69,128
+PWM Bass 1,SN-S:Synth Bass,95,70,1
+PWM Bass 2,SN-S:Synth Bass,95,70,2
+Modular Bs 1,SN-S:Synth Bass,95,70,3
+Modular Bs 2,SN-S:Synth Bass,95,70,4
+Modular Bs 3,SN-S:Synth Bass,95,70,5
+Modular Bs 4,SN-S:Synth Bass,95,70,6
+Modular Bs 5,SN-S:Synth Bass,95,70,7
+Modular Bs 6,SN-S:Synth Bass,95,70,8
+Unison Bs 1,SN-S:Synth Bass,95,70,9
+Unison Bs 2,SN-S:Synth Bass,95,70,10
+Unison Bs 3,SN-S:Synth Bass,95,70,11
+Unison Bs 4,SN-S:Synth Bass,95,70,12
+Monster Bs 1,SN-S:Synth Bass,95,70,13
+Monster Bs 2,SN-S:Synth Bass,95,70,14
+Monster Bs 3,SN-S:Synth Bass,95,70,15
+Monster Bs 4,SN-S:Synth Bass,95,70,16
+Monster Bs 5,SN-S:Synth Bass,95,70,17
+Monster Bs 6,SN-S:Synth Bass,95,70,18
+Monster Bs 7,SN-S:Synth Bass,95,70,19
+Monster Bs 8,SN-S:Synth Bass,95,70,20
+Bit Bs 1,SN-S:Synth Bass,95,70,21
+Bit Bs 2,SN-S:Synth Bass,95,70,22
+Bit Bs 3,SN-S:Synth Bass,95,70,23
+Bit Bs 4,SN-S:Synth Bass,95,70,24
+SuperSawBs 1,SN-S:Synth Bass,95,70,25
+SuperSawBs 2,SN-S:Synth Bass,95,70,26
+SuperSawBs 3,SN-S:Synth Bass,95,70,27
+SuperSawBs 4,SN-S:Synth Bass,95,70,28
+SuperSawBs 5,SN-S:Synth Bass,95,70,29
+Sync Bs 1,SN-S:Synth Bass,95,70,30
+Sync Bs 2,SN-S:Synth Bass,95,70,31
+Sync Bs 3,SN-S:Synth Bass,95,70,32
+Sync Bs 4,SN-S:Synth Bass,95,70,33
+SubOSC Bs 1,SN-S:Synth Bass,95,70,34
+SubOSC Bs 2,SN-S:Synth Bass,95,70,35
+Ramp Bs,SN-S:Synth Bass,95,70,36
+LFO Bs 1,SN-S:Synth Bass,95,70,37
+LFO Bs 2,SN-S:Synth Bass,95,70,38
+LFO Bs 3,SN-S:Synth Bass,95,70,39
+LFO Bs 4,SN-S:Synth Bass,95,70,40
+Crackbass,SN-S:Synth Bass,95,70,41
+Basschunk,SN-S:Synth Bass,95,70,42
+Hi-Energy Bs,SN-S:Synth Bass,95,70,43
+Saw Lead 1,SN-S:Synth Lead,95,70,44
+Saw Lead 2,SN-S:Synth Lead,95,70,45
+Saw Lead 3,SN-S:Synth Lead,95,70,46
+Saw Lead 4,SN-S:Synth Lead,95,70,47
+Saw Lead 5,SN-S:Synth Lead,95,70,48
+Saw Lead 6,SN-S:Synth Lead,95,70,49
+Saw Lead 7,SN-S:Synth Lead,95,70,50
+Saw Lead 8,SN-S:Synth Lead,95,70,51
+Saw Lead 9,SN-S:Synth Lead,95,70,52
+Saw Lead 10,SN-S:Synth Lead,95,70,53
+Saw Lead 11,SN-S:Synth Lead,95,70,54
+Saw Lead 12,SN-S:Synth Lead,95,70,55
+Saw Lead 13,SN-S:Synth Lead,95,70,56
+Saw Lead 14,SN-S:Synth Lead,95,70,57
+Saw Lead 15,SN-S:Synth Lead,95,70,58
+Saw Lead 16,SN-S:Synth Lead,95,70,59
+Saw Lead 17,SN-S:Synth Lead,95,70,60
+Saw Lead 18,SN-S:Synth Lead,95,70,61
+Saw Lead 19,SN-S:Synth Lead,95,70,62
+Saw Lead 20,SN-S:Synth Lead,95,70,63
+Saw Lead 21,SN-S:Synth Lead,95,70,64
+Saw Lead 22,SN-S:Synth Lead,95,70,65
+Saw Lead 23,SN-S:Synth Lead,95,70,66
+Saw Lead 24,SN-S:Synth Lead,95,70,67
+Saw Lead 25,SN-S:Synth Lead,95,70,68
+Saw Lead 26,SN-S:Synth Lead,95,70,69
+Saw Lead 27,SN-S:Synth Lead,95,70,70
+Saw Lead 28,SN-S:Synth Lead,95,70,71
+Saw Lead 29,SN-S:Synth Lead,95,70,72
+Saw Lead 30,SN-S:Synth Lead,95,70,73
+Saw Lead 31,SN-S:Synth Lead,95,70,74
+Saw Lead 32,SN-S:Synth Lead,95,70,75
+Saw Lead 33,SN-S:Synth Lead,95,70,76
+Saw Lead 34,SN-S:Synth Lead,95,70,77
+Saw Lead 35,SN-S:Synth Lead,95,70,78
+Saw Lead 36,SN-S:Synth Lead,95,70,79
+Saw Lead 37,SN-S:Synth Lead,95,70,80
+Saw Lead 38,SN-S:Synth Lead,95,70,81
+Saw Lead 39,SN-S:Synth Lead,95,70,82
+Saw Lead 40,SN-S:Synth Lead,95,70,83
+Saw Lead 41,SN-S:Synth Lead,95,70,84
+Saw Lead 42,SN-S:Synth Lead,95,70,85
+Saw Lead 43,SN-S:Synth Lead,95,70,86
+Saw Lead 44,SN-S:Synth Lead,95,70,87
+Saw Lead 45,SN-S:Synth Lead,95,70,88
+CC Saw Ld 1,SN-S:Synth Lead,95,70,89
+CC Saw Ld 2,SN-S:Synth Lead,95,70,90
+CC Saw Ld 3,SN-S:Synth Lead,95,70,91
+CC Saw Ld 4,SN-S:Synth Lead,95,70,92
+CC Saw Ld 5,SN-S:Synth Lead,95,70,93
+Bad Axe,SN-S:Synth Lead,95,70,94
+Buzz Cut,SN-S:Synth Lead,95,70,95
+Cutting Lead,SN-S:Synth Lead,95,70,96
+Fat GR Lead,SN-S:Synth Lead,95,70,97
+Bright Pls,SN-S:Synth Lead,95,70,98
+Juicy JP,SN-S:Synth Lead,95,70,99
+Abakababra,SN-S:Synth Lead,95,70,100
+Crossfire,SN-S:Synth Lead,95,70,101
+Borrowed,SN-S:Synth Lead,95,70,102
+PulstarLd 1,SN-S:Synth Lead,95,70,103
+PulstarLd 2,SN-S:Synth Lead,95,70,104
+Dirty Saw Ld,SN-S:Synth Lead,95,70,105
+Leadership,SN-S:Synth Lead,95,70,106
+Ripping Mini,SN-S:Synth Lead,95,70,107
+Love Lead,SN-S:Synth Lead,95,70,108
+EQ Lead 1,SN-S:Synth Lead,95,70,109
+EQ Lead 2,SN-S:Synth Lead,95,70,110
+Stn MG Lead,SN-S:Synth Lead,95,70,111
+Octa Juice,SN-S:Synth Lead,95,70,112
+CR Lead,SN-S:Synth Lead,95,70,113
+Hip Lead,SN-S:Synth Lead,95,70,114
+Chubby Lead,SN-S:Synth Lead,95,70,115
+Super Saws,SN-S:Synth Lead,95,70,116
+NuWave,SN-S:Synth Lead,95,70,117
+Flangepig,SN-S:Synth Lead,95,70,118
+Bodyart,SN-S:Synth Lead,95,70,119
+Buzz Synth,SN-S:Synth Lead,95,70,120
+Hard Synth,SN-S:Synth Lead,95,70,121
+Dance Saw 1,SN-S:Synth Lead,95,70,122
+Dance Saw 2,SN-S:Synth Lead,95,70,123
+Funky Lead,SN-S:Synth Lead,95,70,124
+WaveShape Ld,SN-S:Synth Lead,95,70,125
+Synchro Lead,SN-S:Synth Lead,95,70,126
+LFO Saw Ld,SN-S:Synth Lead,95,70,127
+Juno Soft Ld,SN-S:Synth Lead,95,70,128
+Oct Lead,SN-S:Synth Lead,95,71,1
+Slow Lead 1,SN-S:Synth Lead,95,71,2
+Slow Lead 2,SN-S:Synth Lead,95,71,3
+Slow Lead 3,SN-S:Synth Lead,95,71,4
+Slow Lead 4,SN-S:Synth Lead,95,71,5
+Slow Lead 5,SN-S:Synth Lead,95,71,6
+Slow Lead 6,SN-S:Synth Lead,95,71,7
+Slow Lead 7,SN-S:Synth Lead,95,71,8
+Slow Lead 8,SN-S:Synth Lead,95,71,9
+Slow Lead 9,SN-S:Synth Lead,95,71,10
+Slow Lead 10,SN-S:Synth Lead,95,71,11
+Slow Lead 11,SN-S:Synth Lead,95,71,12
+Slow Lead 12,SN-S:Synth Lead,95,71,13
+AnaVox Ld 1,SN-S:Synth Lead,95,71,14
+AnaVox Ld 2,SN-S:Synth Lead,95,71,15
+AnaVox Ld 3,SN-S:Synth Lead,95,71,16
+AnaVox Ld 4,SN-S:Synth Lead,95,71,17
+Pulse Lead 1,SN-S:Synth Lead,95,71,18
+Pulse Lead 2,SN-S:Synth Lead,95,71,19
+Pulse Lead 3,SN-S:Synth Lead,95,71,20
+BellSaw Ld 1,SN-S:Synth Lead,95,71,21
+BellSaw Ld 2,SN-S:Synth Lead,95,71,22
+Bell Lead 1,SN-S:Synth Lead,95,71,23
+Bell Lead 2,SN-S:Synth Lead,95,71,24
+Bell Lead 3,SN-S:Synth Lead,95,71,25
+Dig n D,SN-S:Synth Lead,95,71,26
+Juicy Lead 1,SN-S:Synth Lead,95,71,27
+Juicy Lead 2,SN-S:Synth Lead,95,71,28
+Portament Ld,SN-S:Synth Lead,95,71,29
+Reso Juno,SN-S:Synth Lead,95,71,30
+Air Lead 1,SN-S:Synth Lead,95,71,31
+Air Lead 2,SN-S:Synth Lead,95,71,32
+Reso Pulser,SN-S:Synth Lead,95,71,33
+Growl Lead,SN-S:Synth Lead,95,71,34
+Vintager 1,SN-S:Synth Lead,95,71,35
+Vintager 2,SN-S:Synth Lead,95,71,36
+Vintager 3,SN-S:Synth Lead,95,71,37
+SuperSaw Ld,SN-S:Synth Lead,95,71,38
+5th SawLead1,SN-S:Synth Lead,95,71,39
+5th SawLead2,SN-S:Synth Lead,95,71,40
+Simple Sqr,SN-S:Synth Lead,95,71,41
+Round Sqr 1,SN-S:Synth Lead,95,71,42
+Round Sqr 2,SN-S:Synth Lead,95,71,43
+Square Ld 1,SN-S:Synth Lead,95,71,44
+Square Ld 2,SN-S:Synth Lead,95,71,45
+Square Ld 3,SN-S:Synth Lead,95,71,46
+Square Ld 4,SN-S:Synth Lead,95,71,47
+Square Ld 5,SN-S:Synth Lead,95,71,48
+Square Ld 6,SN-S:Synth Lead,95,71,49
+Square Ld 7,SN-S:Synth Lead,95,71,50
+Square Ld 8,SN-S:Synth Lead,95,71,51
+Square Ld 9,SN-S:Synth Lead,95,71,52
+Square Ld 10,SN-S:Synth Lead,95,71,53
+Square Ld 11,SN-S:Synth Lead,95,71,54
+Square Ld 12,SN-S:Synth Lead,95,71,55
+Square Ld 13,SN-S:Synth Lead,95,71,56
+Square Ld 14,SN-S:Synth Lead,95,71,57
+Square Ld 15,SN-S:Synth Lead,95,71,58
+Squareoff,SN-S:Synth Lead,95,71,59
+Brite Sqr 1,SN-S:Synth Lead,95,71,60
+Brite Sqr 2,SN-S:Synth Lead,95,71,61
+Brite Sqr 3,SN-S:Synth Lead,95,71,62
+Cpt McSquare,SN-S:Synth Lead,95,71,63
+Tekno Sqr,SN-S:Synth Lead,95,71,64
+Octa Square,SN-S:Synth Lead,95,71,65
+Pure Square,SN-S:Synth Lead,95,71,66
+SynOcarina 1,SN-S:Synth Lead,95,71,67
+SynOcarina 2,SN-S:Synth Lead,95,71,68
+SynOcarina 3,SN-S:Synth Lead,95,71,69
+Crawler,SN-S:Synth Lead,95,71,70
+OB Lead 1,SN-S:Synth Lead,95,71,71
+OB Lead 2,SN-S:Synth Lead,95,71,72
+Tri Lead 1,SN-S:Synth Lead,95,71,73
+Tri Lead 2,SN-S:Synth Lead,95,71,74
+Tri Lead 3,SN-S:Synth Lead,95,71,75
+Tri Lead 4,SN-S:Synth Lead,95,71,76
+Softy Lead,SN-S:Synth Lead,95,71,77
+Sine Lead 1,SN-S:Synth Lead,95,71,78
+Sine Lead 2,SN-S:Synth Lead,95,71,79
+Sine Lead 3,SN-S:Synth Lead,95,71,80
+Sine Lead 4,SN-S:Synth Lead,95,71,81
+Sine Lead 5,SN-S:Synth Lead,95,71,82
+OSC-SyncLd 1,SN-S:Synth Lead,95,71,83
+OSC-SyncLd 2,SN-S:Synth Lead,95,71,84
+OSC-SyncLd 3,SN-S:Synth Lead,95,71,85
+OSC-SyncLd 4,SN-S:Synth Lead,95,71,86
+OSC-SyncLd 5,SN-S:Synth Lead,95,71,87
+OSC-SyncLd 6,SN-S:Synth Lead,95,71,88
+OSC-SyncLd 7,SN-S:Synth Lead,95,71,89
+OSC-SyncLd 8,SN-S:Synth Lead,95,71,90
+Disturb Sync,SN-S:Synth Lead,95,71,91
+Digi Lead 1,SN-S:Synth Lead,95,71,92
+Digi Lead 2,SN-S:Synth Lead,95,71,93
+Waspy Lead,SN-S:Synth Lead,95,71,94
+Stitcher,SN-S:Synth Lead,95,71,95
+Sweet 5th 1,SN-S:Synth Lead,95,71,96
+Sweet 5th 2,SN-S:Synth Lead,95,71,97
+SoloNzPeaker,SN-S:Synth Lead,95,71,98
+Release Ld,SN-S:Synth Lead,95,71,99
+Syn Lead 1,SN-S:Synth Lead,95,71,100
+Syn Lead 2,SN-S:Synth Lead,95,71,101
+Syn Lead 3,SN-S:Synth Lead,95,71,102
+Syn Lead 4,SN-S:Synth Lead,95,71,103
+Syn Lead 5,SN-S:Synth Lead,95,71,104
+Syn Lead 6,SN-S:Synth Lead,95,71,105
+Syn Lead 7,SN-S:Synth Lead,95,71,106
+Syn Lead 8,SN-S:Synth Lead,95,71,107
+Syn Lead 9,SN-S:Synth Lead,95,71,108
+Syn Lead 10,SN-S:Synth Lead,95,71,109
+Syn Lead 11,SN-S:Synth Lead,95,71,110
+Tekno Ld 1,SN-S:Synth Lead,95,71,111
+Tekno Ld 2,SN-S:Synth Lead,95,71,112
+Tekno Ld 3,SN-S:Synth Lead,95,71,113
+Tekno Ld 4,SN-S:Synth Lead,95,71,114
+Tekno Ld 5,SN-S:Synth Lead,95,71,115
+Tekno Ld 6,SN-S:Synth Lead,95,71,116
+Tekno Ld 7,SN-S:Synth Lead,95,71,117
+Tekno Ld 8,SN-S:Synth Lead,95,71,118
+Tekno Ld 9,SN-S:Synth Lead,95,71,119
+Tekno Ld 10,SN-S:Synth Lead,95,71,120
+Tekno Ld 11,SN-S:Synth Lead,95,71,121
+Tekno Ld 12,SN-S:Synth Lead,95,71,122
+Tekno Ld 13,SN-S:Synth Lead,95,71,123
+Tekno Ld 14,SN-S:Synth Lead,95,71,124
+Tekno Ld 15,SN-S:Synth Lead,95,71,125
+Tekno Ld 16,SN-S:Synth Lead,95,71,126
+Tekno Ld 17,SN-S:Synth Lead,95,71,127
+Tekno Ld 18,SN-S:Synth Lead,95,71,128
+Tekno Ld 19,SN-S:Synth Lead,95,72,1
+Tekno Ld 20,SN-S:Synth Lead,95,72,2
+Tekno Ld 21,SN-S:Synth Lead,95,72,3
+Tekno Ld 22,SN-S:Synth Lead,95,72,4
+Tekno Ld 23,SN-S:Synth Lead,95,72,5
+Tekno Ld 24,SN-S:Synth Lead,95,72,6
+Tekno Ld 25,SN-S:Synth Lead,95,72,7
+Tekno Ld 26,SN-S:Synth Lead,95,72,8
+Tekno Ld 27,SN-S:Synth Lead,95,72,9
+Tekno Ld 28,SN-S:Synth Lead,95,72,10
+Tekno Ld 29,SN-S:Synth Lead,95,72,11
+Tekno Ld 30,SN-S:Synth Lead,95,72,12
+Tekno Ld 31,SN-S:Synth Lead,95,72,13
+Tekno Ld 32,SN-S:Synth Lead,95,72,14
+Tekno Ld 33,SN-S:Synth Lead,95,72,15
+Tekno Ld 34,SN-S:Synth Lead,95,72,16
+Tekno Ld 35,SN-S:Synth Lead,95,72,17
+Tekno Ld 36,SN-S:Synth Lead,95,72,18
+JP80 Ring-80,SN-S:Synth Lead,95,72,19
+Distroubled,SN-S:Synth Lead,95,72,20
+Hover Dive 1,SN-S:Synth Lead,95,72,21
+Hover Dive 2,SN-S:Synth Lead,95,72,22
+OhWowWow,SN-S:Synth Lead,95,72,23
+Broken Lead,SN-S:Synth Lead,95,72,24
+FX 1,SN-S:Synth FX,95,72,25
+FX 2,SN-S:Synth FX,95,72,26
+FX 3,SN-S:Synth FX,95,72,27
+FX 4,SN-S:Synth FX,95,72,28
+FX 5,SN-S:Synth FX,95,72,29
+FX 6,SN-S:Synth FX,95,72,30
+FX 7,SN-S:Synth FX,95,72,31
+FX 8,SN-S:Synth FX,95,72,32
+FX 9,SN-S:Synth FX,95,72,33
+FX 10,SN-S:Synth FX,95,72,34
+FX 11,SN-S:Synth FX,95,72,35
+FX 12,SN-S:Synth FX,95,72,36
+FX 13,SN-S:Synth FX,95,72,37
+FX 14,SN-S:Synth FX,95,72,38
+FX 15,SN-S:Synth FX,95,72,39
+FX 16,SN-S:Synth FX,95,72,40
+FX 17,SN-S:Synth FX,95,72,41
+FX 18,SN-S:Synth FX,95,72,42
+FX 19,SN-S:Synth FX,95,72,43
+FX 20,SN-S:Synth FX,95,72,44
+FX 21,SN-S:Synth FX,95,72,45
+FX 22,SN-S:Synth FX,95,72,46
+FX 23,SN-S:Synth FX,95,72,47
+FX 24,SN-S:Synth FX,95,72,48
+FX 25,SN-S:Synth FX,95,72,49
+Zapper,SN-S:Synth FX,95,72,50
+Sci-Fi Sweep,SN-S:Synth FX,95,72,51
+War Drum,SN-S:Synth FX,95,72,52
+Vox FX,SN-S:Synth FX,95,72,53
+Atomspheric,SN-S:Synth FX,95,72,54
+Angry Words,SN-S:Synth FX,95,72,55
+F6 = Critter,SN-S:Synth FX,95,72,56
+FreeJazz,SN-S:Synth FX,95,72,57
+FM EP 1,SN-S:E.Piano2,95,72,58
+FM EP 2,SN-S:E.Piano2,95,72,59
+FM EP 3,SN-S:E.Piano2,95,72,60
+FM EP 4,SN-S:E.Piano2,95,72,61
+FM EP 5,SN-S:E.Piano2,95,72,62
+FM EP 6,SN-S:E.Piano2,95,72,63
+FM EPhaser,SN-S:E.Piano2,95,72,64
+EP Belle,SN-S:E.Piano2,95,72,65
+80’s EP,SN-S:E.Piano2,95,72,66
+Spirit Tine,SN-S:E.Piano2,95,72,67
+70’s E.Org 1,SN-S:E.Organ,95,72,68
+70’s E.Org 2,SN-S:E.Organ,95,72,69
+Theater 1,SN-S:Pipe Organ,95,72,70
+Theater 2,SN-S:Pipe Organ,95,72,71
+Theater 3,SN-S:Pipe Organ,95,72,72
+Pulse Clav,SN-S:Clav,95,72,73
+Toy Box 1,SN-S:Mallet,95,72,74
+Toy Box 2,SN-S:Mallet,95,72,75
+Ethno Keys,SN-S:Mallet,95,72,76
+Mood String,SN-S:Ensemble Strings,95,72,77
+Orch Hit,SN-S:Hit,95,72,78
+Philly Hit 1,SN-S:Hit,95,72,79
+Philly Hit 2,SN-S:Hit,95,72,80
+Philly Hit 3,SN-S:Hit,95,72,81
+Philly Hit 4,SN-S:Hit,95,72,82
+House Hit 1,SN-S:Hit,95,72,83
+House Hit 2,SN-S:Hit,95,72,84
+LoFi Hit,SN-S:Hit,95,72,85
+Synth Mallet,SN-S:Mallet,95,72,86
+Vocoder Robt,SN-S:Vox/Choir,95,72,87
+Vocoder wVib,SN-S:Vox/Choir,95,72,88
+Vocoder VP,SN-S:Vox/Choir,95,72,89
+Vocoder Chr,SN-S:Vox/Choir,95,72,90
+Vocoder Ens,SN-S:Vox/Choir,95,72,91

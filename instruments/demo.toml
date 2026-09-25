@@ -1,0 +1,4 @@
+# 動作確認用の内蔵デモシンセ（実機不要）
+name = "Demo Synth"
+type = "demo"
+sample_rate = 44100

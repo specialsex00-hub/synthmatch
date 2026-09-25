@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "synthmatch"
+version = "0.1.0"
+description = "楽曲からキーボードパートを取り出し、手持ちシンセの近い音色を探すツール"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy",
+    "scipy",
+    "librosa>=0.10",
+    "soundfile",
+    "pretty_midi",
+    "mido",
+]
+
+[project.optional-dependencies]
+# 音源分離（torch を含むので重い）
+separate = ["demucs"]
+# 多声の採譜
+transcribe = ["basic-pitch"]
+# ハードウェアシンセの録音
+hardware = ["python-rtmidi", "sounddevice"]
+# VST / AU プラグイン
+vst = ["pedalboard"]
+# ブラウザの画面
+ui = ["fastapi", "uvicorn[standard]", "python-multipart"]
+dev = ["pytest", "httpx"]
+
+[project.scripts]
+synthmatch = "synthmatch.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+synthmatch = ["ui/static/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
