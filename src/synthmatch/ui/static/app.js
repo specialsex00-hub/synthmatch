@@ -2,8 +2,13 @@
 const $ = (sel, el = document) => el.querySelector(sel);
 const $$ = (sel, el = document) => [...el.querySelectorAll(sel)];
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const store = {
+  get(k) { try { return localStorage.getItem(k); } catch { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+};
 
-const state = { inst: null, info: null, job: null, pollTimer: null };
+const state = { inst: null, info: null, job: null, pollTimer: null, lib: { rec: "", group: "" } };
+const GROUP_NAMES = { "SN-A": "SuperNATURAL Acoustic", "SN-S": "SuperNATURAL Synth", PCM: "PCM Synth" };
 
 async function api(path, opts = {}) {
   const res = await fetch(path, opts);
@@ -27,27 +32,50 @@ function fmtTime(sec) {
   const h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60), s = sec % 60;
   return h ? `${h}時間${m}分` : m ? `${m}分${s}秒` : `${s}秒`;
 }
+const clock = (t) => (isFinite(t) ? `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, "0")}` : "0:00");
 
-const GROUP_NAMES = { "SN-A": "SuperNATURAL Acoustic", "SN-S": "SuperNATURAL Synth", PCM: "PCM Synth" };
+// ---------- ジャケット風アートワーク ----------
+function splitCat(cat) {
+  const i = (cat || "").indexOf(":");
+  return i >= 0 ? [cat.slice(0, i), cat.slice(i + 1)] : ["", cat || ""];
+}
+function catIcon(cat) {
+  const c = cat.toLowerCase();
+  if (/pad|string|choir|orch/.test(c)) return "i-verb";
+  if (/bass/.test(c)) return "i-env";
+  if (/brass|sax|flute|wind|reed|harmonica/.test(c)) return "i-filter";
+  if (/piano|organ|clav|harpsi|keys|polykey/.test(c)) return "i-midi";
+  if (/fx|puls|hit|noise|beat|drum|perc|seq/.test(c)) return "i-noise";
+  return "i-wave";
+}
+function hue(text) {
+  let h = 0;
+  for (const ch of text.toLowerCase()) h = (h * 31 + ch.codePointAt(0)) % 360;
+  return h;
+}
+function art(category, cls = "") {
+  const name = splitCat(category)[1] || "?";
+  return `<div class="art ${cls}" style="--h:${hue(name)}"><svg><use href="#${catIcon(name)}"/></svg></div>`;
+}
 
-// ---------- タブ ----------
-function showTab(name) {
-  $$(".tabs button").forEach((b) => b.setAttribute("aria-selected", b.dataset.tab === name));
-  $$(".tab").forEach((t) => (t.hidden = t.id !== `tab-${name}`));
-  try { localStorage.setItem("tab", name); } catch {}
+// ---------- 画面切り替え ----------
+function showView(name) {
+  $$(".nav button").forEach((b) => (b.getAttribute("data-view") === name ? b.setAttribute("aria-current", "page") : b.removeAttribute("aria-current")));
+  $$(".view").forEach((v) => (v.hidden = v.id !== `view-${name}`));
+  store.set("view", name);
+  $(".content").scrollTop = 0;
   if (name === "library") loadPresets();
   if (name === "match") loadHistory();
 }
-$$(".tabs button").forEach((b) => b.addEventListener("click", () => showTab(b.dataset.tab)));
+$$(".nav button").forEach((b) => b.addEventListener("click", () => showView(b.dataset.view)));
 
 // ---------- 楽器 ----------
 async function loadInstruments() {
   const list = await api("/api/instruments");
   const sel = $("#instrument");
-  let saved = null;
-  try { saved = localStorage.getItem("instrument"); } catch {}
   sel.innerHTML = list.map((i) => `<option value="${esc(i.id)}">${esc(i.name)}${i.error ? "（設定エラー）" : ""}</option>`).join("");
   const fromUrl = new URLSearchParams(location.search).get("instrument");
+  const saved = store.get("instrument");
   const pick = list.find((i) => i.id === fromUrl) || list.find((i) => i.id === saved && !i.error) || list.find((i) => i.type === "hardware" && !i.error) || list[0];
   if (pick) sel.value = pick.id;
   await selectInstrument(sel.value);
@@ -56,87 +84,128 @@ $("#instrument").addEventListener("change", (e) => selectInstrument(e.target.val
 
 async function selectInstrument(id) {
   state.inst = id;
-  try { localStorage.setItem("instrument", id); } catch {}
+  store.set("instrument", id);
+  state.lib.group = "";
   await refreshInfo();
   loadDevices();
-  if (!$("#tab-library").hidden) loadPresets();
+  if (!$("#view-library").hidden) loadPresets();
 }
+
+const perPreset = () => (state.info?.type === "hardware" ? 15 : 0.3);
 
 async function refreshInfo() {
   const info = await api(`/api/instruments/${state.inst}`);
   state.info = info;
-  $("#inst-file").textContent = info.file;
-  $("#inst-settings").innerHTML = Object.entries(info.settings).map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join("");
-  const pct = info.total ? (info.recorded / info.total) * 100 : 0;
-  $("#overall-bar").style.width = `${pct}%`;
-  $("#overall-text").textContent = `${info.recorded} / ${info.total} 音色 録音済み`;
+  const pct = info.total ? info.recorded / info.total : 0;
+
+  $("#inst-settings").innerHTML = `<dt>設定ファイル</dt><dd><code>${esc(info.file)}</code></dd>` +
+    Object.entries(info.settings).map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join("");
+  $("#stat-recorded").textContent = info.recorded.toLocaleString();
+  $("#stat-total").textContent = info.total.toLocaleString();
+  $("#ring-pct").textContent = `${Math.floor(pct * 100)}%`;
+  $("#ring-fg").style.strokeDashoffset = 326.7 * (1 - pct);
+  $("#stat-remaining").textContent = info.total === info.recorded ? "完了" : `約${fmtTime((info.total - info.recorded) * perPreset())}`;
+  $("#side-count").textContent = `${info.recorded} / ${info.total}`;
+  $("#side-bar").style.width = `${pct * 100}%`;
 
   const cats = info.categories.slice().sort((a, b) => a.name.localeCompare(b.name));
   const opts = `<option value="">すべてのカテゴリ</option>` + cats.map((c) => `<option value="${esc(c.name)}">${esc(c.name)}（${c.recorded}/${c.total}）</option>`).join("");
   for (const id of ["#build-category", "#lib-category"]) {
     const sel = $(id), v = sel.value;
     sel.innerHTML = opts;
-    sel.value = v;
+    sel.value = cats.some((c) => c.name === v) ? v : "";
   }
+
   const groups = {};
-  for (const c of cats) {
-    const [g, name] = c.name.includes(":") ? c.name.split(/:(.*)/s) : ["", c.name];
-    (groups[g] ||= []).push({ ...c, label: name });
-  }
-  $("#cat-table").innerHTML = Object.entries(groups).map(([g, list]) => {
+  for (const c of cats) (groups[splitCat(c.name)[0]] ||= []).push(c);
+  const selected = $("#build-category").value;
+  $("#cat-groups").innerHTML = Object.entries(groups).map(([g, list]) => {
     const t = list.reduce((a, c) => a + c.total, 0), r = list.reduce((a, c) => a + c.recorded, 0);
-    return `${g ? `<h3 class="cat-group">${esc(GROUP_NAMES[g] || g)} <span class="muted">${r}/${t}</span></h3>` : ""}
+    return `<div class="cat-group">
+      ${g ? `<div class="cat-group-head"><h3>${esc(GROUP_NAMES[g] || g)}</h3><div class="bar"><span style="width:${(r / t) * 100}%"></span></div><span class="muted small">${r}/${t}</span></div>` : ""}
       <div class="cat-grid">${list.map((c) => `
-        <div class="cat ${c.recorded === c.total ? "complete" : ""}" data-cat="${esc(c.name)}" title="クリックで録音対象に選ぶ">
-          <span>${esc(c.label)}</span><span class="num">${c.recorded}/${c.total}</span>
-          <div class="bar"><span style="width:${(c.recorded / c.total) * 100}%"></span></div>
-        </div>`).join("")}</div>`;
+        <button class="cat ${c.recorded === c.total ? "complete" : ""}" data-cat="${esc(c.name)}" aria-pressed="${c.name === selected}">
+          ${art(c.name)}
+          <span class="cat-body">
+            <span class="cat-name">${esc(splitCat(c.name)[1])}</span>
+            <span class="cat-num">${c.recorded} / ${c.total}</span>
+            <span class="bar"><span style="width:${(c.recorded / c.total) * 100}%"></span></span>
+          </span>
+        </button>`).join("")}</div></div>`;
   }).join("");
-  $$(".cat").forEach((el) => el.addEventListener("click", () => { $("#build-category").value = el.dataset.cat; updateEstimate(); }));
+  $$(".cat").forEach((el) => el.addEventListener("click", () => {
+    const sel = $("#build-category");
+    sel.value = sel.value === el.dataset.cat ? "" : el.dataset.cat;
+    syncCatSelection();
+    $(".content").scrollTo({ top: 0, behavior: "smooth" });
+  }));
+
+  const scope = $("#match-scope"), scopeVal = scope.value;
+  const recGroups = Object.entries(groups).filter(([g, list]) => g && list.some((c) => c.recorded));
+  const recCats = cats.filter((c) => c.recorded);
+  scope.innerHTML = `<option value="">録音済みの全音色（${info.recorded}）</option>` +
+    (recGroups.length ? `<optgroup label="種類">${recGroups.map(([g, list]) => `<option value="${esc(g)}:">${esc(GROUP_NAMES[g] || g)}（${list.reduce((a, c) => a + c.recorded, 0)}）</option>`).join("")}</optgroup>` : "") +
+    (recCats.length ? `<optgroup label="カテゴリ">${recCats.map((c) => `<option value="${esc(c.name)}">${esc(c.name)}（${c.recorded}）</option>`).join("")}</optgroup>` : "");
+  scope.value = [...scope.options].some((o) => o.value === scopeVal) ? scopeVal : "";
+
+  const groupNames = Object.keys(groups).filter(Boolean);
+  $("#lib-group-chips").innerHTML = groupNames.map((g) => `<button class="chip" data-group="${esc(g)}" aria-pressed="${state.lib.group === g}">${esc(GROUP_NAMES[g] || g)}</button>`).join("");
+  $$("[data-group]").forEach((b) => b.addEventListener("click", () => {
+    state.lib.group = state.lib.group === b.dataset.group ? "" : b.dataset.group;
+    $$("[data-group]").forEach((x) => x.setAttribute("aria-pressed", x.dataset.group === state.lib.group));
+    loadPresets();
+  }));
+  updateEstimate();
+}
+
+function syncCatSelection() {
+  const v = $("#build-category").value;
+  $$(".cat").forEach((el) => el.setAttribute("aria-pressed", el.dataset.cat === v));
   updateEstimate();
 }
 
 function updateEstimate() {
   if (!state.info) return;
   const cat = $("#build-category").value;
-  const c = cat ? state.info.categories.find((x) => x.name === cat) : { total: state.info.total, recorded: state.info.recorded };
+  const c = cat ? state.info.categories.find((x) => x.name === cat) : state.info;
+  if (!c) return;
   let n = $("#build-overwrite").checked ? c.total : c.total - c.recorded;
   const limit = parseInt($("#build-limit").value);
-  if (limit) n = Math.min(limit, c.total);
-  const per = state.info.type === "hardware" ? 15 : 0.3;
-  $("#build-estimate").textContent = n ? `約 ${n} 音色・${fmtTime(n * per)}` : "すべて録音済み";
+  if (limit) n = Math.min(limit, n || c.total);
+  $("#build-estimate").textContent = n ? `${n} 音色・約${fmtTime(n * perPreset())}` : "すべて録音済み";
 }
-["#build-category", "#build-limit", "#build-overwrite"].forEach((s) => $(s).addEventListener("input", updateEstimate));
+$("#build-category").addEventListener("input", syncCatSelection);
+["#build-limit", "#build-overwrite"].forEach((s) => $(s).addEventListener("input", updateEstimate));
 
 async function loadDevices() {
   const box = $("#devices");
   box.innerHTML = `<span class="muted">確認中…</span>`;
+  const pills = $("#conn-pills"), stat = $("#stat-conn");
   try {
     const d = await api("/api/devices");
     box.innerHTML = `
-      <b>MIDI出力</b><ul>${d.midi_outputs.map((n) => `<li>${esc(n)}</li>`).join("") || "<li class='muted'>なし</li>"}</ul>
-      <b>オーディオ入力</b><ul>${d.audio_inputs.map((a) => `<li>${esc(a.name)} <span class="muted">(${a.channels}ch, ${a.sample_rate}Hz)</span></li>`).join("") || "<li class='muted'>なし</li>"}</ul>
-      ${d.errors.map((e) => `<p class="muted">${esc(e)}</p>`).join("")}
-      <p class="muted small">名前が違う場合は ${esc(state.info?.file ?? "楽器設定")} を編集して、ページを再読み込みしてください。</p>`;
-    const has = (list, want) => list.some((n) => n.toLowerCase().includes(want.toLowerCase()));
-    const st = $("#conn-status");
-    if (state.info?.type === "hardware") {
-      const port = state.info.settings["MIDI出力"], dev = state.info.settings["録音デバイス"];
-      const midiOk = has(d.midi_outputs, port);
-      const audioOk = dev.startsWith("(") || has(d.audio_inputs.map((a) => a.name), dev);
-      st.innerHTML = `<span class="tag ${midiOk ? "ok" : "warn"}">MIDI ${midiOk ? "接続OK" : "見つかりません"}</span>
-        <span class="tag ${audioOk ? "ok" : "warn"}">録音 ${audioOk ? "接続OK" : "見つかりません"}</span>`;
-      $("#devices-box").open = !(midiOk && audioOk);
-    } else {
-      st.innerHTML = `<span class="tag ok">接続不要</span>`;
+      <p class="eyebrow">MIDI出力</p><ul>${d.midi_outputs.map((n) => `<li>${esc(n)}</li>`).join("") || "<li class='muted'>なし</li>"}</ul>
+      <p class="eyebrow">オーディオ入力</p><ul>${d.audio_inputs.map((a) => `<li>${esc(a.name)} <span class="muted">(${a.channels}ch, ${a.sample_rate}Hz)</span></li>`).join("") || "<li class='muted'>なし</li>"}</ul>
+      ${d.errors.map((e) => `<p class="muted small">${esc(e)}</p>`).join("")}
+      <p class="muted small">名前が違う場合は ${esc(state.info?.file ?? "楽器設定")} を書き換えて、ページを再読み込みしてください。</p>`;
+    if (state.info?.type !== "hardware") {
+      pills.innerHTML = stat.innerHTML = `<span class="pill ok">接続不要</span>`;
+      return;
     }
+    const has = (list, want) => list.some((n) => n.toLowerCase().includes(want.toLowerCase()));
+    const port = state.info.settings["MIDI出力"], dev = state.info.settings["録音デバイス"];
+    const midiOk = has(d.midi_outputs, port);
+    const audioOk = dev.startsWith("(") || has(d.audio_inputs.map((a) => a.name), dev);
+    const html = `<span class="pill ${midiOk ? "ok" : "warn"}">MIDI ${midiOk ? "OK" : "未接続"}</span><span class="pill ${audioOk ? "ok" : "warn"}">録音 ${audioOk ? "OK" : "未接続"}</span>`;
+    pills.innerHTML = stat.innerHTML = html;
+    $("#devices-box").open = !(midiOk && audioOk);
   } catch (e) {
     box.textContent = e.message;
   }
 }
-$("#refresh-devices").addEventListener("click", (e) => { e.preventDefault(); loadDevices(); });
+$("#refresh-devices").addEventListener("click", loadDevices);
 
-// テスト録音の音色候補
+// ---------- テスト録音 ----------
 $("#test-preset-q").addEventListener("input", async (e) => {
   const q = e.target.value.trim();
   if (q.length < 2) return;
@@ -153,104 +222,364 @@ $("#test-btn").addEventListener("click", async () => {
     if (!hit) return toast("その名前の音色が見つかりません");
     preset_id = hit.id;
   }
-  $("#test-result").innerHTML = `<div class="verdict">録音中…</div>`;
+  $("#test-result").innerHTML = `<div class="verdict"><span class="rec-dot"></span><div class="verdict-body">録音しています…</div></div>`;
   startJob(() => post(`/api/instruments/${state.inst}/test`, { preset_id }));
 });
 
 // ---------- ライブラリ録音 ----------
 $("#build-btn").addEventListener("click", () => {
-  const body = {
+  startJob(() => post(`/api/instruments/${state.inst}/build`, {
     category: $("#build-category").value || null,
     limit: parseInt($("#build-limit").value) || null,
     overwrite: $("#build-overwrite").checked,
-  };
-  startJob(() => post(`/api/instruments/${state.inst}/build`, body));
+  }));
 });
 
-function rerecord(id, name) {
-  if (!confirm(`「${name}」を録音し直しますか？`)) return;
+function recordOne(id, name, recorded) {
+  if (recorded && !confirm(`「${name}」を録音し直しますか？`)) return;
   startJob(() => post(`/api/instruments/${state.inst}/build`, { ids: [id], overwrite: true }));
 }
 
-// ---------- 音色ライブラリ ----------
+async function findPreset(q) {
+  const r = await api(`/api/instruments/${state.inst}/presets?q=${encodeURIComponent(q)}&limit=50`);
+  return r.presets.find((p) => p.name.toLowerCase() === q.toLowerCase()) || r.presets[0];
+}
+$("#one-q").addEventListener("input", async (e) => {
+  const q = e.target.value.trim();
+  if (q.length < 2) return;
+  const r = await api(`/api/instruments/${state.inst}/presets?q=${encodeURIComponent(q)}&limit=30`);
+  $("#one-list").innerHTML = r.presets.map((p) => `<option value="${esc(p.name)}">${esc(p.category)}${p.recorded ? "・録音済み" : ""}</option>`).join("");
+});
+$("#one-btn").addEventListener("click", async () => {
+  const q = $("#one-q").value.trim();
+  if (!q) return toast("録音したい音色名を入力してください");
+  const p = await findPreset(q);
+  if (!p) return toast("その名前の音色が見つかりません");
+  recordOne(p.id, p.name, p.recorded);
+});
+
+// ---------- ライブラリ ----------
 let presetTimer;
 async function loadPresets() {
   if (!state.inst) return;
-  const params = new URLSearchParams({ limit: 300 });
-  if ($("#lib-q").value) params.set("q", $("#lib-q").value);
-  if ($("#lib-category").value) params.set("category", $("#lib-category").value);
-  if ($("#lib-recorded").value) params.set("recorded", $("#lib-recorded").value);
+  const params = new URLSearchParams({ limit: 240 });
+  const q = $("#lib-q").value.trim();
+  if (q) params.set("q", q);
+  const cat = $("#lib-category").value || state.lib.group;
+  if (cat) params.set("category", cat);
+  if (state.lib.rec) params.set("recorded", state.lib.rec);
   const r = await api(`/api/instruments/${state.inst}/presets?${params}`);
-  $("#lib-count").textContent = r.total > r.presets.length ? `${r.total} 件中 ${r.presets.length} 件を表示` : `${r.total} 件`;
-  $("#lib-rows").innerHTML = r.presets.map((p) => `
-    <tr>
-      <td>${esc(p.name)}</td>
-      <td class="muted">${esc(p.category)}</td>
-      <td>${p.recorded ? `<span class="tag ok">済</span>` : `<span class="tag">未</span>`}</td>
-      <td>${p.audio ? `<audio controls preload="none" src="${esc(p.audio)}"></audio>` : ""}
-        <button class="small" data-rec="${esc(p.id)}" data-name="${esc(p.name)}">${p.recorded ? "録り直す" : "録音"}</button></td>
-    </tr>`).join("");
-  $$("[data-rec]").forEach((b) => b.addEventListener("click", () => rerecord(b.dataset.rec, b.dataset.name)));
+  $("#lib-count").textContent = r.total > r.presets.length ? `${r.total.toLocaleString()} 音色中 ${r.presets.length} 音色を表示（検索やカテゴリで絞り込めます）` : `${r.total.toLocaleString()} 音色`;
+  if (!r.presets.length) {
+    $("#lib-tiles").innerHTML = `<div class="empty-state" style="grid-column:1/-1">条件に合う音色がありません</div>`;
+    return;
+  }
+  $("#lib-tiles").innerHTML = r.presets.map((p, i) => `
+    <div class="tile ${p.recorded ? "" : "unrec"}" data-i="${i}">
+      <div class="tile-art-wrap">
+        ${art(p.category)}
+        ${p.audio ? `<button class="fab" data-play="${i}" aria-label="${esc(p.name)}を再生"><svg><use href="#i-play"/></svg></button>` : ""}
+      </div>
+      <div class="tile-title" title="${esc(p.name)}（クリックで詳細）">${esc(p.name)}</div>
+      <div class="tile-sub">${esc(splitCat(p.category)[1])}</div>
+      <div class="tile-foot">
+        ${p.recorded ? `<span class="pill ok">済</span>` : `<span class="pill">未録音</span>`}
+        <button class="btn ghost small" data-rec="${i}"><svg><use href="#${p.recorded ? "i-redo" : "i-rec"}"/></svg>${p.recorded ? "録り直す" : "録音"}</button>
+      </div>
+    </div>`).join("");
+  $$("[data-play]", $("#lib-tiles")).forEach((b) => b.addEventListener("click", () => {
+    const p = r.presets[b.dataset.play];
+    player.play({ src: p.audio, title: p.name, sub: p.category, category: p.category });
+  }));
+  $$("[data-rec]", $("#lib-tiles")).forEach((b) => b.addEventListener("click", () => {
+    const p = r.presets[b.dataset.rec];
+    recordOne(p.id, p.name, p.recorded);
+  }));
+  $$(".tile", $("#lib-tiles")).forEach((t) => t.addEventListener("click", (e) => {
+    if (e.target.closest("button")) return;
+    openTone(r.presets[t.dataset.i].id);
+  }));
 }
-["#lib-q", "#lib-category", "#lib-recorded"].forEach((s) =>
-  $(s).addEventListener("input", () => { clearTimeout(presetTimer); presetTimer = setTimeout(loadPresets, 250); }));
+$("#lib-q").addEventListener("input", () => { clearTimeout(presetTimer); presetTimer = setTimeout(loadPresets, 250); });
+$("#lib-category").addEventListener("input", loadPresets);
+$$("[data-rec]", $("#lib-chips")).forEach((b) => b.addEventListener("click", () => {
+  state.lib.rec = b.dataset.rec;
+  $$("[data-rec]", $("#lib-chips")).forEach((x) => x.setAttribute("aria-pressed", x === b));
+  loadPresets();
+}));
+
+// ---------- 音色の詳細（分析） ----------
+const TRAITS = [
+  { key: "brightness", label: "明るさ", ends: ["暗い", "明るい"], fmt: (v) => `${v.toFixed(2)} oct`, desc: "音の重心が基音から何オクターブ上にあるか" },
+  { key: "attack_ms", label: "アタック", ends: ["速い", "ゆっくり"], fmt: (v) => `${Math.round(v)} ms`, desc: "立ち上がりにかかる時間" },
+  { key: "sustain_db", label: "サステイン", ends: ["減衰する", "伸びる"], fmt: (v) => `${v.toFixed(1)} dB`, desc: "押さえている間の音量の下がり方" },
+  { key: "release_s", label: "余韻", ends: ["短い", "長い"], fmt: (v) => `${v.toFixed(2)} s`, desc: "鍵盤を離してからの余韻（リリース＋リバーブ）" },
+  { key: "noisiness", label: "ノイズ感", ends: ["きれい", "ノイズ寄り"], fmt: (v) => v.toFixed(2), desc: "ノイズっぽさ" },
+];
+
+async function openTone(presetId) {
+  const dlg = $("#tone-dialog");
+  let d;
+  try {
+    d = await api(`/api/instruments/${state.inst}/preset?preset_id=${encodeURIComponent(presetId)}`);
+  } catch (e) { return toast(e.message); }
+  const midi = d.midi && d.midi.msb !== undefined ? `<span class="pill plain">MSB ${d.midi.msb} / LSB ${d.midi.lsb} / PC ${d.midi.pc}</span>` : "";
+  const traits = d.profile ? TRAITS.map((t) => {
+    const v = d.profile[t.key], p = d.percentile?.[t.key];
+    return `<div class="trait ${v == null ? "na" : ""}" title="${esc(t.desc)}">
+      <div class="trait-top"><b>${t.label}</b><span>${v == null ? "測れませんでした" : `${t.fmt(v)}${p == null ? "" : ` ・ ライブラリ内 ${p}%`}`}</span></div>
+      <div class="trait-scale">${p == null ? "" : `<i style="left:${p}%"></i>`}</div>
+      <div class="trait-ends"><span>${t.ends[0]}</span><span>${t.ends[1]}</span></div>
+    </div>`;
+  }).join("") : `<div class="empty-state">まだ録音していないので、分析結果はありません。<br>「この音色を録音」を押すと録音して分析します。</div>`;
+  $("#tone-body").innerHTML = `
+    <div class="tone-head">
+      ${art(d.category)}
+      <div>
+        <div class="eyebrow">${esc(splitCat(d.category)[0] ? GROUP_NAMES[splitCat(d.category)[0]] || splitCat(d.category)[0] : "音色")}</div>
+        <h2 id="tone-name">${esc(d.name)}</h2>
+        <div class="muted small">${esc(splitCat(d.category)[1])}</div>
+        <div class="tone-meta">${d.recorded ? `<span class="pill ok">録音済み</span>` : `<span class="pill">未録音</span>`}${midi}</div>
+      </div>
+      <button class="icon-btn close" aria-label="閉じる"><svg><use href="#i-x"/></svg></button>
+    </div>
+    <div class="tone-content">
+      <div class="tone-actions">
+        ${d.audio ? `<button class="btn primary" data-act="play"><svg><use href="#i-play"/></svg>聴く</button>` : ""}
+        <button class="btn" data-act="rec"><svg><use href="#${d.recorded ? "i-redo" : "i-rec"}"/></svg>${d.recorded ? "録り直す" : "この音色を録音"}</button>
+        <button class="btn ghost" data-act="find"><svg><use href="#i-find"/></svg>このカテゴリの中から曲に合う音色を探す</button>
+      </div>
+      <div>
+        <div class="section-head" style="margin:0 0 10px"><h2 style="font-size:16px">音の特徴</h2>
+          ${d.profile ? `<span class="muted small">ライブラリの ${d.library_size} 音色の中での位置</span>` : ""}</div>
+        <div class="traits">${traits}</div>
+      </div>
+    </div>`;
+  $(".close", dlg).addEventListener("click", () => dlg.close());
+  $("[data-act=play]", dlg)?.addEventListener("click", () => player.play({ src: d.audio, title: d.name, sub: d.category, category: d.category }));
+  $("[data-act=rec]", dlg).addEventListener("click", () => { dlg.close(); recordOne(d.id, d.name, d.recorded); });
+  $("[data-act=find]", dlg).addEventListener("click", () => {
+    dlg.close();
+    showView("match");
+    const scope = $("#match-scope");
+    if ([...scope.options].some((o) => o.value === d.category)) scope.value = d.category;
+    else toast("このカテゴリはまだ録音済みの音色がありません");
+  });
+  if (!dlg.open) dlg.showModal();
+}
+$("#tone-dialog").addEventListener("click", (e) => { if (e.target.id === "tone-dialog") e.target.close(); });
 
 // ---------- 曲から探す ----------
-const drop = $("#song-drop");
-const songInput = $("input[name=song]", drop);
-function showSongName() {
+const orb = $("#song-drop");
+const songInput = $("input[name=song]", orb);
+const midiInput = $("input[name=midi]");
+function showSong() {
   const f = songInput.files[0];
-  drop.classList.toggle("has-file", !!f);
-  $("span", drop).innerHTML = f ? esc(f.name) : `曲ファイルをドロップ、またはクリックして選択<br><small class="muted">mp3 / wav など</small>`;
+  orb.classList.toggle("has-file", !!f);
+  $("#finder-title").textContent = f ? f.name : "曲をドロップして音色を探す";
+  $("#finder-sub").textContent = f ? `${(f.size / 1024 / 1024).toFixed(1)} MB ・ 準備OK。「探す」を押してください` : "mp3 / wav をドロップ、または丸をクリックして選択";
+  $("#match-btn").disabled = !f || state.job?.status === "running";
 }
-songInput.addEventListener("change", showSongName);
-drop.addEventListener("dragover", (e) => { e.preventDefault(); drop.classList.add("over"); });
-drop.addEventListener("dragleave", () => drop.classList.remove("over"));
-drop.addEventListener("drop", (e) => {
+songInput.addEventListener("change", showSong);
+const finder = $("#match-form");
+finder.addEventListener("dragover", (e) => { e.preventDefault(); orb.classList.add("over"); });
+finder.addEventListener("dragleave", (e) => { if (!finder.contains(e.relatedTarget)) orb.classList.remove("over"); });
+finder.addEventListener("drop", (e) => {
   e.preventDefault();
-  drop.classList.remove("over");
-  if (e.dataTransfer.files.length) { songInput.files = e.dataTransfer.files; showSongName(); }
+  orb.classList.remove("over");
+  const files = [...e.dataTransfer.files];
+  const mid = files.find((f) => /\.midi?$/i.test(f.name));
+  const song = files.find((f) => f !== mid);
+  const put = (input, file) => { const dt = new DataTransfer(); dt.items.add(file); input.files = dt.files; };
+  if (song) { put(songInput, song); showSong(); }
+  if (mid) { put(midiInput, mid); showMidi(); }
 });
+function showMidi() {
+  const f = midiInput.files[0];
+  $("#midi-btn").classList.toggle("has-file", !!f);
+  $("#midi-btn span").textContent = f ? `MIDI: ${f.name}` : "MIDIを追加（任意）";
+}
+midiInput.addEventListener("change", showMidi);
 
-$("#match-form").addEventListener("submit", (e) => {
+finder.addEventListener("submit", (e) => {
   e.preventDefault();
-  const fd = new FormData(e.target);
+  const fd = new FormData(finder);
   fd.set("instrument_id", state.inst);
-  if (!$("input[name=midi]").files.length) fd.delete("midi");
+  if (!midiInput.files.length) fd.delete("midi");
   $("#match-result").innerHTML = "";
   $("#match-log").textContent = "アップロード中…";
   startJob(() => api("/api/match", { method: "POST", body: fd }));
 });
 
-function renderMatch(r) {
-  const cands = r.candidates.map((c) => `
-    <div class="cand ${c.rank === 1 ? "first" : ""}">
-      <div class="rank">${c.rank}</div>
-      <h3>${esc(c.name)}</h3>
-      <div class="meta">${esc(c.category)} ・ スコア ${c.score}（${c.stage === "rerank" ? "実際に鳴らして比較" : "ライブラリで比較"}）</div>
-      <div>
-        ${c.audio ? `<audio controls preload="none" src="${esc(c.audio)}"></audio>` : ""}
-        ${c.hints.length ? `<ul>${c.hints.map((h) => `<li>${esc(h)}</li>`).join("")}</ul>` : `<p class="muted small">大きな違いは見つかりませんでした</p>`}
-      </div>
-    </div>`).join("");
+function hintIcon(h) {
+  if (/カットオフ|cutoff|フィルター/i.test(h)) return "i-filter";
+  if (/リバーブ|reverb|余韻|残響/i.test(h)) return "i-verb";
+  if (/ノイズ|noise/i.test(h)) return "i-noise";
+  return "i-env";
+}
+const hintList = (hints) => hints.length
+  ? hints.map((h) => `<li><svg><use href="#${hintIcon(h)}"/></svg><span>${esc(h)}</span></li>`).join("")
+  : `<li class="none"><svg><use href="#i-check"/></svg><span>大きな違いは見つかりませんでした</span></li>`;
+
+function renderMatch(r, scroll = false) {
+  const [best, ...rest] = r.candidates;
+  if (!best) { $("#match-result").innerHTML = `<div class="empty-state">候補が見つかりませんでした</div>`; return; }
+  const target = { src: r.target_audio, title: "取り出したキーボードの音", sub: "原曲", category: "" };
+  const cand = (c) => ({ src: c.audio, title: c.name, sub: c.category, category: c.category });
   $("#match-result").innerHTML = `
-    <div class="card">
-      <div class="result-head">
-        <div><h2>候補（${esc(r.instrument)}）</h2>
-          <span class="muted small"><a href="${esc(r.midi)}" download>MIDI</a> ・ <a href="${esc(r.report_md)}" target="_blank">report.md</a></span></div>
-        <div><div class="muted small">取り出したキーボードの音</div><audio controls src="${esc(r.target_audio)}"></audio></div>
+    <div class="result-hero">
+      ${art(best.category)}
+      <div>
+        <div class="eyebrow">いちばん近い音色</div>
+        <h2>${esc(best.name)}</h2>
+        <div class="meta">${esc(best.category)} ・ スコア ${best.score}（${best.stage === "rerank" ? "実際に鳴らして比較" : "ライブラリで比較"}）</div>
+        <div class="hero-actions">
+          ${best.audio ? `<button class="btn primary" data-ab="0"><svg><use href="#i-play"/></svg>原曲とA/B比較</button>
+          <button class="btn" data-cand="0"><svg><use href="#i-play"/></svg>この音色を聴く</button>` : ""}
+          <button class="btn ghost" data-target><svg><use href="#i-play"/></svg>取り出した音</button>
+        </div>
+        <ul class="hints">${hintList(best.hints)}</ul>
+        <div class="links"><a href="${esc(r.report_html || r.report_md)}" target="_blank">レポートを開く</a><a href="${esc(r.midi)}" download>MIDIをダウンロード</a>${r.category ? `<span class="muted">探した範囲: ${esc(r.category)}</span>` : ""}</div>
       </div>
-      <div class="cands">${cands}</div>
-      <p class="muted small">スコアは小さいほど近い。上の「取り出したキーボードの音」と聴き比べてください。</p>
-    </div>`;
+    </div>
+    ${rest.length ? `<div class="section-head"><h2>ほかの候補</h2><span class="muted small">上から近い順。スコアは小さいほど近い</span></div>
+    <div class="list others">${rest.map((c, i) => `
+      <div class="row">
+        <span class="rank-num">${c.rank}</span>
+        ${art(c.category)}
+        <div class="row-body">
+          <div class="row-title">${esc(c.name)}</div>
+          <div class="row-sub">${esc(c.category)} ・ ${c.stage === "rerank" ? `スコア ${c.score}（実際に鳴らして比較）` : `ライブラリで比較（スコア ${c.score}・参考値）`}</div>
+          ${c.hints.length ? `<ul class="row-hints">${c.hints.map((h) => `<li>${esc(h)}</li>`).join("")}</ul>` : ""}
+        </div>
+        ${c.audio ? `<button class="btn small" data-ab="${i + 1}">A/B</button><button class="icon-btn" data-cand="${i + 1}" aria-label="再生"><svg><use href="#i-play"/></svg></button>` : ""}
+      </div>`).join("")}</div>` : ""}`;
+  const all = r.candidates;
+  $$("[data-ab]", $("#match-result")).forEach((b) => b.addEventListener("click", () => player.compare(target, cand(all[b.dataset.ab]))));
+  $$("[data-cand]", $("#match-result")).forEach((b) => b.addEventListener("click", () => player.play(cand(all[b.dataset.cand]))));
+  $("[data-target]", $("#match-result")).addEventListener("click", () => player.play(target));
+  if (scroll) $("#match-result").scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 async function loadHistory() {
-  const rows = await api("/api/history");
+  const rows = await api("/api/history").catch(() => []);
   $("#history").innerHTML = rows.map((h) => `
-    <li><span>${esc(h.name)}<br><span class="muted small">1位: ${esc(h.top ?? "-")}</span></span>
-    <a href="${esc(h.report_md)}" target="_blank">レポート</a></li>`).join("") || `<li class="muted">まだありません</li>`;
+    <div class="row">
+      ${art(h.top_category || h.top || h.name)}
+      <div class="row-body">
+        <div class="row-title">${esc(h.name.replace(/^\d{8}-\d{6}_/, ""))}</div>
+        <div class="row-sub">${esc(h.name.slice(0, 15).replace(/^(\d{4})(\d{2})(\d{2})-(\d{2})(\d{2}).*/, "$1/$2/$3 $4:$5"))} ・ 1位: ${esc(h.top ?? "-")} ・ ${esc(h.instrument)}</div>
+      </div>
+      <a href="${esc(h.report)}" target="_blank">レポート</a>
+    </div>`).join("") || `<div class="empty-state">まだありません。上の丸に曲をドロップして始めましょう。</div>`;
 }
+
+// ---------- プレイヤー ----------
+const player = (() => {
+  const audio = new Audio();
+  const canvas = $("#pl-wave");
+  const ctx = canvas.getContext("2d");
+  const peaksCache = new Map();
+  let tracks = null, which = "a", peaks = null, raf = 0;
+
+  const cur = () => tracks?.[which];
+
+  async function loadPeaks(src) {
+    if (peaksCache.has(src)) return peaksCache.get(src);
+    const p = (async () => {
+      const buf = await (await fetch(src)).arrayBuffer();
+      const AC = window.AudioContext || window.webkitAudioContext;
+      const ac = new AC();
+      const data = (await ac.decodeAudioData(buf)).getChannelData(0);
+      ac.close();
+      const n = 400, step = Math.max(1, Math.floor(data.length / n)), out = new Float32Array(n);
+      for (let i = 0; i < n; i++) {
+        let m = 0;
+        for (let j = i * step; j < Math.min((i + 1) * step, data.length); j += 16) m = Math.max(m, Math.abs(data[j]));
+        out[i] = m;
+      }
+      const max = Math.max(...out) || 1;
+      return out.map((v) => v / max);
+    })().catch(() => null);
+    peaksCache.set(src, p);
+    return p;
+  }
+
+  function draw() {
+    const dpr = window.devicePixelRatio || 1;
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    if (canvas.width !== w * dpr) { canvas.width = w * dpr; canvas.height = h * dpr; }
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+    const css = getComputedStyle(document.documentElement);
+    const played = css.getPropertyValue("--accent").trim(), rest = css.getPropertyValue("--hover").trim();
+    const prog = audio.duration ? audio.currentTime / audio.duration : 0;
+    const bars = Math.max(20, Math.floor(w / 4));
+    for (let i = 0; i < bars; i++) {
+      const v = peaks ? peaks[Math.floor((i / bars) * peaks.length)] : 0.08;
+      const bh = Math.max(2, v * h);
+      ctx.fillStyle = i / bars < prog ? played : rest;
+      ctx.fillRect(i * (w / bars), (h - bh) / 2, Math.max(1, w / bars - 1.5), bh);
+    }
+    $("#pl-time").textContent = clock(audio.currentTime);
+    $("#pl-dur").textContent = clock(audio.duration);
+  }
+  function loop() { draw(); raf = audio.paused ? 0 : requestAnimationFrame(loop); }
+
+  function setIcon() { $("#pl-play use").setAttribute("href", audio.paused ? "#i-play" : "#i-pause"); }
+  audio.addEventListener("play", () => { setIcon(); if (!raf) loop(); });
+  audio.addEventListener("pause", setIcon);
+  audio.addEventListener("ended", setIcon);
+  audio.addEventListener("loadedmetadata", draw);
+  window.addEventListener("resize", draw);
+
+  function showMeta() {
+    const t = cur();
+    $("#pl-title").textContent = t.title;
+    $("#pl-sub").textContent = tracks.b ? `A/B比較中 ・ ${which === "a" ? "A: 原曲" : "B: " + tracks.b.title}` : t.sub || "";
+    $("#pl-art").outerHTML = t.category ? art(t.category).replace('class="art ', 'id="pl-art" class="art ') : `<div class="art empty" id="pl-art"><svg><use href="#i-wave"/></svg></div>`;
+    $("#pl-ab").hidden = !tracks.b;
+    $$("#pl-ab button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.ab === which));
+  }
+
+  async function load(keepTime) {
+    const t = cur(), time = keepTime ? audio.currentTime : 0, wasPlaying = keepTime ? !audio.paused : true;
+    audio.src = t.src;
+    showMeta();
+    $("#pl-play").disabled = false;
+    peaks = null;
+    draw();
+    await new Promise((res) => audio.addEventListener("loadedmetadata", res, { once: true }));
+    audio.currentTime = Math.min(time, audio.duration || 0);
+    if (wasPlaying) audio.play().catch(() => {});
+    peaks = await loadPeaks(t.src);
+    if (cur() === t) draw();
+  }
+
+  $("#pl-play").addEventListener("click", () => (audio.paused ? audio.play() : audio.pause()));
+  $$("#pl-ab button").forEach((b) => b.addEventListener("click", () => {
+    if (!tracks?.b || which === b.dataset.ab) return;
+    which = b.dataset.ab;
+    load(true);
+  }));
+  canvas.addEventListener("click", (e) => {
+    if (!audio.duration) return;
+    const r = canvas.getBoundingClientRect();
+    audio.currentTime = ((e.clientX - r.left) / r.width) * audio.duration;
+    draw();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.target.matches("input, select, textarea") || !tracks) return;
+    if (e.code === "Space") { e.preventDefault(); audio.paused ? audio.play() : audio.pause(); }
+    if (tracks.b && (e.key === "a" || e.key === "b")) $(`#pl-ab [data-ab="${e.key}"]`).click();
+  });
+  draw();
+
+  return {
+    play(t) { tracks = { a: t }; which = "a"; load(false); },
+    compare(a, b) { tracks = { a, b }; which = "a"; load(false); toast("A/Bボタン（またはキーボードの A / B）で切り替えて聴き比べられます"); },
+  };
+})();
 
 // ---------- ジョブ ----------
 async function startJob(fn) {
@@ -261,7 +590,7 @@ async function startJob(fn) {
     poll();
   } catch (e) {
     toast(e.message);
-    if ($("#test-result").textContent === "録音中…") $("#test-result").innerHTML = "";
+    if (/録音しています/.test($("#test-result").textContent)) $("#test-result").innerHTML = "";
     $("#match-log").textContent = "";
   }
 }
@@ -282,71 +611,111 @@ function poll() {
 
 $$("[data-cancel]").forEach((b) => b.addEventListener("click", async () => {
   if (state.job) await post(`/api/jobs/${state.job.id}/cancel`);
-  toast("中止しています（今の音色が終わったら止まります）");
+  toast("中止しています（今の処理が終わったら止まります）");
 }));
 
-const JOB_LABEL = { build: "録音中", test: "テスト録音中", match: "照合中" };
+const JOB_LABEL = { build: "録音中", test: "テスト録音中", match: "音色を探しています" };
+const JOB_VIEW = { build: "record", test: "record", match: "match" };
+$("#job-mini").addEventListener("click", () => state.job && showView(JOB_VIEW[state.job.kind]));
+
 function renderJob(job) {
   const running = job.status === "running";
-  const pill = $("#job-pill");
-  pill.hidden = !running;
-  pill.textContent = `${JOB_LABEL[job.kind]}${job.kind === "build" && job.total ? ` ${job.progress}/${job.total}` : ""}`;
-  $("#build-btn").disabled = $("#test-btn").disabled = $("#match-btn").disabled = running;
+  $("#job-mini").hidden = !running;
+  $("#job-mini-text").textContent = `${JOB_LABEL[job.kind]}${job.kind === "build" && job.total ? ` ${job.progress}/${job.total}` : ""}`;
+  $("#build-btn").disabled = $("#test-btn").disabled = running;
+  $("#match-btn").disabled = running || !songInput.files.length;
+  orb.classList.toggle("busy", running && job.kind === "match");
 
   if (job.kind === "build") {
-    $("#build-run").hidden = false;
-    $("h2", $("#build-run")).textContent = running ? "録音中" : { done: "録音完了", cancelled: "中止しました", error: "エラー" }[job.status];
-    $("[data-cancel]", $("#build-run")).hidden = !running;
-    const pct = job.total ? (job.progress / job.total) * 100 : 0;
-    $("#build-bar").style.width = `${pct}%`;
+    const box = $("#build-run");
+    box.hidden = false;
+    box.classList.toggle("stopped", !running);
+    $("#build-state").textContent = running ? "REC" : { done: "録音完了", cancelled: "中止しました", error: "エラー" }[job.status];
+    $("[data-cancel]", box).hidden = !running;
+    $("#build-bar").style.width = `${job.total ? (job.progress / job.total) * 100 : 0}%`;
     const c = job.data.counts || {};
-    $("#build-progress").innerHTML = `<b>${job.progress} / ${job.total}</b>（録音 ${c.done || 0}・済 ${c.skipped || 0}${c.silent ? `・<span style="color:var(--danger)">無音 ${c.silent}</span>` : ""}）`;
-    $("#build-current").innerHTML = running && job.data.current ? `いま: <b>${esc(job.data.current)}</b>` : "";
+    $("#build-progress").textContent = `${job.progress} / ${job.total}`;
+    const now = running ? job.data.current : (job.data.recent?.[0]?.name ?? "-");
+    const nowCat = running ? job.data.current_category : job.data.recent?.[0]?.category;
+    $("#build-current").textContent = now || "-";
+    $("#build-art").outerHTML = art(nowCat || "", "big").replace('class="art ', 'id="build-art" class="art ');
     const done = (c.done || 0) + (c.silent || 0);
-    const elapsed = (Date.now() / 1000) - job.started;
-    $("#build-eta").textContent = running && done ? `残り 約${fmtTime((elapsed / done) * (job.total - job.progress))}` : job.error ? job.error : "";
-    $("#build-recent").innerHTML = (job.data.recent || []).map((r) => `
-      <li><span class="name">${esc(r.name)} <span class="muted small">${esc(r.category)}</span></span>
-      ${r.status === "silent" ? `<span class="tag warn">無音</span>` : r.audio ? `<audio controls preload="none" src="${esc(r.audio)}"></audio>` : ""}</li>`).join("");
+    const elapsed = Date.now() / 1000 - job.started;
+    const parts = [`録音 ${c.done || 0}`, `録音済みでスキップ ${c.skipped || 0}`];
+    if (c.silent) parts.push(`無音 ${c.silent}`);
+    if (running && done) parts.push(`残り 約${fmtTime((elapsed / done) * (job.total - job.progress))}`);
+    if (job.error) parts.push(job.error);
+    $("#build-eta").textContent = parts.join(" ・ ");
+    const recent = job.data.recent || [];
+    $("#build-recent").innerHTML = recent.map((r, i) => `
+      <div class="row">
+        ${art(r.category)}
+        <div class="row-body"><div class="row-title">${esc(r.name)}</div><div class="row-sub">${esc(r.category)}</div></div>
+        ${r.status === "silent" ? `<span class="pill warn">無音</span>` : r.audio ? `<button class="icon-btn" data-recent="${i}" aria-label="再生"><svg><use href="#i-play"/></svg></button>` : ""}
+      </div>`).join("");
+    $$("[data-recent]").forEach((b) => b.addEventListener("click", () => {
+      const r = recent[b.dataset.recent];
+      player.play({ src: r.audio, title: r.name, sub: r.category, category: r.category });
+    }));
   }
   if (job.kind === "match") {
-    $("#match-run").hidden = !running && job.status === "done";
-    $("h2", $("#match-run")).textContent = running ? "処理中" : { cancelled: "中止しました", error: "エラー", done: "完了" }[job.status];
+    $("#match-run").hidden = job.status === "done";
+    const log = job.log.join("\n");
+    $("#match-log").textContent = log + (job.error ? `\n\nエラー: ${job.error}` : "");
+    const m = [...log.matchAll(/\[(\d)\/3\]/g)].pop();
+    const step = job.status === "done" ? 4 : m ? +m[1] : 1;
+    $$("#steps li").forEach((li) => {
+      const n = +li.dataset.step;
+      li.classList.toggle("done", n < step);
+      li.classList.toggle("active", running && n === step);
+    });
+    $("#match-status").textContent = running ? job.message : { cancelled: "中止しました", error: `エラー: ${job.error}` }[job.status] || "";
     $("[data-cancel]", $("#match-run")).hidden = !running;
-    $("#match-log").textContent = job.log.join("\n") + (job.error ? `\n\nエラー: ${job.error}` : "");
-    $("#match-log").scrollTop = 1e9;
   }
 }
 
 function onJobEnd(job) {
   if (job.kind === "test") {
+    if (job.status !== "done") {
+      $("#test-result").innerHTML = `<div class="verdict bad"><div class="verdict-body"><b>テスト録音できませんでした</b>${esc(job.error || "中止しました")}</div></div>`;
+      return;
+    }
     const r = job.result;
-    $("#test-result").innerHTML = job.status === "done"
-      ? `<div class="verdict ${r.peak_db < -50 || r.peak_db > -0.5 ? "bad" : "good"}">
-          <b>${esc(r.preset)}</b> ・ ピーク ${r.peak_db} dB<br>${esc(r.verdict)}
-          <audio controls autoplay src="${esc(r.audio)}"></audio></div>`
-      : `<div class="verdict bad">${esc(job.error || "中止しました")}</div>`;
+    const level = r.peak_db < -50 ? "bad" : r.peak_db > -0.5 || r.peak_db < -24 ? "warn" : "";
+    $("#test-result").innerHTML = `
+      <div class="verdict ${level}">
+        <button class="icon-btn" id="test-play" aria-label="再生"><svg><use href="#i-play"/></svg></button>
+        <div class="verdict-body">
+          <b>${esc(r.preset)} ・ ピーク ${r.peak_db} dB</b>${esc(r.verdict)}
+          <div class="meter bar"><span style="width:${Math.max(0, Math.min(100, ((r.peak_db + 60) / 60) * 100))}%"></span></div>
+        </div>
+      </div>`;
+    const track = { src: r.audio, title: `テスト録音: ${r.preset}`, sub: `ピーク ${r.peak_db} dB`, category: r.category || "" };
+    $("#test-play").addEventListener("click", () => player.play(track));
+    player.play(track);
   }
   if (job.kind === "build") {
     refreshInfo();
-    if (!$("#tab-library").hidden) loadPresets();
+    if (!$("#view-library").hidden) loadPresets();
     if (job.status === "error") toast(job.error);
+    if (job.status === "done") toast("録音が終わりました");
   }
   if (job.kind === "match") {
-    if (job.status === "done") { renderMatch(job.result); loadHistory(); }
+    if (job.status === "done") { renderMatch(job.result, true); loadHistory(); }
     else if (job.status === "error") toast(job.error);
   }
 }
 
 // ---------- 起動 ----------
 (async () => {
-  let tab = "record";
-  try { tab = localStorage.getItem("tab") || tab; } catch {}
-  if (["record", "library", "match"].includes(location.hash.slice(1))) tab = location.hash.slice(1);
-  showTab(tab);
+  const hash = location.hash.slice(1);
+  const view = ["record", "library", "match"].includes(hash) ? hash : store.get("view") || "record";
   await loadInstruments();
+  showView(view);
   // ページを開き直したとき、実行中のジョブがあれば表示を再開
   const cur = await api("/api/jobs/current").catch(() => null);
   if (cur && cur.status === "running") { state.job = cur; renderJob(cur); poll(); }
   else if (cur && cur.kind === "match" && cur.status === "done") renderMatch(cur.result);
+  const tone = new URLSearchParams(location.search).get("tone");
+  if (tone) openTone(tone);
 })();

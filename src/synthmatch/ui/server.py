@@ -6,6 +6,7 @@ MIDI やオーディオ機器は同時に1つしか使えないので、ジョ�
 
 from __future__ import annotations
 
+import bisect
 import threading
 import time
 import uuid
@@ -19,9 +20,9 @@ from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from .. import audio
+from .. import audio, features
 from ..instruments import Instrument, load_instrument, slugify
-from ..library import build_library, is_recorded, select_presets
+from ..library import Library, build_library, is_recorded, select_presets
 from ..notes import Note
 from ..pipeline import default_library_dir, run
 
@@ -121,6 +122,15 @@ def create_app(root: str | Path = ".") -> FastAPI:
     jobs = Jobs()
     app = FastAPI(title="synthmatch")
 
+    @app.middleware("http")
+    async def no_stale_cache(request, call_next):
+        # 画面のファイル（HTML/JS/CSS）と API は毎回最新を確認させる。
+        # 古い HTML と新しい JS が混ざると、画面が途中までしか表示されなくなるため。
+        response = await call_next(request)
+        if not request.url.path.startswith("/files/"):
+            response.headers["Cache-Control"] = "no-cache"
+        return response
+
     def instrument(inst_id: str) -> Instrument:
         path = inst_dir / f"{inst_id}.toml"
         if not path.exists() or path.parent != inst_dir:
@@ -171,6 +181,56 @@ def create_app(root: str | Path = ".") -> FastAPI:
             rows.append({"id": p.id, "name": p.name, "category": p.category, "recorded": rec, "audio": url(wav) if wav.exists() else None})
         return {"total": len(rows), "presets": rows[:limit]}
 
+    profile_cache: dict = {}
+
+    def library_profiles(ld: Path) -> dict[str, list[float]]:
+        """ライブラリ全体での各特徴の値（並べ替え済み）。音色が全体のどのあたりかを出すのに使う。"""
+        idx = ld / "index.json"
+        key = (str(ld), idx.stat().st_mtime if idx.exists() else 0)
+        if key not in profile_cache:
+            values: dict[str, list[float]] = {k: [] for k in features.PROFILE_KEYS}
+            if idx.exists():
+                try:
+                    lib = Library.load(ld)
+                except ValueError:
+                    lib = None
+                for i in range(len(lib.entries) if lib else 0):
+                    for k, v in features.describe(lib.features_of(i)).items():
+                        if v is not None:
+                            values[k].append(v)
+            profile_cache.clear()
+            profile_cache[key] = {k: sorted(v) for k, v in values.items()}
+        return profile_cache[key]
+
+    @app.get("/api/instruments/{inst_id}/preset")
+    def preset_detail(inst_id: str, preset_id: str):
+        inst = instrument(inst_id)
+        preset = next((p for p in inst.presets() if p.id == preset_id), None)
+        if preset is None:
+            raise HTTPException(404, "音色が見つかりません")
+        ld = lib_dir(inst)
+        fpath = ld / "features" / f"{slugify(preset.id)}.npy"
+        wav = ld / "renders" / f"{slugify(preset.id)}.wav"
+        profile, rank = None, None
+        if fpath.exists():
+            profile = features.describe(features.from_vector(np.load(fpath)))
+            dist = library_profiles(ld)
+            rank = {
+                k: round(100 * bisect.bisect_left(dist[k], v) / max(len(dist[k]) - 1, 1)) if v is not None and dist[k] else None
+                for k, v in profile.items()
+            }
+        return {
+            "id": preset.id,
+            "name": preset.name,
+            "category": preset.category,
+            "recorded": fpath.exists(),
+            "audio": url(wav) if wav.exists() else None,
+            "midi": {k: v for k, v in preset.data.items() if isinstance(v, (int, str))},
+            "profile": profile,
+            "percentile": rank,
+            "library_size": len(library_profiles(ld)["brightness"]),
+        }
+
     @app.get("/api/devices")
     def devices():
         from ..instruments.hardware import query_devices
@@ -218,7 +278,7 @@ def create_app(root: str | Path = ".") -> FastAPI:
                 verdict = "音が割れている可能性があります。本体のボリュームか入力レベルを下げてください。"
             else:
                 verdict = "OK。正しい音色が鳴っているか聴いて確認してください。"
-            return {"preset": preset.name, "audio": url(path), "peak_db": round(peak_db, 1), "verdict": verdict}
+            return {"preset": preset.name, "category": preset.category, "audio": url(path), "peak_db": round(peak_db, 1), "verdict": verdict}
 
         return jobs.start("test", work).public()
 
@@ -242,10 +302,12 @@ def create_app(root: str | Path = ".") -> FastAPI:
                     wav = out / "renders" / f"{slugify(preset.id)}.wav"
                     job.data["recent"] = ([{"name": preset.name, "category": preset.category, "status": status, "audio": url(wav) if wav.exists() else None}] + job.data["recent"])[:30]
                 job.data["current"] = targets[i].name if i < job.total else None
+                job.data["current_category"] = targets[i].category if i < job.total else None
                 job.write(f"[{i}/{n}] {preset.name}（{ {'done': '録音', 'skipped': '録音済み', 'silent': '無音'}[status] }）")
 
             job.total = min(len(targets), req.limit) if req.limit else len(targets)
             job.data["current"] = targets[0].name
+            job.data["current_category"] = targets[0].category
             try:
                 build_library(inst, out, category=req.category, limit=req.limit, ids=req.ids, overwrite=req.overwrite, progress=progress)
             except ValueError:
@@ -264,6 +326,7 @@ def create_app(root: str | Path = ".") -> FastAPI:
         top: int = Form(5),
         rerank: int = Form(3),
         clip: float = Form(30.0),
+        category: str = Form(""),
     ):
         inst = instrument(instrument_id)
         ld = lib_dir(inst)
@@ -282,12 +345,13 @@ def create_app(root: str | Path = ".") -> FastAPI:
             report = run(
                 song_path, inst_dir / f"{instrument_id}.toml", work_dir,
                 separator=separator, transcriber=transcriber, midi=midi_path,
-                library_dir=ld, top=top, rerank=rerank, clip=clip or None, log=job.write,
+                library_dir=ld, top=top, rerank=rerank, clip=clip or None, category=category or None, log=job.write,
             )
             report["target_audio"] = url(work_dir / "keys.wav")
             report["input_audio"] = url(song_path)
             report["midi"] = url(work_dir / "notes.mid")
             report["report_md"] = url(work_dir / "report.md")
+            report["report_html"] = url(work_dir / "report.html")
             for c in report["candidates"]:
                 c["audio"] = url(work_dir / c["audio"]) if c["audio"] else None
             return report
@@ -303,7 +367,12 @@ def create_app(root: str | Path = ".") -> FastAPI:
         for d in sorted((out_root / "ui").glob("*/report.json"), reverse=True)[:30]:
             rep = json.loads(d.read_text(encoding="utf-8"))
             top1 = rep["candidates"][0]["name"] if rep["candidates"] else None
-            rows.append({"name": d.parent.name, "instrument": rep["instrument"], "top": top1, "report_md": url(d.parent / "report.md")})
+            page = d.parent / "report.html"
+            rows.append({
+                "name": d.parent.name, "instrument": rep["instrument"], "top": top1,
+                "top_category": rep["candidates"][0]["category"] if rep["candidates"] else "",
+                "report": url(page if page.exists() else d.parent / "report.md"),
+            })
         return rows
 
     app.mount("/files/libraries", StaticFiles(directory=lib_root), name="libraries")

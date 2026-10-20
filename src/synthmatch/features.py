@@ -143,3 +143,26 @@ def aligned_mel_distance(a: np.ndarray, b: np.ndarray, sr: int) -> float:
     ma, mb = ma[:, :n], mb[:, :n]
     mask = (ma > -60) | (mb > -60)
     return float(np.abs(ma - mb)[mask].mean()) if mask.any() else 0.0
+
+
+PROFILE_KEYS = ("brightness", "attack_ms", "sustain_db", "release_s", "noisiness")
+
+
+def describe(feats: dict[str, np.ndarray]) -> dict[str, float | None]:
+    """特徴量のうち、人が読んで意味がわかるものだけを取り出す（測れなかったものは None）。
+
+    brightness: 基音から何オクターブ上にスペクトルの重心があるか（大きいほど明るい）
+    attack_ms:  立ち上がりの時間
+    sustain_db: 押さえている間にどれだけ音量が下がるか（0 に近いほど伸びる）
+    release_s:  鍵盤を離してからの余韻（リリース＋残響）
+    noisiness:  ノイズっぽさ（log10 のスペクトル平坦度。大きいほどノイズ寄り）
+    """
+    a, s, r = (float(v) for v in feats["envelope"])
+    values = {
+        "brightness": float(feats["brightness"][0]),
+        "attack_ms": a * 1000,
+        "sustain_db": s,
+        "release_s": r,
+        "noisiness": float(feats["flatness"][0]),
+    }
+    return {k: (round(v, 3) if np.isfinite(v) else None) for k, v in values.items()}

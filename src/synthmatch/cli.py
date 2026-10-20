@@ -16,6 +16,7 @@ def _cmd_run(a):
         Path(a.song), Path(a.instrument), Path(a.out),
         separator=a.separator, transcriber=a.transcriber, midi=Path(a.midi) if a.midi else None,
         library_dir=Path(a.library) if a.library else None, top=a.top, rerank=a.rerank, clip=a.clip,
+        category=a.category,
     )
     _print_report(report, Path(a.out))
 
@@ -62,6 +63,7 @@ def _cmd_match(a):
     report = match_audio(
         Path(a.audio), Path(a.instrument), Path(a.out), notes,
         library_dir=Path(a.library) if a.library else None, top=a.top, rerank=a.rerank, clip=a.clip,
+        category=a.category,
     )
     _print_report(report, Path(a.out))
 
@@ -91,7 +93,7 @@ def _print_report(report: dict, out: Path):
         print(f"{r['rank']}. {r['name']}  [{r['category']}]  score={r['score']} ({r['stage']})")
         for h in r["hints"]:
             print(f"     - {h}")
-    print(f"\nレポート: {out / 'report.md'}")
+    print(f"\nレポート: {out / 'report.html'}（ブラウザで開く） / {out / 'report.md'}")
 
 
 def main(argv=None):
@@ -107,6 +109,7 @@ def main(argv=None):
         sp.add_argument("--clip", type=float, default=30.0, help="先頭何秒で比べるか（0で全体）")
         sp.add_argument("--midi", help="採譜の代わりに使う MIDI ファイル")
         sp.add_argument("--transcriber", default="auto", help="auto / basic-pitch / pyin")
+        sp.add_argument("--category", help="このカテゴリ名を含む音色の中だけから探す（例: Bell）")
 
     sp = sub.add_parser("run", help="楽曲から一気に：分離 → 採譜 → 照合")
     sp.add_argument("song")

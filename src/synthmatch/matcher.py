@@ -27,6 +27,7 @@ class Candidate:
     score: float  # 小さいほど近い
     stage: str  # "library" または "rerank"
     hints: list[str] = field(default_factory=list)
+    profile: dict = field(default_factory=dict)  # features.describe() の値
     audio: np.ndarray | None = None  # rerank 時に鳴らした音
 
 
@@ -38,11 +39,21 @@ def match(
     instrument: Instrument | None = None,
     top: int = 5,
     rerank: int = 0,
+    category: str | None = None,
+    info: dict | None = None,
     log=print,
 ) -> list[Candidate]:
+    """近い順の候補を返す。category を渡すと、そのカテゴリ名を含む音色だけから探す。
+    info に dict を渡すと、目標の音の特徴（target_profile）を書き込む。"""
     target = features.extract(y, sr, notes)
     tvec = features.to_vector(target)
     ranked = library.rank(tvec)
+    if category:
+        ranked = [(i, d) for i, d in ranked if category.lower() in library.entries[i].get("category", "").lower()]
+        if not ranked:
+            raise ValueError(f"カテゴリ「{category}」の音色がライブラリにありません（先に録音してください）")
+    if info is not None:
+        info["target_profile"] = features.describe(target)
 
     pool = ranked[: max(top, rerank)]
     results: list[Candidate] = []
@@ -74,6 +85,7 @@ def match(
     for n, c in enumerate(results, 1):
         c.rank = n
         c.hints = make_hints(target, cand_feats[c.preset_id], controls)
+        c.profile = features.describe(cand_feats[c.preset_id])
     return results
 
 

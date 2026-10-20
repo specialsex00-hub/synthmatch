@@ -50,6 +50,12 @@ def test_record_and_match(client, tmp_path):
     assert job["result"]["counts"] == {"done": 3}
     assert client.get("/api/instruments/demo").json()["recorded"] == 3
 
+    detail = client.get("/api/instruments/demo/preset", params={"preset_id": "demo-003"}).json()
+    assert detail["name"] == "Soft Pad" and detail["recorded"]
+    assert set(detail["profile"]) == {"brightness", "attack_ms", "sustain_db", "release_s", "noisiness"}
+    assert 0 <= detail["percentile"]["attack_ms"] <= 100
+    assert client.get("/api/instruments/demo/preset", params={"preset_id": "demo-000"}).json()["profile"] is None
+
     presets = client.get("/api/instruments/demo/presets", params={"recorded": True}).json()["presets"]
     assert {p["name"] for p in presets} == {"Soft Pad", "String Pad", "Warm Pad"}
     assert client.get(presets[0]["audio"]).status_code == 200
@@ -60,13 +66,14 @@ def test_record_and_match(client, tmp_path):
     write_midi(notes, mid)
     job = client.post(
         "/api/match",
-        data={"instrument_id": "demo", "separator": "none", "rerank": "2"},
+        data={"instrument_id": "demo", "separator": "none", "rerank": "2", "category": "Pad"},
         files={"song": ("song.wav", io.BytesIO(wav.read_bytes()), "audio/wav"), "midi": ("s.mid", io.BytesIO(mid.read_bytes()), "audio/midi")},
     ).json()
     job = wait(client, job)
     assert job["status"] == "done", job
     assert job["result"]["candidates"][0]["name"] == "Warm Pad"
     assert client.get(job["result"]["target_audio"]).status_code == 200
+    assert client.get(job["result"]["report_html"]).status_code == 200
     assert client.get("/api/history").json()[0]["top"] == "Warm Pad"
 
 
@@ -83,3 +90,4 @@ def test_one_job_at_a_time_and_cancel(client):
 def test_static_page(client):
     r = client.get("/")
     assert r.status_code == 200 and "synthmatch" in r.text
+    assert client.get("/app.js").headers["cache-control"] == "no-cache"

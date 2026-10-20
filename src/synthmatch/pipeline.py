@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import json
+import os
 import shutil
+from datetime import datetime
 from pathlib import Path
 
 from . import audio
@@ -11,6 +13,7 @@ from .instruments import Instrument, load_instrument, slugify
 from .library import Library
 from .matcher import Candidate, match
 from .notes import Note, clip_notes, read_midi, write_midi
+from .report_html import render_html
 from .separate import separate
 from .transcribe import transcribe
 
@@ -28,6 +31,7 @@ def match_audio(
     top: int = 5,
     rerank: int = 3,
     clip: float | None = 30.0,
+    category: str | None = None,
     log=print,
 ) -> dict:
     inst = load_instrument(instrument_config)
@@ -36,9 +40,11 @@ def match_audio(
     if clip:
         y = y[: int(clip * sr)]
         notes = clip_notes(notes, clip) if notes else notes
-    log(f"[照合] {library.instrument} の {len(library.entries)} 音色から探します")
-    cands = match(y, sr, notes, library, inst, top=top, rerank=rerank, log=log)
-    return write_report(out_dir, keys_wav, library, cands, inst.sample_rate)
+    scope = f"「{category}」の音色" if category else f"{len(library.entries)} 音色"
+    log(f"[照合] {library.instrument} の {scope}から探します")
+    info: dict = {}
+    cands = match(y, sr, notes, library, inst, top=top, rerank=rerank, category=category, info=info, log=log)
+    return write_report(out_dir, keys_wav, library, cands, inst.sample_rate, info.get("target_profile", {}), category)
 
 
 def run(
@@ -70,7 +76,15 @@ def run(
     return match_audio(keys, instrument_config, out_dir, notes, **match_kw)
 
 
-def write_report(out_dir: Path, keys_wav: Path, library: Library, cands: list[Candidate], sr: int) -> dict:
+def write_report(
+    out_dir: Path,
+    keys_wav: Path,
+    library: Library,
+    cands: list[Candidate],
+    sr: int,
+    target_profile: dict | None = None,
+    category: str | None = None,
+) -> dict:
     out_dir.mkdir(parents=True, exist_ok=True)
     cand_dir = out_dir / "candidates"
     if cand_dir.exists():
@@ -98,17 +112,29 @@ def write_report(out_dir: Path, keys_wav: Path, library: Library, cands: list[Ca
                 "score": round(c.score, 3),
                 "stage": c.stage,
                 "hints": c.hints,
+                "profile": c.profile,
                 "audio": str(wav.relative_to(out_dir)) if wav else None,
             }
         )
-    report = {"target": str(keys_wav), "instrument": library.instrument, "candidates": rows}
+    report = {
+        "target": str(keys_wav),
+        "instrument": library.instrument,
+        "category": category,
+        "created": datetime.now().isoformat(timespec="seconds"),
+        "target_profile": target_profile or {},
+        "candidates": rows,
+    }
     (out_dir / "report.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
     (out_dir / "report.md").write_text(_markdown(report), encoding="utf-8")
+    target_rel = os.path.relpath(keys_wav, out_dir) if keys_wav.exists() else None
+    (out_dir / "report.html").write_text(render_html(report, target_rel), encoding="utf-8")
     return report
 
 
 def _markdown(report: dict) -> str:
     lines = [f"# 音色候補（{report['instrument']}）", "", f"目標: `{report['target']}`", ""]
+    if report.get("category"):
+        lines += [f"探した範囲: カテゴリ「{report['category']}」", ""]
     for r in report["candidates"]:
         lines.append(f"## {r['rank']}. {r['name']}  ")
         lines.append(f"カテゴリ: {r['category'] or '-'} / ID: `{r['id']}` / スコア: {r['score']}（{r['stage']}）  ")

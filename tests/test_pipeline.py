@@ -60,4 +60,17 @@ def test_run_end_to_end(library, tmp_path):
     report = run(song, DEMO, tmp_path / "out", separator="none", midi=midi, library_dir=library.path, rerank=3, log=lambda *_: None)
     assert report["candidates"][0]["name"] == "String Pad"
     assert (tmp_path / "out" / "report.md").exists()
+    page = (tmp_path / "out" / "report.html").read_text(encoding="utf-8")
+    assert "String Pad" in page and "音の特徴の比較" in page and 'src="keys.wav"' in page
+    assert report["target_profile"]["attack_ms"] is not None
     assert len(read_midi(tmp_path / "out" / "notes.mid")) == len(notes)
+
+
+def test_category_limits_candidates(library):
+    notes = phrase()
+    y = render_patch(DemoInstrument.variant("Soft Pad"), notes, seed=7)
+    inst = load_instrument(DEMO)
+    cands = match(y, inst.sample_rate, notes, library, inst, top=5, rerank=0, category="Keys", log=lambda *_: None)
+    assert {c.name for c in cands} == {"Bell", "Organ"}
+    with pytest.raises(ValueError):
+        match(y, inst.sample_rate, notes, library, inst, category="存在しない", log=lambda *_: None)
