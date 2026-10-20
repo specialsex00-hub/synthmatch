@@ -31,15 +31,34 @@ def read_midi(path: str | Path) -> list[Note]:
     return sorted(notes, key=lambda n: (n.start, n.pitch))
 
 
-def write_midi(notes: list[Note], path: str | Path) -> None:
+def write_midi(notes: list[Note], path: str | Path, pedals: list[tuple[float, float]] | None = None) -> None:
+    """pedals を渡すと、サステインペダル（CC64）の踏む・離すも書き込む。"""
     import pretty_midi
 
     pm = pretty_midi.PrettyMIDI()
     inst = pretty_midi.Instrument(program=0, name="keys")
     for n in notes:
         inst.notes.append(pretty_midi.Note(n.velocity, n.pitch, n.start, n.end))
+    for on, off in pedals or []:
+        inst.control_changes.append(pretty_midi.ControlChange(64, 127, on))
+        inst.control_changes.append(pretty_midi.ControlChange(64, 0, off))
     pm.instruments.append(inst)
     pm.write(str(path))
+
+
+def read_pedals(path: str | Path) -> list[tuple[float, float]]:
+    """MIDI のサステインペダル（CC64）を（踏んだ秒, 離した秒）の一覧にする。"""
+    import pretty_midi
+
+    pm = pretty_midi.PrettyMIDI(str(path))
+    out, down = [], None
+    for cc in sorted((c for i in pm.instruments for c in i.control_changes if c.number == 64), key=lambda c: c.time):
+        if cc.value >= 64 and down is None:
+            down = cc.time
+        elif cc.value < 64 and down is not None:
+            out.append((down, cc.time))
+            down = None
+    return out
 
 
 def end_time(notes: list[Note]) -> float:

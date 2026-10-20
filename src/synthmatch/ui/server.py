@@ -112,6 +112,15 @@ class TestRequest(BaseModel):
     preset_id: str | None = None
 
 
+class SheetRebuild(BaseModel):
+    bpm: float | None = None
+    key_sharps: int | None = None
+    sensitivity: str = "normal"
+    time_signature: str = "4/4"
+    grid: int = 4
+    split: int = 60
+
+
 def create_app(root: str | Path = ".") -> FastAPI:
     root = Path(root).resolve()
     inst_dir = root / "instruments"
@@ -357,6 +366,85 @@ def create_app(root: str | Path = ".") -> FastAPI:
             return report
 
         return jobs.start("match", work).public()
+
+    # ---- 楽譜にする ----
+
+    sheets_root = out_root / "sheets"
+
+    def sheet_dir(name: str) -> Path:
+        d = (sheets_root / name).resolve()
+        if d.parent != sheets_root.resolve() or not (d / "sheet.json").exists():
+            raise HTTPException(404, "楽譜が見つかりません")
+        return d
+
+    def sheet_payload(d: Path) -> dict:
+        import json
+
+        meta = json.loads((d / "sheet.json").read_text(encoding="utf-8"))
+        base = url(d)
+        meta["name"] = d.name
+        # 作り直したときにブラウザが古いファイルを表示しないよう、更新時刻を付ける
+        v = lambda rel: f"{base}/{rel}?v={int((d / rel).stat().st_mtime)}" if (d / rel).exists() else None  # noqa: E731
+        meta["urls"] = {k: v(f) for k, f in meta["files"].items()}
+        meta["page_urls"] = [v(p) for p in meta["pages"]]
+        return meta
+
+    @app.post("/api/sheet")
+    async def sheet_create(
+        file: UploadFile = File(...),
+        title: str = Form(""),
+        bpm: str = Form(""),
+        time_signature: str = Form("4/4"),
+        grid: int = Form(4),
+        split: int = Form(60),
+        transcriber: str = Form("piano"),
+        key_sharps: str = Form(""),
+        sensitivity: str = Form("normal"),
+    ):
+        from ..sheet.pipeline import make_sheet
+
+        stem = Path(file.filename or "piano").stem
+        work = sheets_root / f"{datetime.now():%Y%m%d-%H%M%S}_{slugify(stem)}"
+        work.mkdir(parents=True, exist_ok=True)
+        src = work / f"input{Path(file.filename or '.wav').suffix or '.wav'}"
+        src.write_bytes(await file.read())
+
+        def work_fn(job: Job):
+            make_sheet(
+                src, work, title=title.strip() or stem, backend=transcriber,
+                bpm=float(bpm) if bpm.strip() else None, time_signature=time_signature, grid=grid, split=split,
+                key_sharps=int(key_sharps) if key_sharps.strip() else None, sensitivity=sensitivity, log=job.write,
+            )
+            return sheet_payload(work)
+
+        return jobs.start("sheet", work_fn).public()
+
+    @app.post("/api/sheets/{name}/rebuild")
+    def sheet_rebuild(name: str, req: SheetRebuild):
+        from ..sheet.pipeline import rebuild
+
+        d = sheet_dir(name)
+
+        def work_fn(job: Job):
+            rebuild(
+                d, bpm=req.bpm, time_signature=req.time_signature, grid=req.grid, split=req.split,
+                key_sharps=req.key_sharps, sensitivity=req.sensitivity, log=job.write,
+            )
+            return sheet_payload(d)
+
+        return jobs.start("sheet", work_fn).public()
+
+    @app.get("/api/sheets")
+    def sheets():
+        rows = []
+        for f in sorted(sheets_root.glob("*/sheet.json"), reverse=True)[:50]:
+            m = sheet_payload(f.parent)
+            rows.append({k: m[k] for k in ("name", "title", "created", "key", "time_signature", "measures", "notes", "urls")})
+        return rows
+
+    @app.get("/api/sheets/{name}")
+    def sheet_get(name: str):
+        return sheet_payload(sheet_dir(name))
 
     @app.get("/api/history")
     def history():

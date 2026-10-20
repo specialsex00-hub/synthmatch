@@ -66,6 +66,7 @@ function showView(name) {
   $(".content").scrollTop = 0;
   if (name === "library") loadPresets();
   if (name === "match") loadHistory();
+  if (name === "sheet") loadSheets();
 }
 $$(".nav button").forEach((b) => b.addEventListener("click", () => showView(b.dataset.view)));
 
@@ -474,13 +475,215 @@ async function loadHistory() {
     </div>`).join("") || `<div class="empty-state">まだありません。上の丸に曲をドロップして始めましょう。</div>`;
 }
 
+// ---------- 楽譜にする ----------
+const sheetOrb = $("#sheet-drop");
+const sheetInput = $("input[name=file]", sheetOrb);
+const sheetForm = $("#sheet-form");
+
+function showSheetFile() {
+  const f = sheetInput.files[0];
+  sheetOrb.classList.toggle("has-file", !!f);
+  $("#sheet-title").textContent = f ? f.name : "ピアノの音から楽譜を作る";
+  $("#sheet-sub").textContent = f ? `${(f.size / 1024 / 1024).toFixed(1)} MB ・ 準備OK。「楽譜にする」を押してください` : "ピアノだけの mp3 / wav / mp4 / 動画をドロップ、または丸をクリックして選択";
+  $("#sheet-btn").disabled = !f || state.job?.status === "running";
+}
+sheetInput.addEventListener("change", showSheetFile);
+sheetForm.addEventListener("dragover", (e) => { e.preventDefault(); sheetOrb.classList.add("over"); });
+sheetForm.addEventListener("dragleave", (e) => { if (!sheetForm.contains(e.relatedTarget)) sheetOrb.classList.remove("over"); });
+sheetForm.addEventListener("drop", (e) => {
+  e.preventDefault();
+  sheetOrb.classList.remove("over");
+  const f = e.dataTransfer.files[0];
+  if (!f) return;
+  const dt = new DataTransfer();
+  dt.items.add(f);
+  sheetInput.files = dt.files;
+  showSheetFile();
+});
+sheetForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  $("#sheet-result").innerHTML = "";
+  $("#sheet-log").textContent = "アップロード中…";
+  startJob(() => api("/api/sheet", { method: "POST", body: new FormData(sheetForm) }));
+});
+
+function renderSheetJob(job) {
+  const running = job.status === "running";
+  $("#sheet-run").hidden = job.status === "done";
+  const log = job.log.join("\n");
+  $("#sheet-log").textContent = log + (job.error ? `\n\nエラー: ${job.error}` : "");
+  $("#sheet-log").scrollTop = 1e9;
+  const m = [...log.matchAll(/\[(\d)\/4\]/g)].pop();
+  const step = job.status === "done" ? 5 : m ? +m[1] : 1;
+  $$("#sheet-steps li").forEach((li) => {
+    const n = +li.dataset.step;
+    li.classList.toggle("done", n < step);
+    li.classList.toggle("active", running && n === step);
+  });
+  $("#sheet-status").textContent = running ? job.message : { cancelled: "中止しました", error: `エラー: ${job.error}` }[job.status] || "";
+  $("[data-cancel]", $("#sheet-run")).hidden = !running;
+}
+
+// 調の名前を日本語に（例: "F# minor" → 嬰ヘ短調）
+function keyJa(k) {
+  const m = /^([A-G])([#b]?) (major|minor)$/.exec(k || "");
+  if (!m) return k || "-";
+  const name = { C: "ハ", D: "ニ", E: "ホ", F: "ヘ", G: "ト", A: "イ", B: "ロ" }[m[1]];
+  return `${m[2] === "#" ? "嬰" : m[2] === "b" ? "変" : ""}${name}${m[3] === "major" ? "長調" : "短調"}`;
+}
+
+// 調号（♯は正・♭は負）と、その調号の長調・短調
+const KEY_SIGS = {
+  "-7": ["Cb", "Ab"], "-6": ["Gb", "Eb"], "-5": ["Db", "Bb"], "-4": ["Ab", "F"], "-3": ["Eb", "C"], "-2": ["Bb", "G"], "-1": ["F", "D"],
+  "0": ["C", "A"], "1": ["G", "E"], "2": ["D", "B"], "3": ["A", "F#"], "4": ["E", "C#"], "5": ["B", "G#"], "6": ["F#", "D#"], "7": ["C#", "A#"],
+};
+const sigLabel = (n) => (n === 0 ? "なし" : `${n > 0 ? "♯" : "♭"}${Math.abs(n)}つ`);
+function keySigOptions(cur) {
+  return [`<option value="" ${cur == null ? "selected" : ""}>自動</option>`].concat(
+    Object.entries(KEY_SIGS).filter(([n]) => Math.abs(n) <= 6).map(([n, [maj, min]]) =>
+      `<option value="${n}" ${String(cur) === n ? "selected" : ""}>${sigLabel(+n)}（${keyJa(maj + " major")}・${keyJa(min + " minor")}）</option>`)
+  ).join("");
+}
+
+function sheetArt(title) {
+  return `<div class="art" style="--h:${hue(title || "score")}"><svg><use href="#i-score"/></svg></div>`;
+}
+
+function renderSheet(m, scroll = false) {
+  const u = m.urls;
+  const opt = (vals, cur) => vals.map(([v, t]) => `<option value="${v}" ${String(v) === String(cur) ? "selected" : ""}>${t}</option>`).join("");
+  $("#sheet-result").innerHTML = `
+    <div class="card">
+      <div class="sheet-head">
+        <div>
+          <div class="eyebrow">楽譜</div>
+          <h2>${esc(m.title)}</h2>
+          <div class="facts">
+            <div class="fact"><b>${esc(keyJa(m.key))}</b><span>調（${esc(m.key)}・${sigLabel(m.key_sharps ?? 0)}）${m.key_fixed ? "・指定" : ""}</span></div>
+            <div class="fact"><b>${esc(m.time_signature)}</b><span>拍子</span></div>
+            <div class="fact"><b>${Math.round(m.bpm)}</b><span>テンポ${m.bpm_fixed ? "（指定）" : "（自動）"}</span></div>
+            <div class="fact"><b>${m.measures}</b><span>小節</span></div>
+            <div class="fact"><b>${m.notes}</b><span>音</span></div>
+          </div>
+          ${m.key_candidates?.length > 1 ? `<p class="muted small" style="margin:10px 0 0">調のほかの候補：${m.key_candidates.slice(1, 4).map((c) =>
+            `<button class="chip small-chip" data-key="${c.sharps}" title="この調号で作り直す">${esc(keyJa(c.key))}（${sigLabel(c.sharps)}）</button>`).join(" ")}</p>` : ""}
+          <div class="hero-actions">
+            <button class="btn primary" data-sheet-ab="score"><svg><use href="#i-play"/></svg>原曲 ↔ 楽譜どおり</button>
+            <button class="btn" data-sheet-ab="preview"><svg><use href="#i-play"/></svg>原曲 ↔ 採譜（演奏そのまま）</button>
+          </div>
+          ${m.playback === "simple" ? `<p class="muted small">※ ピアノ音源（FluidSynth）が使えなかったため、簡易な音で鳴らしています。</p>` : ""}
+        </div>
+        <div class="downloads">
+          <a class="btn" href="${esc(u.pdf)}" target="_blank"><svg><use href="#i-download"/></svg>PDF（印刷用）</a>
+          <a class="btn" href="${esc(u.musicxml)}" download="${esc(m.title)}.musicxml"><svg><use href="#i-download"/></svg>MusicXML（MuseScoreで編集）</a>
+          <a class="btn" href="${esc(u.score_midi)}" download="${esc(m.title)}.mid"><svg><use href="#i-download"/></svg>MIDI（楽譜どおり）</a>
+          <a class="btn ghost" href="${esc(u.transcription_midi)}" download="${esc(m.title)}_演奏.mid"><svg><use href="#i-download"/></svg>MIDI（演奏そのまま）</a>
+          ${u.score_audio ? `<a class="btn ghost" href="${esc(u.score_audio)}" download="${esc(m.title)}_楽譜どおり.wav"><svg><use href="#i-download"/></svg>音声（楽譜どおり）</a>` : ""}
+        </div>
+      </div>
+      <div class="roll-wrap">
+        <canvas class="roll" id="sheet-roll"></canvas>
+        <div class="roll-legend"><span><i style="background:var(--accent)"></i>右手</span><span><i style="background:var(--accent-2)"></i>左手</span><span><i class="ghost-key"></i>弾いていないと判断して除いた音</span><span>横 = 時間・縦 = 音の高さ</span></div>
+        ${m.cleanup && m.sensitivity !== "off" ? `<p class="muted small">弾いていないと思われる弱い音・短すぎる音を <b>${m.cleanup.removed}</b> 個除き、少しずれて弾いた <b>${m.cleanup.merged}</b> 個の音を和音にそろえました。除きすぎ・残しすぎと感じたら「音を拾う量」を変えて作り直してください。</p>` : ""}
+      </div>
+      <form class="rebuild" id="sheet-rebuild">
+        <label class="field">調号<select name="key_sharps">${keySigOptions(m.key_fixed ? m.key_sharps : null)}</select></label>
+        <label class="field">音を拾う量<select name="sensitivity">${opt([["low", "少なめ"], ["normal", "ふつう"], ["high", "多め"], ["off", "除かない"]], m.sensitivity || "normal")}</select></label>
+        <label class="field">拍子<select name="time_signature">${opt([["4/4", "4/4"], ["3/4", "3/4"], ["2/4", "2/4"], ["6/8", "6/8"]], m.time_signature)}</select></label>
+        <label class="field">テンポ（空欄で自動）<input name="bpm" type="number" min="30" max="300" step="0.1" value="${m.bpm_fixed ? m.bpm : ""}" placeholder="自動（${Math.round(m.bpm)}）"></label>
+        <label class="field">リズムの細かさ<select name="grid">${opt([[4, "16分音符まで"], [2, "8分音符まで"]], m.grid)}</select></label>
+        <label class="field">右手と左手の境目<select name="split">${opt([[55, "G3"], [60, "C4（真ん中のド）"], [64, "E4"]], m.split)}</select></label>
+        <button class="btn" type="submit"><svg><use href="#i-redo"/></svg>この設定で作り直す</button>
+      </form>
+      <p class="muted small">作り直しは採譜をやり直さないので数秒で終わります。拍がずれていると感じたら、テンポを指定するか拍子を変えてみてください。</p>
+    </div>
+    <div class="pages">${m.page_urls.map((p, i) => `<div class="page"><img src="${esc(p)}" alt="楽譜 ${i + 1}ページ目" loading="lazy"></div>`).join("")}</div>`;
+
+  const orig = { src: u.audio, title: `${m.title}（原曲）`, sub: "原曲", category: "" };
+  const other = {
+    preview: [{ src: u.preview, title: "採譜（演奏そのまま）", sub: m.title, category: "" }, "B 採譜"],
+    score: [{ src: u.score_audio || u.preview, title: "楽譜どおりの音", sub: m.title, category: "" }, "B 楽譜"],
+  };
+  $$("[data-sheet-ab]").forEach((b) => b.addEventListener("click", () => {
+    const [track, label] = other[b.dataset.sheetAb];
+    player.compare(orig, track, ["A 原曲", label]);
+  }));
+  $$("[data-key]", $("#sheet-result")).forEach((b) => b.addEventListener("click", () => {
+    $("#sheet-rebuild [name=key_sharps]").value = b.dataset.key;
+    $("#sheet-rebuild").requestSubmit();
+  }));
+  $("#sheet-rebuild").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const f = new FormData(e.target);
+    const bpm = f.get("bpm"), ks = f.get("key_sharps");
+    startJob(() => post(`/api/sheets/${encodeURIComponent(m.name)}/rebuild`, {
+      bpm: bpm ? parseFloat(bpm) : null, time_signature: f.get("time_signature"), grid: +f.get("grid"), split: +f.get("split"),
+      key_sharps: ks === "" ? null : +ks, sensitivity: f.get("sensitivity"),
+    }));
+  });
+  drawRoll($("#sheet-roll"), m.roll, m.split, m.duration);
+  if (scroll) $("#sheet-result").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function drawRoll(canvas, roll, split, duration) {
+  if (!roll?.length) return;
+  const dpr = window.devicePixelRatio || 1;
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  canvas.width = w * dpr; canvas.height = h * dpr;
+  const ctx = canvas.getContext("2d");
+  ctx.scale(dpr, dpr);
+  const css = getComputedStyle(document.documentElement);
+  const colR = css.getPropertyValue("--accent").trim(), colL = css.getPropertyValue("--accent-2").trim(), line = css.getPropertyValue("--line").trim();
+  const lo = Math.min(...roll.map((n) => n[0])) - 2, hi = Math.max(...roll.map((n) => n[0])) + 2;
+  const end = Math.max(duration || 0, ...roll.map((n) => n[2]));
+  const y = (p) => h - ((p - lo) / (hi - lo)) * h;
+  ctx.strokeStyle = line;
+  ctx.setLineDash([4, 4]);
+  ctx.beginPath(); ctx.moveTo(0, y(split - 0.5)); ctx.lineTo(w, y(split - 0.5)); ctx.stroke();
+  ctx.setLineDash([]);
+  const rowH = Math.max(2, h / (hi - lo) - 1);
+  const muted = css.getPropertyValue("--text-3").trim();
+  for (const [p, s, e, v, used = true] of roll) {
+    const x = (s / end) * w, bw = Math.max(2, ((e - s) / end) * w);
+    if (!used) {
+      ctx.globalAlpha = 0.9;
+      ctx.strokeStyle = muted;
+      ctx.setLineDash([2, 2]);
+      ctx.strokeRect(x, y(p) - rowH / 2, Math.max(4, bw), rowH);
+      ctx.setLineDash([]);
+      continue;
+    }
+    ctx.globalAlpha = 0.35 + 0.65 * (v / 127);
+    ctx.fillStyle = p >= split ? colR : colL;
+    ctx.fillRect(x, y(p) - rowH / 2, bw, rowH);
+  }
+  ctx.globalAlpha = 1;
+}
+
+async function loadSheets() {
+  const rows = await api("/api/sheets").catch(() => []);
+  $("#sheet-history").innerHTML = rows.map((r, i) => `
+    <div class="row" data-sheet="${i}" style="cursor:pointer">
+      ${sheetArt(r.title)}
+      <div class="row-body">
+        <div class="row-title">${esc(r.title)}</div>
+        <div class="row-sub">${esc(r.created.replace("T", " ").slice(0, 16))} ・ ${esc(keyJa(r.key))} ・ ${esc(r.time_signature)} ・ ${r.measures}小節</div>
+      </div>
+      <a href="${esc(r.urls.pdf)}" target="_blank">PDF</a>
+    </div>`).join("") || `<div class="empty-state">まだありません。上の丸にピアノの音声をドロップして始めましょう。</div>`;
+  $$("[data-sheet]", $("#sheet-history")).forEach((el) => el.addEventListener("click", async (e) => {
+    if (e.target.closest("a")) return;
+    renderSheet(await api(`/api/sheets/${encodeURIComponent(rows[el.dataset.sheet].name)}`), true);
+  }));
+}
+
 // ---------- プレイヤー ----------
 const player = (() => {
   const audio = new Audio();
   const canvas = $("#pl-wave");
   const ctx = canvas.getContext("2d");
   const peaksCache = new Map();
-  let tracks = null, which = "a", peaks = null, raf = 0;
+  let tracks = null, which = "a", peaks = null, raf = 0, labels = ["A 原曲", "B 音色"];
 
   const cur = () => tracks?.[which];
 
@@ -536,7 +739,9 @@ const player = (() => {
   function showMeta() {
     const t = cur();
     $("#pl-title").textContent = t.title;
-    $("#pl-sub").textContent = tracks.b ? `A/B比較中 ・ ${which === "a" ? "A: 原曲" : "B: " + tracks.b.title}` : t.sub || "";
+    $("#pl-sub").textContent = tracks.b ? `A/B比較中 ・ ${which === "a" ? labels[0] : `${labels[1]}: ${tracks.b.title}`}` : t.sub || "";
+    $('#pl-ab [data-ab="a"]').textContent = labels[0];
+    $('#pl-ab [data-ab="b"]').textContent = labels[1];
     $("#pl-art").outerHTML = t.category ? art(t.category).replace('class="art ', 'id="pl-art" class="art ') : `<div class="art empty" id="pl-art"><svg><use href="#i-wave"/></svg></div>`;
     $("#pl-ab").hidden = !tracks.b;
     $$("#pl-ab button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.ab === which));
@@ -577,7 +782,10 @@ const player = (() => {
 
   return {
     play(t) { tracks = { a: t }; which = "a"; load(false); },
-    compare(a, b) { tracks = { a, b }; which = "a"; load(false); toast("A/Bボタン（またはキーボードの A / B）で切り替えて聴き比べられます"); },
+    compare(a, b, names = ["A 原曲", "B 音色"]) {
+      tracks = { a, b }; which = "a"; labels = names; load(false);
+      toast("A/Bボタン（またはキーボードの A / B）で切り替えて聴き比べられます");
+    },
   };
 })();
 
@@ -614,8 +822,8 @@ $$("[data-cancel]").forEach((b) => b.addEventListener("click", async () => {
   toast("中止しています（今の処理が終わったら止まります）");
 }));
 
-const JOB_LABEL = { build: "録音中", test: "テスト録音中", match: "音色を探しています" };
-const JOB_VIEW = { build: "record", test: "record", match: "match" };
+const JOB_LABEL = { build: "録音中", test: "テスト録音中", match: "音色を探しています", sheet: "楽譜を作っています" };
+const JOB_VIEW = { build: "record", test: "record", match: "match", sheet: "sheet" };
 $("#job-mini").addEventListener("click", () => state.job && showView(JOB_VIEW[state.job.kind]));
 
 function renderJob(job) {
@@ -625,6 +833,9 @@ function renderJob(job) {
   $("#build-btn").disabled = $("#test-btn").disabled = running;
   $("#match-btn").disabled = running || !songInput.files.length;
   orb.classList.toggle("busy", running && job.kind === "match");
+  sheetOrb.classList.toggle("busy", running && job.kind === "sheet");
+  $("#sheet-btn").disabled = running || !sheetInput.files.length;
+  if (job.kind === "sheet") renderSheetJob(job);
 
   if (job.kind === "build") {
     const box = $("#build-run");
@@ -675,6 +886,10 @@ function renderJob(job) {
 }
 
 function onJobEnd(job) {
+  if (job.kind === "sheet") {
+    if (job.status === "done") { renderSheet(job.result, true); loadSheets(); }
+    else if (job.status === "error") toast(job.error);
+  }
   if (job.kind === "test") {
     if (job.status !== "done") {
       $("#test-result").innerHTML = `<div class="verdict bad"><div class="verdict-body"><b>テスト録音できませんでした</b>${esc(job.error || "中止しました")}</div></div>`;
@@ -709,13 +924,14 @@ function onJobEnd(job) {
 // ---------- 起動 ----------
 (async () => {
   const hash = location.hash.slice(1);
-  const view = ["record", "library", "match"].includes(hash) ? hash : store.get("view") || "record";
+  const view = ["record", "library", "match", "sheet"].includes(hash) ? hash : store.get("view") || "record";
   await loadInstruments();
   showView(view);
   // ページを開き直したとき、実行中のジョブがあれば表示を再開
   const cur = await api("/api/jobs/current").catch(() => null);
   if (cur && cur.status === "running") { state.job = cur; renderJob(cur); poll(); }
   else if (cur && cur.kind === "match" && cur.status === "done") renderMatch(cur.result);
+  else if (cur && cur.kind === "sheet" && cur.status === "done") renderSheet(cur.result);
   const tone = new URLSearchParams(location.search).get("tone");
   if (tone) openTone(tone);
 })();

@@ -81,6 +81,24 @@ def _cmd_presets(a):
         print(f"{p.id}\t{p.category}\t{p.name}")
 
 
+def _cmd_sheet(a):
+    from .sheet.pipeline import make_sheet, rebuild
+
+    opts = dict(bpm=a.bpm, time_signature=a.time_signature, grid={8: 2, 16: 4}[a.grid], split=a.split, key_sharps=a.key, sensitivity=a.sensitivity)
+    if a.rebuild:
+        meta = rebuild(a.out, **opts)
+    else:
+        if not a.input:
+            raise ValueError("入力ファイルを指定してください")
+        meta = make_sheet(a.input, a.out, title=a.title, backend=a.transcriber, **opts)
+    out = Path(a.out)
+    others = "、".join(c["key"] for c in meta["key_candidates"][1:4])
+    c = meta["cleanup"]
+    print(f"弾いていないと思われる音を {c['removed']} 個除き、{c['merged']} 個を和音にそろえました")
+    print(f"\n{meta['key']}（ほかの候補: {others}）・{meta['time_signature']}・テンポ {meta['bpm']}・{meta['measures']}小節・{meta['notes']}音")
+    print(f"PDF: {out / meta['files']['pdf']}  /  MusicXML: {out / meta['files']['musicxml']}  /  MIDI: {out / meta['files']['score_midi']}")
+
+
 def _cmd_ui(a):
     from .ui.server import serve
 
@@ -149,6 +167,23 @@ def main(argv=None):
     sp = sub.add_parser("presets", help="楽器設定から読み込んだ音色一覧")
     sp.add_argument("-i", "--instrument", required=True)
     sp.set_defaults(func=_cmd_presets)
+
+    sp = sub.add_parser("sheet", help="ピアノの音声（mp3/wav/mp4/動画）から楽譜を作る")
+    sp.add_argument("input", nargs="?", help="ピアノの音声ファイル")
+    sp.add_argument("-o", "--out", default="out/sheet")
+    sp.add_argument("--title", help="楽譜のタイトル（省略時はファイル名）")
+    sp.add_argument("--bpm", type=float, help="テンポを指定する（省略時は自動で推定）")
+    sp.add_argument("--time-signature", default="4/4", choices=["4/4", "3/4", "2/4", "6/8"], help="拍子")
+    sp.add_argument("--grid", type=int, default=16, choices=[8, 16], help="リズムを何分音符単位でそろえるか")
+    sp.add_argument("--split", type=int, default=60, help="右手と左手を分ける音（MIDI番号。60 = 真ん中のド）")
+    sp.add_argument("--key", type=int, choices=range(-7, 8), metavar="-7〜7", help="調号を指定する（♯の数は正、♭の数は負。例: -5 = ♭5つ）。省略すると自動")
+    sp.add_argument("--transcriber", default="piano", choices=["piano", "basic"], help="piano = ピアノ専用の高精度採譜")
+    sp.add_argument(
+        "--sensitivity", default="normal", choices=["off", "low", "normal", "high"],
+        help="音を拾う量。low = 弱い音を多めに除く / high = 弱い音もなるべく残す / off = 除かない",
+    )
+    sp.add_argument("--rebuild", action="store_true", help="採譜はやり直さず、-o のフォルダの結果から設定だけ変えて作り直す")
+    sp.set_defaults(func=_cmd_sheet)
 
     sp = sub.add_parser("ui", help="ブラウザで使う画面を起動する")
     sp.add_argument("--root", default=".", help="instruments/ があるフォルダ（録音データもここに保存）")

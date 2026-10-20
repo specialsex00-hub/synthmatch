@@ -30,6 +30,39 @@ pip install -e ".[transcribe]"     # 和音の採譜（basic-pitch）
 brew install ffmpeg                # mp3 などを読む場合
 ```
 
+## ピアノの音から楽譜を作る
+
+ピアノだけの音声（mp3 / wav / mp4 / 動画）から、楽譜（PDF・MusicXML・MIDI）を作る。
+
+```sh
+pip install -e ".[sheet]"     # torch などを含むので重い
+brew install ffmpeg fluid-synth   # 動画の読み込み / ピアノの音で鳴らす（初回に SoundFont 約24MB を自動取得）
+synthmatch sheet piano.mp4 -o out/sheet --title "曲名"
+synthmatch sheet -o out/sheet --rebuild --time-signature 3/4 --bpm 92   # 採譜はそのままで設定だけ変えて作り直す
+synthmatch sheet -o out/sheet --rebuild --key -5   # 調号を指定（♯は正・♭は負。-5 = ♭5つ）
+```
+
+1. ffmpeg で音声を取り出す（動画もそのまま渡せる）
+2. ピアノ専用の採譜モデル（ByteDance, Kong et al. 2021）で音を拾う（初回のみモデル約170MBをダウンロード）
+3. 拍とテンポを推定し、弾いていないと思われる音（弱い誤検出・押さえたままの音の再検出・極端に短い音）を除き、
+   少しずれて弾いた音を1つの和音にそろえてから、16分（または8分）音符の格子にそろえる
+   （除く量は `--sensitivity low / normal / high / off` で調整）。3連符で弾いている拍は 1/3 拍の格子にそろえる
+   （テンポの揺れを許して、等間隔に並んでいるかで判定）
+4. 調を推定し（嬰ハ長調／変ニ長調のように書き方が2通りある調は♯・♭の少ない方）、右手（ト音記号）と左手（ヘ音記号）に分けて MusicXML にする → Verovio で描画、PDF 化
+5. 楽譜には「聞こえている長さ」で書く：ペダルで響いている音は伸ばし、録音の最後まで鳴っていた音は小節の終わりまで伸ばす。
+   休符は拍の区切りで分けて書く（複付点の休符を作らない）
+6. 採譜結果（ペダルつき）と楽譜どおりの演奏を、FluidSynth でピアノの音にする
+
+| 出力 | 中身 |
+|---|---|
+| `score.pdf` | 印刷用の楽譜 |
+| `score.musicxml` | MuseScore などで開いて直せる楽譜データ |
+| `score.mid` / `transcription.mid` | 楽譜どおりの MIDI / 演奏そのままの MIDI |
+| `preview.wav` | 採譜結果を演奏そのまま（ペダルつき）ピアノの音で鳴らしたもの |
+| `score.wav` | 楽譜どおりにピアノの音で鳴らしたもの（先頭を原曲にそろえてある） |
+
+自動の楽譜は「どちらの手で弾くか」「音の長さの書き方」などが人の書いた楽譜とは違うことがある。仕上げは MuseScore で直す前提。
+
 ## 画面（UI）で使う
 
 ```sh
@@ -41,6 +74,7 @@ synthmatch ui        # ブラウザで http://127.0.0.1:8765/ が開く
 | 録音 | 機器の接続チェック、テスト録音（音量の確認つき）、音色ライブラリの録音（カテゴリ指定・音色名で1つだけ・進み具合・残り時間・中止） |
 | ライブラリ | 音色の検索・試聴。音色をクリックすると、その音色の分析（明るさ・アタック・サステイン・余韻・ノイズ感と、ライブラリ内での位置）を表示 |
 | 曲から探す | 曲（と任意で MIDI）をドロップ → 候補・調整案・原曲とのA/B比較。「探す範囲」で Bell だけ、などに絞れる |
+| 楽譜にする | ピアノの音声をドロップ → 楽譜の表示・PDF/MusicXML/MIDI・原曲と採譜のA/B比較・ピアノロール。拍子やテンポを変えて数秒で作り直せる |
 
 音色はカテゴリ単位ではなく、1音色ずつ録音・分析・照合する。
 照合結果は `report.html`（試聴・A/B比較・特徴の比較表つき。フォルダごと渡せば他の人も見られる）と `report.md` に出力される。
@@ -119,6 +153,7 @@ src/synthmatch/
   hints.py        特徴量の差から調整案を作る
   pipeline.py     全体の流れとレポート出力
   instruments/    楽器（demo / hardware / vst）
+  sheet/          ピアノの音声 → 楽譜（採譜・幽霊の音の除去・拍の推定・量子化・music21・Verovio・FluidSynth）
   ui/             Web UI（FastAPI + 素の HTML/JS）
 ```
 

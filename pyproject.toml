@@ -26,6 +26,8 @@ transcribe = ["basic-pitch"]
 hardware = ["python-rtmidi", "sounddevice"]
 # VST / AU プラグイン
 vst = ["pedalboard"]
+# ピアノの音声から楽譜を作る（torch を含むので重い。mp4 などの読み込みに ffmpeg も必要）
+sheet = ["piano_transcription_inference", "torch", "torchlibrosa", "audioread", "music21", "verovio", "pymupdf"]
 # ブラウザの画面
 ui = ["fastapi", "uvicorn[standard]", "python-multipart"]
 dev = ["pytest", "httpx"]
