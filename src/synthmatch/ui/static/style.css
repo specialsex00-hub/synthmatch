@@ -475,3 +475,13 @@ a.btn { text-decoration: none; }
 .small-chip { padding: 3px 10px; font-size: 12px; margin: 2px 2px 0 0; }
 .roll-legend { flex-wrap: wrap; }
 .roll-legend i.ghost-key { border: 1px dashed var(--text-3); background: transparent; }
+.mods { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; margin-top: 12px; }
+.mods > .muted { margin-right: 4px; font-weight: 600; }
+.mod { display: inline-flex; flex-direction: column; background: var(--surface-2); border-radius: 10px; padding: 4px 10px; font-size: 13px; line-height: 1.35; }
+.mod small { color: var(--text-3); font-size: 11px; }
+.mod-arrow { color: var(--text-3); }
+.mod-item { display: inline-flex; align-items: center; gap: 8px; }
+.mod select { border: 0; background: transparent; padding: 0 2px; font-weight: 700; font-size: 13px; color: var(--text); cursor: pointer; }
+.mod select:hover { color: var(--accent); }
+.mod b { font-size: 12px; color: var(--text-2); font-weight: 600; }
+.mods .pill { margin-left: 4px; }

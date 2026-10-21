@@ -84,15 +84,19 @@ def _cmd_presets(a):
 def _cmd_sheet(a):
     from .sheet.pipeline import make_sheet, rebuild
 
-    opts = dict(bpm=a.bpm, time_signature=a.time_signature, grid={8: 2, 16: 4}[a.grid], split=a.split, key_sharps=a.key, sensitivity=a.sensitivity)
+    opts = dict(bpm=a.bpm, time_signature=a.time_signature, grid={8: 2, 16: 4}[a.grid], split=a.split, sensitivity=a.sensitivity)
     if a.rebuild:
-        meta = rebuild(a.out, **opts)
+        key = "auto" if a.key == "auto" else int(a.key) if a.key is not None else "keep"
+        meta = rebuild(a.out, key=key, **opts)
     else:
         if not a.input:
             raise ValueError("入力ファイルを指定してください")
-        meta = make_sheet(a.input, a.out, title=a.title, backend=a.transcriber, **opts)
+        key_sharps = int(a.key) if a.key not in (None, "auto") else None
+        meta = make_sheet(a.input, a.out, title=a.title, backend=a.transcriber, key_sharps=key_sharps, **opts)
     out = Path(a.out)
     others = "、".join(c["key"] for c in meta["key_candidates"][1:4])
+    for mod in meta.get("modulations", []):
+        print(f"小節{mod['measure']}から転調: {mod['key']}（調号 {mod['sharps']:+d}）")
     c = meta["cleanup"]
     print(f"弾いていないと思われる音を {c['removed']} 個除き、{c['merged']} 個を和音にそろえました")
     print(f"\n{meta['key']}（ほかの候補: {others}）・{meta['time_signature']}・テンポ {meta['bpm']}・{meta['measures']}小節・{meta['notes']}音")
@@ -176,7 +180,11 @@ def main(argv=None):
     sp.add_argument("--time-signature", default="4/4", choices=["4/4", "3/4", "2/4", "6/8"], help="拍子")
     sp.add_argument("--grid", type=int, default=16, choices=[8, 16], help="リズムを何分音符単位でそろえるか")
     sp.add_argument("--split", type=int, default=60, help="右手と左手を分ける音（MIDI番号。60 = 真ん中のド）")
-    sp.add_argument("--key", type=int, choices=range(-7, 8), metavar="-7〜7", help="調号を指定する（♯の数は正、♭の数は負。例: -5 = ♭5つ）。省略すると自動")
+    sp.add_argument(
+        "--key", choices=[str(i) for i in range(-6, 7)] + ["auto"], metavar="-6〜6|auto",
+        help="調号（♯の数は正、♭の数は負。例: -5 = ♭5つ）。曲全体をこの調号で書く。auto = 自動（転調も検出）。"
+        "--rebuild で省略すると前回の指定のまま",
+    )
     sp.add_argument("--transcriber", default="piano", choices=["piano", "basic"], help="piano = ピアノ専用の高精度採譜")
     sp.add_argument(
         "--sensitivity", default="normal", choices=["off", "low", "normal", "high"],

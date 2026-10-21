@@ -90,6 +90,7 @@ def sheet_from_transcription(
     grid: int = 4,
     split: int = 60,
     key_sharps: int | None = None,
+    key_plan: list[tuple[float, int]] | None = None,
     sensitivity: str = "normal",
     playback: str | None = None,
     log=print,
@@ -114,12 +115,16 @@ def sheet_from_transcription(
     right, left = split_hands(qnotes, split=split)
 
     log("[4/4] 楽譜にしています")
-    score, info = build_score(right, left, bpm=tempo, time_signature=time_signature, title=title, key_sharps=key_sharps)
+    score, info = build_score(
+        right, left, bpm=tempo, time_signature=time_signature, title=title, key_sharps=key_sharps, key_plan=key_plan
+    )
     xml = out / "score.musicxml"
     score.write("musicxml", fp=str(xml))
     score.write("midi", fp=str(out / "score.mid"))
     pages, pdf = render(xml, out)
     log(f"  {info.key}・{info.time_signature}・{info.measures}小節・{len(pages)}ページ")
+    for mod in info.modulations:
+        log(f"  小節{mod['measure']}から転調: {mod['key']}（調号 {mod['sharps']:+d}）")
     log("  楽譜どおりの音を作っています…")
     offset = max(beats_to_seconds(origin_beat(notes, beats), beats), 0.0)
     method = render_midi(out / "score.mid", out / "score.wav", offset=offset, log=log)
@@ -131,8 +136,11 @@ def sheet_from_transcription(
         "created": datetime.now().isoformat(timespec="seconds"),
         "key": info.key,
         "key_sharps": info.key_sharps,
-        "key_fixed": key_sharps is not None,
+        "key_fixed": key_sharps is not None,  # 曲全体を1つの調号に指定
+        "key_plan": info.key_plan,
+        "key_plan_fixed": bool(key_plan),  # 区間ごとの調号を手で直した
         "key_candidates": info.key_candidates,
+        "modulations": info.modulations,
         "playback": playback or method,
         "time_signature": info.time_signature,
         "bpm": info.bpm,
@@ -165,8 +173,19 @@ def sheet_from_transcription(
     return meta
 
 
-def rebuild(out_dir: str | Path, **kw) -> dict:
-    """前回の採譜結果（transcription.mid）から、拍子やテンポなどの設定だけ変えて楽譜を作り直す。"""
+KEEP = "keep"
+
+
+def rebuild(out_dir: str | Path, key: object = KEEP, **kw) -> dict:
+    """前回の採譜結果（transcription.mid）から、拍子やテンポなどの設定だけ変えて楽譜を作り直す。
+
+    key（調号の決め方）:
+      "keep"   前回の指定をそのまま使う（手で直した区間ごとの調号・曲全体の調号も引き継ぐ）
+      "auto"   自動で推定し直す（転調も検出）
+      int      曲全体をその調号で書く
+      list     区間ごとの調号 [(何拍目から, 調号), ...]
+    互換のため key_sharps=... でも曲全体の調号を指定できる。
+    """
     from ..notes import read_midi
 
     out = Path(out_dir)
@@ -180,9 +199,19 @@ def rebuild(out_dir: str | Path, **kw) -> dict:
         old["playback"] = None
     opts = {k: old[k] for k in ("time_signature", "grid", "split")}
     opts["bpm"] = old["bpm"] if old.get("bpm_fixed") else None
-    opts["key_sharps"] = old.get("key_sharps") if old.get("key_fixed") else None
     opts["sensitivity"] = old.get("sensitivity", "normal")
-    opts.update({k: v for k, v in kw.items() if k in ("bpm", "time_signature", "grid", "split", "key_sharps", "sensitivity", "log")})
+    opts.update({k: v for k, v in kw.items() if k in ("bpm", "time_signature", "grid", "split", "sensitivity", "log")})
+    if "key_sharps" in kw:
+        key = "auto" if kw["key_sharps"] is None else int(kw["key_sharps"])
+    if key == KEEP:
+        opts["key_sharps"] = old.get("key_sharps") if old.get("key_fixed") else None
+        opts["key_plan"] = [(p["beat"], p["sharps"]) for p in old.get("key_plan", [])] if old.get("key_plan_fixed") else None
+    elif key == "auto":
+        opts["key_sharps"], opts["key_plan"] = None, None
+    elif isinstance(key, int):
+        opts["key_sharps"], opts["key_plan"] = key, None
+    else:
+        opts["key_sharps"], opts["key_plan"] = None, [(float(b), int(sig)) for b, sig in key]
     log = opts.get("log", print)
     if not (out / "preview.wav").exists() or old.get("playback") != "fluidsynth":
         old["playback"] = render_midi(mid, out / "preview.wav", log=log)

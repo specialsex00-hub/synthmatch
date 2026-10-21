@@ -538,11 +538,23 @@ const KEY_SIGS = {
   "0": ["C", "A"], "1": ["G", "E"], "2": ["D", "B"], "3": ["A", "F#"], "4": ["E", "C#"], "5": ["B", "G#"], "6": ["F#", "D#"], "7": ["C#", "A#"],
 };
 const sigLabel = (n) => (n === 0 ? "なし" : `${n > 0 ? "♯" : "♭"}${Math.abs(n)}つ`);
-function keySigOptions(cur) {
-  return [`<option value="" ${cur == null ? "selected" : ""}>自動</option>`].concat(
-    Object.entries(KEY_SIGS).filter(([n]) => Math.abs(n) <= 6).map(([n, [maj, min]]) =>
-      `<option value="${n}" ${String(cur) === n ? "selected" : ""}>${sigLabel(+n)}（${keyJa(maj + " major")}・${keyJa(min + " minor")}）</option>`)
-  ).join("");
+// 同じ調号の長調・短調（例: ♭5つ → 変ニ長調／変ロ短調）
+const keyPair = (n) => { const [maj, min] = KEY_SIGS[String(n)] || ["C", "A"]; return `${keyJa(maj + " major")}／${keyJa(min + " minor")}`; };
+const SIG_RANGE = Object.keys(KEY_SIGS).map(Number).filter((n) => Math.abs(n) <= 6).sort((a, b) => a - b);
+function keyModeOptions(m) {
+  const manual = m.key_fixed || m.key_plan_fixed;
+  return [
+    `<option value="keep" selected>${manual ? "今のまま（手で直した調号）" : "今のまま"}</option>`,
+    `<option value="auto">自動で推定し直す（転調も検出）</option>`,
+    ...SIG_RANGE.map((n) => `<option value="whole:${n}">曲全体を ${sigLabel(n)}（${esc(keyPair(n))}）</option>`),
+  ].join("");
+}
+const BAR_BEATS = { "4/4": 4, "3/4": 3, "2/4": 2, "6/8": 3 };
+// 調号の区間（古い結果には key_plan がないので、転調の一覧から作る）
+function keyPlanOf(m) {
+  if (m.key_plan?.length) return m.key_plan.map((p) => ({ ...p }));
+  const bar = BAR_BEATS[m.time_signature] || 4;
+  return [{ measure: 1, sharps: m.key_sharps ?? 0 }, ...(m.modulations || [])].map((x) => ({ beat: (x.measure - 1) * bar, measure: x.measure, sharps: x.sharps }));
 }
 
 function sheetArt(title) {
@@ -559,14 +571,25 @@ function renderSheet(m, scroll = false) {
           <div class="eyebrow">楽譜</div>
           <h2>${esc(m.title)}</h2>
           <div class="facts">
-            <div class="fact"><b>${esc(keyJa(m.key))}</b><span>調（${esc(m.key)}・${sigLabel(m.key_sharps ?? 0)}）${m.key_fixed ? "・指定" : ""}</span></div>
+            <div class="fact"><b>${sigLabel(m.key_sharps ?? 0)}</b><span>調号（${esc(keyPair(m.key_sharps ?? 0))}）${m.key_fixed || m.key_plan_fixed ? "・指定" : ""}${m.modulations?.length ? `・転調${m.modulations.length}回` : ""}</span></div>
             <div class="fact"><b>${esc(m.time_signature)}</b><span>拍子</span></div>
             <div class="fact"><b>${Math.round(m.bpm)}</b><span>テンポ${m.bpm_fixed ? "（指定）" : "（自動）"}</span></div>
             <div class="fact"><b>${m.measures}</b><span>小節</span></div>
             <div class="fact"><b>${m.notes}</b><span>音</span></div>
           </div>
-          ${m.key_candidates?.length > 1 ? `<p class="muted small" style="margin:10px 0 0">調のほかの候補：${m.key_candidates.slice(1, 4).map((c) =>
-            `<button class="chip small-chip" data-key="${c.sharps}" title="この調号で作り直す">${esc(keyJa(c.key))}（${sigLabel(c.sharps)}）</button>`).join(" ")}</p>` : ""}
+          <div class="mods">
+            <span class="muted small">${keyPlanOf(m).length > 1 ? "転調" : "調号"}</span>
+            ${keyPlanOf(m).map((x, i) => `<span class="mod-item">${i ? '<span class="mod-arrow">→</span>' : ""}<label class="mod">
+              <b>小節${x.measure}〜</b>
+              <select data-section="${i}" aria-label="小節${x.measure}からの調号">
+                ${SIG_RANGE.map((n) => `<option value="${n}" ${n === x.sharps ? "selected" : ""}>${sigLabel(n)}</option>`).join("")}
+                ${i ? `<option value="remove">転調をなくす</option>` : ""}
+              </select>
+              <small>${esc(keyPair(x.sharps))}</small></label></span>`).join("")}
+            ${m.key_fixed || m.key_plan_fixed
+              ? `<span class="pill warn plain-pill">手で指定中</span><button class="btn ghost small" data-key-auto><svg><use href="#i-redo"/></svg>自動に戻す</button>`
+              : `<span class="muted small">区間ごとに調号を選び直せます（ほかの区間はそのまま）</span>`}
+          </div>
           <div class="hero-actions">
             <button class="btn primary" data-sheet-ab="score"><svg><use href="#i-play"/></svg>原曲 ↔ 楽譜どおり</button>
             <button class="btn" data-sheet-ab="preview"><svg><use href="#i-play"/></svg>原曲 ↔ 採譜（演奏そのまま）</button>
@@ -587,7 +610,7 @@ function renderSheet(m, scroll = false) {
         ${m.cleanup && m.sensitivity !== "off" ? `<p class="muted small">弾いていないと思われる弱い音・短すぎる音を <b>${m.cleanup.removed}</b> 個除き、少しずれて弾いた <b>${m.cleanup.merged}</b> 個の音を和音にそろえました。除きすぎ・残しすぎと感じたら「音を拾う量」を変えて作り直してください。</p>` : ""}
       </div>
       <form class="rebuild" id="sheet-rebuild">
-        <label class="field">調号<select name="key_sharps">${keySigOptions(m.key_fixed ? m.key_sharps : null)}</select></label>
+        <label class="field">調号<select name="key_mode">${keyModeOptions(m)}</select></label>
         <label class="field">音を拾う量<select name="sensitivity">${opt([["low", "少なめ"], ["normal", "ふつう"], ["high", "多め"], ["off", "除かない"]], m.sensitivity || "normal")}</select></label>
         <label class="field">拍子<select name="time_signature">${opt([["4/4", "4/4"], ["3/4", "3/4"], ["2/4", "2/4"], ["6/8", "6/8"]], m.time_signature)}</select></label>
         <label class="field">テンポ（空欄で自動）<input name="bpm" type="number" min="30" max="300" step="0.1" value="${m.bpm_fixed ? m.bpm : ""}" placeholder="自動（${Math.round(m.bpm)}）"></label>
@@ -608,18 +631,27 @@ function renderSheet(m, scroll = false) {
     const [track, label] = other[b.dataset.sheetAb];
     player.compare(orig, track, ["A 原曲", label]);
   }));
-  $$("[data-key]", $("#sheet-result")).forEach((b) => b.addEventListener("click", () => {
-    $("#sheet-rebuild [name=key_sharps]").value = b.dataset.key;
-    $("#sheet-rebuild").requestSubmit();
-  }));
-  $("#sheet-rebuild").addEventListener("submit", (e) => {
-    e.preventDefault();
-    const f = new FormData(e.target);
-    const bpm = f.get("bpm"), ks = f.get("key_sharps");
+  // 作り直し：調号以外の設定は、いま画面の設定欄に入っている値を使う
+  const rebuildWith = (keySpec) => {
+    const f = new FormData($("#sheet-rebuild"));
+    const bpm = f.get("bpm");
     startJob(() => post(`/api/sheets/${encodeURIComponent(m.name)}/rebuild`, {
       bpm: bpm ? parseFloat(bpm) : null, time_signature: f.get("time_signature"), grid: +f.get("grid"), split: +f.get("split"),
-      key_sharps: ks === "" ? null : +ks, sensitivity: f.get("sensitivity"),
+      sensitivity: f.get("sensitivity"), ...keySpec,
     }));
+  };
+  $$("[data-section]", $("#sheet-result")).forEach((sel) => sel.addEventListener("change", () => {
+    const plan = keyPlanOf(m);
+    const i = +sel.dataset.section;
+    if (sel.value === "remove") plan.splice(i, 1);
+    else plan[i].sharps = +sel.value;
+    rebuildWith({ key_mode: "plan", key_plan: plan.map((p) => ({ beat: p.beat, sharps: p.sharps })) });
+  }));
+  $("[data-key-auto]", $("#sheet-result"))?.addEventListener("click", () => rebuildWith({ key_mode: "auto" }));
+  $("#sheet-rebuild").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const mode = new FormData(e.target).get("key_mode");
+    rebuildWith(mode.startsWith("whole:") ? { key_mode: "whole", key_sharps: +mode.slice(6) } : { key_mode: mode });
   });
   drawRoll($("#sheet-roll"), m.roll, m.split, m.duration);
   if (scroll) $("#sheet-result").scrollIntoView({ behavior: "smooth", block: "start" });
@@ -667,7 +699,7 @@ async function loadSheets() {
       ${sheetArt(r.title)}
       <div class="row-body">
         <div class="row-title">${esc(r.title)}</div>
-        <div class="row-sub">${esc(r.created.replace("T", " ").slice(0, 16))} ・ ${esc(keyJa(r.key))} ・ ${esc(r.time_signature)} ・ ${r.measures}小節</div>
+        <div class="row-sub">${esc(r.created.replace("T", " ").slice(0, 16))} ・ ${esc(keyJa(r.key))} ・ ${esc(r.time_signature)} ・ ${r.measures}小節${r.modulations?.length ? ` ・ 転調${r.modulations.length}回` : ""}</div>
       </div>
       <a href="${esc(r.urls.pdf)}" target="_blank">PDF</a>
     </div>`).join("") || `<div class="empty-state">まだありません。上の丸にピアノの音声をドロップして始めましょう。</div>`;
@@ -932,6 +964,11 @@ function onJobEnd(job) {
   if (cur && cur.status === "running") { state.job = cur; renderJob(cur); poll(); }
   else if (cur && cur.kind === "match" && cur.status === "done") renderMatch(cur.result);
   else if (cur && cur.kind === "sheet" && cur.status === "done") renderSheet(cur.result);
-  const tone = new URLSearchParams(location.search).get("tone");
-  if (tone) openTone(tone);
+  const params = new URLSearchParams(location.search);
+  if (params.get("tone")) openTone(params.get("tone"));
+  if (params.get("sheet")) {
+    const sheet = await api(`/api/sheets/${encodeURIComponent(params.get("sheet"))}`).catch(() => null);
+    if (sheet) renderSheet(sheet);
+    else toast("指定された楽譜が見つかりません");
+  }
 })();

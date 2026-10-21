@@ -112,9 +112,17 @@ class TestRequest(BaseModel):
     preset_id: str | None = None
 
 
+class KeySection(BaseModel):
+    beat: float
+    sharps: int
+
+
 class SheetRebuild(BaseModel):
     bpm: float | None = None
+    # 調号: keep = 前回のまま / auto = 自動（転調も検出）/ whole = 曲全体を key_sharps で / plan = 区間ごとに key_plan で
+    key_mode: str = "keep"
     key_sharps: int | None = None
+    key_plan: list[KeySection] | None = None
     sensitivity: str = "normal"
     time_signature: str = "4/4"
     grid: int = 4
@@ -426,9 +434,14 @@ def create_app(root: str | Path = ".") -> FastAPI:
         d = sheet_dir(name)
 
         def work_fn(job: Job):
+            key: object = req.key_mode
+            if req.key_mode == "whole":
+                key = int(req.key_sharps if req.key_sharps is not None else 0)
+            elif req.key_mode == "plan":
+                key = [(s.beat, s.sharps) for s in req.key_plan or []] or "auto"
             rebuild(
-                d, bpm=req.bpm, time_signature=req.time_signature, grid=req.grid, split=req.split,
-                key_sharps=req.key_sharps, sensitivity=req.sensitivity, log=job.write,
+                d, key=key, bpm=req.bpm, time_signature=req.time_signature, grid=req.grid, split=req.split,
+                sensitivity=req.sensitivity, log=job.write,
             )
             return sheet_payload(d)
 
@@ -439,7 +452,9 @@ def create_app(root: str | Path = ".") -> FastAPI:
         rows = []
         for f in sorted(sheets_root.glob("*/sheet.json"), reverse=True)[:50]:
             m = sheet_payload(f.parent)
-            rows.append({k: m[k] for k in ("name", "title", "created", "key", "time_signature", "measures", "notes", "urls")})
+            row = {k: m[k] for k in ("name", "title", "created", "key", "time_signature", "measures", "notes", "urls")}
+            row["modulations"] = m.get("modulations", [])
+            rows.append(row)
         return rows
 
     @app.get("/api/sheets/{name}")

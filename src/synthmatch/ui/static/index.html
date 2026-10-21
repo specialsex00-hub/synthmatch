@@ -267,10 +267,12 @@
               <select name="split"><option value="55">G3（左手を少なめ）</option><option value="60" selected>C4・真ん中のド</option><option value="64">E4（左手を多め）</option></select>
             </label>
             <label class="field">調号
-              <select name="key_sharps"><option value="">自動</option>
+              <select name="key_sharps"><option value="">自動（転調も検出）</option>
+                <optgroup label="曲全体をこの調号で書く">
                 <option value="-6">♭6つ</option><option value="-5">♭5つ</option><option value="-4">♭4つ</option><option value="-3">♭3つ</option><option value="-2">♭2つ</option><option value="-1">♭1つ</option>
                 <option value="0">なし</option>
                 <option value="1">♯1つ</option><option value="2">♯2つ</option><option value="3">♯3つ</option><option value="4">♯4つ</option><option value="5">♯5つ</option><option value="6">♯6つ</option>
+                </optgroup>
               </select>
             </label>
             <label class="field">音を拾う量

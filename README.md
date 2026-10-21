@@ -39,7 +39,8 @@ pip install -e ".[sheet]"     # torch などを含むので重い
 brew install ffmpeg fluid-synth   # 動画の読み込み / ピアノの音で鳴らす（初回に SoundFont 約24MB を自動取得）
 synthmatch sheet piano.mp4 -o out/sheet --title "曲名"
 synthmatch sheet -o out/sheet --rebuild --time-signature 3/4 --bpm 92   # 採譜はそのままで設定だけ変えて作り直す
-synthmatch sheet -o out/sheet --rebuild --key -5   # 調号を指定（♯は正・♭は負。-5 = ♭5つ）
+synthmatch sheet -o out/sheet --rebuild --key -5   # 曲全体をこの調号で書く（♯は正・♭は負。-5 = ♭5つ）
+synthmatch sheet -o out/sheet --rebuild --key auto # 自動に戻す（転調も検出）。--key を省略すると前回の指定のまま
 ```
 
 1. ffmpeg で音声を取り出す（動画もそのまま渡せる）
@@ -48,7 +49,7 @@ synthmatch sheet -o out/sheet --rebuild --key -5   # 調号を指定（♯は正
    少しずれて弾いた音を1つの和音にそろえてから、16分（または8分）音符の格子にそろえる
    （除く量は `--sensitivity low / normal / high / off` で調整）。3連符で弾いている拍は 1/3 拍の格子にそろえる
    （テンポの揺れを許して、等間隔に並んでいるかで判定）
-4. 調を推定し（嬰ハ長調／変ニ長調のように書き方が2通りある調は♯・♭の少ない方）、右手（ト音記号）と左手（ヘ音記号）に分けて MusicXML にする → Verovio で描画、PDF 化
+4. 調を推定し（嬰ハ長調／変ニ長調のように書き方が2通りある調は♯・♭の少ない方）、転調を見つけて途中に新しい調号を入れ、右手（ト音記号）と左手（ヘ音記号）に分けて MusicXML にする → Verovio で描画、PDF 化
 5. 楽譜には「聞こえている長さ」で書く：ペダルで響いている音は伸ばし、録音の最後まで鳴っていた音は小節の終わりまで伸ばす。
    休符は拍の区切りで分けて書く（複付点の休符を作らない）
 6. 採譜結果（ペダルつき）と楽譜どおりの演奏を、FluidSynth でピアノの音にする
