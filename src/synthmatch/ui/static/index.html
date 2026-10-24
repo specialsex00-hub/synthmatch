@@ -52,6 +52,8 @@
       <button data-view="sheet"><svg><use href="#i-score"/></svg><span>楽譜にする</span></button>
     </nav>
 
+    <a class="side-link public-only" href="https://github.com/specialsex00-hub/synthmatch" target="_blank" rel="noopener">ソースコード（GitHub）</a>
+
     <div class="side-progress">
       <div class="side-progress-top"><span>ライブラリ</span><span id="side-count"></span></div>
       <div class="bar"><span id="side-bar"></span></div>
@@ -287,8 +289,9 @@
               <select name="transcriber"><option value="piano">ピアノ専用（高精度）</option><option value="basic">汎用（ピアノ以外の楽器）</option></select>
             </label>
           </div>
-          <p class="muted small">初回だけ、ピアノ採譜のモデル（約170MB）をダウンロードします。</p>
+          <p class="muted small local-only">初回だけ、ピアノ採譜のモデル（約170MB）をダウンロードします。</p>
         </details>
+        <p class="public-note muted small" id="public-note" hidden></p>
       </form>
 
       <div class="card steps-card" id="sheet-run" hidden>

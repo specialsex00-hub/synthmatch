@@ -43,13 +43,21 @@ def make_sheet(
     split: int = 60,
     key_sharps: int | None = None,
     sensitivity: str = "normal",
+    max_seconds: float | None = None,
     log=print,
 ) -> dict:
+    """max_seconds を渡すと、それより長い音声は断る（公開版で処理が長くなりすぎないように）。"""
     src, out = Path(src), Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
 
     log("[1/4] 音声を読み込んでいます")
     wav = decode_audio(src, out / "audio.wav", sr=44100)
+    if max_seconds is not None:
+        import soundfile as sf
+
+        seconds = sf.info(str(wav)).duration
+        if seconds > max_seconds:
+            raise RuntimeError(f"音声が長すぎます（{seconds / 60:.1f}分）。{max_seconds / 60:.0f}分までにしてください。")
     wav16 = decode_audio(src, out / "audio16k.wav", sr=16000) if backend == "piano" else wav
 
     log("[2/4] ピアノの音を拾っています")

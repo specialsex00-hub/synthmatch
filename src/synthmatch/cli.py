@@ -106,7 +106,7 @@ def _cmd_sheet(a):
 def _cmd_ui(a):
     from .ui.server import serve
 
-    serve(a.root, port=a.port, open_browser=not a.no_browser)
+    serve(a.root, host=a.host, port=a.port, open_browser=not a.no_browser, public=a.public, retention_hours=a.retention_hours)
 
 
 def _print_report(report: dict, out: Path):
@@ -195,7 +195,10 @@ def main(argv=None):
 
     sp = sub.add_parser("ui", help="ブラウザで使う画面を起動する")
     sp.add_argument("--root", default=".", help="instruments/ があるフォルダ（録音データもここに保存）")
+    sp.add_argument("--host", default="127.0.0.1", help="公開するときは 0.0.0.0")
     sp.add_argument("--port", type=int, default=8765)
+    sp.add_argument("--public", action="store_true", help="公開モード（楽譜にするだけ・ブラウザごとに分ける・順番待ち・自動削除）")
+    sp.add_argument("--retention-hours", type=float, default=24, help="公開モードで楽譜を残しておく時間")
     sp.add_argument("--no-browser", action="store_true", help="ブラウザを自動で開かない")
     sp.set_defaults(func=_cmd_ui)
 

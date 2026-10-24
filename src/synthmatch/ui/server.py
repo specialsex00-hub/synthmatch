@@ -1,22 +1,30 @@
-"""ローカルで動くWeb UI（FastAPI）。`synthmatch ui` で起動する。
+"""Web UI（FastAPI）。`synthmatch ui` で起動する。
 
 録音・照合などの時間がかかる処理は「ジョブ」として裏で動かし、画面から進み具合を見たり中止したりできる。
-MIDI やオーディオ機器は同時に1つしか使えないので、ジョブは同時に1つまで。
+
+2つのモードがある。
+  ローカル（既定）  自分の Mac で使う。全機能。MIDI やオーディオ機器は同時に1つしか使えないので、ジョブは同時に1つまで
+  公開（--public）   Hugging Face Spaces などで誰でも使えるようにする。「楽譜にする」だけ。
+                     ブラウザごとに楽譜を分け（他の人の楽譜は見えない）、処理は順番待ちで1つずつ行い、
+                     一定時間たった楽譜は自動で削除する
 """
 
 from __future__ import annotations
 
 import bisect
+import re
+import shutil
 import threading
 import time
 import uuid
-from collections import Counter
+from collections import Counter, deque
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
 
 import numpy as np
-from fastapi import FastAPI, File, Form, HTTPException, UploadFile
+from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
+from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
@@ -37,7 +45,8 @@ class Cancelled(Exception):
 class Job:
     id: str
     kind: str
-    status: str = "running"  # running / done / error / cancelled
+    status: str = "running"  # queued / running / done / error / cancelled
+    owner: str = ""  # 公開モードで、どのブラウザのジョブか
     progress: int = 0
     total: int = 0
     message: str = ""
@@ -59,46 +68,93 @@ class Job:
         self.log.append(msg)
         del self.log[:-200]
 
+    position: int = 0  # 順番待ちのとき、前に何件あるか＋1
+
     def public(self) -> dict:
         return {
             k: getattr(self, k)
-            for k in ("id", "kind", "status", "progress", "total", "message", "log", "data", "result", "error", "started", "finished")
+            for k in ("id", "kind", "status", "position", "progress", "total", "message", "log", "data", "result", "error", "started", "finished")
         }
 
 
 class Jobs:
-    def __init__(self):
-        self._lock = threading.Lock()
+    """ジョブの管理。
+
+    queue=False（ローカル）: 同時に1つだけ。実行中に別のジョブを頼むと 409 で断る。
+    queue=True（公開）     : 頼まれた順に1つずつ実行する。1つのブラウザが同時に頼めるのは1件まで。
+    """
+
+    def __init__(self, queue: bool = False):
+        self._lock = threading.Condition()
+        self.queue = queue
         self.jobs: dict[str, Job] = {}
-        self.current: Job | None = None
+        self.latest: dict[str, Job] = {}  # ブラウザ（owner）ごとの最新のジョブ
+        self._pending: deque[tuple[Job, object]] = deque()
+        if queue:
+            threading.Thread(target=self._worker, daemon=True).start()
 
-    def start(self, kind: str, fn) -> Job:
+    def start(self, kind: str, fn, owner: str = "") -> Job:
         with self._lock:
-            if self.current and self.current.status == "running":
-                raise HTTPException(409, f"別の処理（{self.current.kind}）が実行中です。終わるか中止してから始めてください。")
-            job = Job(uuid.uuid4().hex[:12], kind)
+            cur = self.latest.get(owner)
+            if cur and cur.status in ("running", "queued"):
+                if self.queue:
+                    raise HTTPException(409, "前に頼んだ処理がまだ終わっていません。終わるか中止してから始めてください。")
+                raise HTTPException(409, f"別の処理（{cur.kind}）が実行中です。終わるか中止してから始めてください。")
+            job = Job(uuid.uuid4().hex[:12], kind, status="queued" if self.queue else "running", owner=owner)
             self.jobs[job.id] = job
-            self.current = job
-
-        def target():
-            try:
-                job.result = fn(job)
-                job.status = "done"
-            except Cancelled:
-                job.status = "cancelled"
-            except Exception as e:  # noqa: BLE001
-                job.status = "error"
-                job.error = str(e) or e.__class__.__name__
-            finally:
-                job.finished = time.time()
-
-        threading.Thread(target=target, daemon=True).start()
+            self.latest[owner] = job
+            if self.queue:
+                self._pending.append((job, fn))
+                self._renumber()
+                self._lock.notify()
+                return job
+        threading.Thread(target=self._run, args=(job, fn), daemon=True).start()
         return job
 
-    def get(self, job_id: str) -> Job:
-        if job_id not in self.jobs:
+    def _renumber(self) -> None:
+        for i, (j, _) in enumerate(self._pending):
+            j.position = i + 1
+
+    def _worker(self) -> None:
+        while True:
+            with self._lock:
+                while not self._pending:
+                    self._lock.wait()
+                job, fn = self._pending.popleft()
+                self._renumber()
+            if job._cancel.is_set():
+                job.status, job.finished = "cancelled", time.time()
+                continue
+            job.status, job.position, job.started = "running", 0, time.time()
+            self._run(job, fn)
+
+    @staticmethod
+    def _run(job: Job, fn) -> None:
+        try:
+            job.result = fn(job)
+            job.status = "done"
+        except Cancelled:
+            job.status = "cancelled"
+        except Exception as e:  # noqa: BLE001
+            job.status = "error"
+            job.error = str(e) or e.__class__.__name__
+        finally:
+            job.finished = time.time()
+
+    def get(self, job_id: str, owner: str = "") -> Job:
+        job = self.jobs.get(job_id)
+        if job is None or job.owner != owner:
             raise HTTPException(404, "ジョブが見つかりません")
-        return self.jobs[job_id]
+        return job
+
+    def forget_older_than(self, seconds: float) -> None:
+        """終わってから時間がたったジョブを忘れる（公開モードでメモリを食い続けないように）。"""
+        limit = time.time() - seconds
+        with self._lock:
+            for jid in [j for j, job in self.jobs.items() if job.finished and job.finished < limit]:
+                job = self.jobs.pop(jid)
+                if self.latest.get(job.owner) is job:
+                    del self.latest[job.owner]
 
 
 class BuildRequest(BaseModel):
@@ -129,15 +185,62 @@ class SheetRebuild(BaseModel):
     split: int = 60
 
 
-def create_app(root: str | Path = ".") -> FastAPI:
+OWNER_RE = re.compile(r"^[0-9a-f]{32}$")
+# 公開モードで受け付けない API（MIDI 機器やこの Mac の音色ライブラリを使うもの）
+LOCAL_ONLY = ("/api/instruments", "/api/devices", "/api/match", "/api/history", "/files/libraries", "/files/out/ui")
+
+
+def create_app(
+    root: str | Path = ".",
+    public: bool = False,
+    retention_hours: float = 24,
+    max_upload_mb: int = 100,
+    max_minutes: float = 10,
+) -> FastAPI:
     root = Path(root).resolve()
     inst_dir = root / "instruments"
     lib_root = root / "libraries"
     out_root = root / "out"
-    lib_root.mkdir(exist_ok=True)
-    out_root.mkdir(exist_ok=True)
-    jobs = Jobs()
+    lib_root.mkdir(parents=True, exist_ok=True)
+    out_root.mkdir(parents=True, exist_ok=True)
+    jobs = Jobs(queue=public)
     app = FastAPI(title="synthmatch")
+
+    def owner_of(request: Request) -> str:
+        """公開モードではブラウザごとの ID（画面が作って X-Client-Id で送る）。ローカルでは空。"""
+        if not public:
+            return ""
+        owner = request.headers.get("x-client-id", "")
+        if not OWNER_RE.match(owner):
+            raise HTTPException(400, "ページを再読み込みしてからもう一度お試しください。")
+        return owner
+
+    @app.middleware("http")
+    async def public_guard(request, call_next):
+        if public and request.url.path.startswith(LOCAL_ONLY):
+            return JSONResponse({"detail": "この機能は公開版では使えません"}, status_code=404)
+        return await call_next(request)
+
+    @app.get("/api/config")
+    def config():
+        return {"public": public, "retention_hours": retention_hours, "max_upload_mb": max_upload_mb, "max_minutes": max_minutes}
+
+    async def save_upload(file: UploadFile, dst: Path) -> None:
+        """アップロードを保存する。公開モードでは大きすぎるファイルを途中で断る。"""
+        limit = max_upload_mb * 1024 * 1024 if public else None
+        size = 0
+        with open(dst, "wb") as f:
+            while chunk := await file.read(1 << 20):
+                size += len(chunk)
+                if limit is not None and size > limit:
+                    f.close()
+                    shutil.rmtree(dst.parent, ignore_errors=True)
+                    raise HTTPException(413, f"ファイルが大きすぎます（{max_upload_mb}MB まで）")
+                f.write(chunk)
+
+    def safe_suffix(filename: str | None) -> str:
+        suffix = Path(filename or "").suffix.lower()
+        return suffix if re.fullmatch(r"\.[a-z0-9]{1,5}", suffix) else ".wav"
 
     @app.middleware("http")
     async def no_stale_cache(request, call_next):
@@ -257,16 +360,17 @@ def create_app(root: str | Path = ".") -> FastAPI:
     # ---- ジョブ ----
 
     @app.get("/api/jobs/current")
-    def current_job():
-        return jobs.current.public() if jobs.current else None
+    def current_job(request: Request):
+        job = jobs.latest.get(owner_of(request))
+        return job.public() if job else None
 
     @app.get("/api/jobs/{job_id}")
-    def job_status(job_id: str):
-        return jobs.get(job_id).public()
+    def job_status(job_id: str, request: Request):
+        return jobs.get(job_id, owner_of(request)).public()
 
     @app.post("/api/jobs/{job_id}/cancel")
-    def cancel(job_id: str):
-        jobs.get(job_id)._cancel.set()
+    def cancel(job_id: str, request: Request):
+        jobs.get(job_id, owner_of(request))._cancel.set()
         return {"ok": True}
 
     @app.post("/api/instruments/{inst_id}/test")
@@ -379,9 +483,14 @@ def create_app(root: str | Path = ".") -> FastAPI:
 
     sheets_root = out_root / "sheets"
 
-    def sheet_dir(name: str) -> Path:
-        d = (sheets_root / name).resolve()
-        if d.parent != sheets_root.resolve() or not (d / "sheet.json").exists():
+    def sheets_of(owner: str) -> Path:
+        """楽譜の置き場所。公開モードではブラウザごとに分ける（ID を知らない人には見えない）。"""
+        return sheets_root / owner if owner else sheets_root
+
+    def sheet_dir(name: str, owner: str) -> Path:
+        base = sheets_of(owner).resolve()
+        d = (base / name).resolve()
+        if d.parent != base or not (d / "sheet.json").exists():
             raise HTTPException(404, "楽譜が見つかりません")
         return d
 
@@ -399,6 +508,7 @@ def create_app(root: str | Path = ".") -> FastAPI:
 
     @app.post("/api/sheet")
     async def sheet_create(
+        request: Request,
         file: UploadFile = File(...),
         title: str = Form(""),
         bpm: str = Form(""),
@@ -411,27 +521,34 @@ def create_app(root: str | Path = ".") -> FastAPI:
     ):
         from ..sheet.pipeline import make_sheet
 
+        owner = owner_of(request)
         stem = Path(file.filename or "piano").stem
-        work = sheets_root / f"{datetime.now():%Y%m%d-%H%M%S}_{slugify(stem)}"
+        work = sheets_of(owner) / f"{datetime.now():%Y%m%d-%H%M%S}_{slugify(stem)}_{uuid.uuid4().hex[:4]}"
         work.mkdir(parents=True, exist_ok=True)
-        src = work / f"input{Path(file.filename or '.wav').suffix or '.wav'}"
-        src.write_bytes(await file.read())
+        src = work / f"input{safe_suffix(file.filename)}"
+        await save_upload(file, src)
 
         def work_fn(job: Job):
             make_sheet(
-                src, work, title=title.strip() or stem, backend=transcriber,
+                src, work, title=title.strip()[:80] or stem[:80], backend=transcriber,
                 bpm=float(bpm) if bpm.strip() else None, time_signature=time_signature, grid=grid, split=split,
-                key_sharps=int(key_sharps) if key_sharps.strip() else None, sensitivity=sensitivity, log=job.write,
+                key_sharps=int(key_sharps) if key_sharps.strip() else None, sensitivity=sensitivity,
+                max_seconds=max_minutes * 60 if public else None, log=job.write,
             )
             return sheet_payload(work)
 
-        return jobs.start("sheet", work_fn).public()
+        try:
+            return jobs.start("sheet", work_fn, owner).public()
+        except HTTPException:
+            shutil.rmtree(work, ignore_errors=True)
+            raise
 
     @app.post("/api/sheets/{name}/rebuild")
-    def sheet_rebuild(name: str, req: SheetRebuild):
+    def sheet_rebuild(name: str, req: SheetRebuild, request: Request):
         from ..sheet.pipeline import rebuild
 
-        d = sheet_dir(name)
+        owner = owner_of(request)
+        d = sheet_dir(name, owner)
 
         def work_fn(job: Job):
             key: object = req.key_mode
@@ -445,12 +562,12 @@ def create_app(root: str | Path = ".") -> FastAPI:
             )
             return sheet_payload(d)
 
-        return jobs.start("sheet", work_fn).public()
+        return jobs.start("sheet", work_fn, owner).public()
 
     @app.get("/api/sheets")
-    def sheets():
+    def sheets(request: Request):
         rows = []
-        for f in sorted(sheets_root.glob("*/sheet.json"), reverse=True)[:50]:
+        for f in sorted(sheets_of(owner_of(request)).glob("*/sheet.json"), reverse=True)[:50]:
             m = sheet_payload(f.parent)
             row = {k: m[k] for k in ("name", "title", "created", "key", "time_signature", "measures", "notes", "urls")}
             row["modulations"] = m.get("modulations", [])
@@ -458,8 +575,16 @@ def create_app(root: str | Path = ".") -> FastAPI:
         return rows
 
     @app.get("/api/sheets/{name}")
-    def sheet_get(name: str):
-        return sheet_payload(sheet_dir(name))
+    def sheet_get(name: str, request: Request):
+        return sheet_payload(sheet_dir(name, owner_of(request)))
+
+    if public:
+        def cleanup_loop():
+            while True:
+                cleanup_once(sheets_root, jobs, retention_hours)
+                time.sleep(600)
+
+        threading.Thread(target=cleanup_loop, daemon=True).start()
 
     @app.get("/api/history")
     def history():
@@ -482,6 +607,27 @@ def create_app(root: str | Path = ".") -> FastAPI:
     app.mount("/files/out", StaticFiles(directory=out_root), name="out")
     app.mount("/", StaticFiles(directory=STATIC, html=True), name="static")
     return app
+
+
+def cleanup_once(sheets_root: Path, jobs: Jobs, retention_hours: float) -> int:
+    """公開モード：作ってから retention_hours たった楽譜（ブラウザごとのフォルダの中）とジョブを消す。消した数を返す。"""
+    limit = time.time() - retention_hours * 3600
+    removed = 0
+    for d in sheets_root.glob("*/*"):
+        try:
+            if d.is_dir() and d.stat().st_mtime < limit:
+                shutil.rmtree(d, ignore_errors=True)
+                removed += 1
+        except OSError:
+            pass
+    for d in sheets_root.glob("*"):
+        try:
+            if d.is_dir() and not any(d.iterdir()):
+                d.rmdir()
+        except OSError:
+            pass
+    jobs.forget_older_than(retention_hours * 3600)
+    return removed
 
 
 def _summary(inst_id: str, inst: Instrument, ld: Path) -> dict:
@@ -518,12 +664,20 @@ def _settings(inst: Instrument) -> dict:
     return {"種類": "ソフトウェア（機器の接続は不要）", "サンプルレート": f"{inst.sample_rate} Hz"}
 
 
-def serve(root: str | Path = ".", host: str = "127.0.0.1", port: int = 8765, open_browser: bool = True) -> None:
+def serve(
+    root: str | Path = ".",
+    host: str = "127.0.0.1",
+    port: int = 8765,
+    open_browser: bool = True,
+    public: bool = False,
+    retention_hours: float = 24,
+) -> None:
     import uvicorn
 
     if open_browser:
         import webbrowser
 
         threading.Timer(1.2, lambda: webbrowser.open(f"http://{host}:{port}/")).start()
-    print(f"synthmatch UI: http://{host}:{port}/  （終了は Ctrl+C）")
-    uvicorn.run(create_app(root), host=host, port=port, log_level="warning")
+    mode = "公開モード（楽譜にするだけ）" if public else "ローカル"
+    print(f"synthmatch UI [{mode}]: http://{host}:{port}/  （終了は Ctrl+C）")
+    uvicorn.run(create_app(root, public=public, retention_hours=retention_hours), host=host, port=port, log_level="warning")

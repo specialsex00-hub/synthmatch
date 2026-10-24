@@ -10,8 +10,21 @@ const store = {
 const state = { inst: null, info: null, job: null, pollTimer: null, lib: { rec: "", group: "" } };
 const GROUP_NAMES = { "SN-A": "SuperNATURAL Acoustic", "SN-S": "SuperNATURAL Synth", PCM: "PCM Synth" };
 
+// 公開版でブラウザごとに楽譜を分けるための ID（ランダム。サーバーには X-Client-Id で送る）
+const CLIENT_ID = (() => {
+  let id = store.get("client_id");
+  if (!/^[0-9a-f]{32}$/.test(id || "")) {
+    const b = new Uint8Array(16);
+    crypto.getRandomValues(b);
+    id = [...b].map((x) => x.toString(16).padStart(2, "0")).join("");
+    store.set("client_id", id);
+  }
+  return id;
+})();
+const isActive = (job) => job?.status === "running" || job?.status === "queued";
+
 async function api(path, opts = {}) {
-  const res = await fetch(path, opts);
+  const res = await fetch(path, { ...opts, headers: { ...(opts.headers || {}), "X-Client-Id": CLIENT_ID } });
   const body = await res.json().catch(() => null);
   if (!res.ok) throw new Error(body?.detail || `${res.status} ${res.statusText}`);
   return body;
@@ -379,7 +392,7 @@ function showSong() {
   orb.classList.toggle("has-file", !!f);
   $("#finder-title").textContent = f ? f.name : "曲をドロップして音色を探す";
   $("#finder-sub").textContent = f ? `${(f.size / 1024 / 1024).toFixed(1)} MB ・ 準備OK。「探す」を押してください` : "mp3 / wav をドロップ、または丸をクリックして選択";
-  $("#match-btn").disabled = !f || state.job?.status === "running";
+  $("#match-btn").disabled = !f || isActive(state.job);
 }
 songInput.addEventListener("change", showSong);
 const finder = $("#match-form");
@@ -485,7 +498,7 @@ function showSheetFile() {
   sheetOrb.classList.toggle("has-file", !!f);
   $("#sheet-title").textContent = f ? f.name : "ピアノの音から楽譜を作る";
   $("#sheet-sub").textContent = f ? `${(f.size / 1024 / 1024).toFixed(1)} MB ・ 準備OK。「楽譜にする」を押してください` : "ピアノだけの mp3 / wav / mp4 / 動画をドロップ、または丸をクリックして選択";
-  $("#sheet-btn").disabled = !f || state.job?.status === "running";
+  $("#sheet-btn").disabled = !f || isActive(state.job);
 }
 sheetInput.addEventListener("change", showSheetFile);
 sheetForm.addEventListener("dragover", (e) => { e.preventDefault(); sheetOrb.classList.add("over"); });
@@ -508,7 +521,7 @@ sheetForm.addEventListener("submit", (e) => {
 });
 
 function renderSheetJob(job) {
-  const running = job.status === "running";
+  const running = isActive(job);
   $("#sheet-run").hidden = job.status === "done";
   const log = job.log.join("\n");
   $("#sheet-log").textContent = log + (job.error ? `\n\nエラー: ${job.error}` : "");
@@ -520,7 +533,9 @@ function renderSheetJob(job) {
     li.classList.toggle("done", n < step);
     li.classList.toggle("active", running && n === step);
   });
-  $("#sheet-status").textContent = running ? job.message : { cancelled: "中止しました", error: `エラー: ${job.error}` }[job.status] || "";
+  $("#sheet-status").textContent = job.status === "queued"
+    ? `順番待ち（${job.position}番目）。前の人の処理が終わると自動で始まります`
+    : running ? job.message : { cancelled: "中止しました", error: `エラー: ${job.error}` }[job.status] || "";
   $("[data-cancel]", $("#sheet-run")).hidden = !running;
 }
 
@@ -843,7 +858,7 @@ function poll() {
       const job = await api(`/api/jobs/${state.job.id}`);
       state.job = job;
       renderJob(job);
-      if (job.status === "running") poll();
+      if (isActive(job)) poll();
       else onJobEnd(job);
     } catch { poll(); }
   }, 800);
@@ -859,9 +874,11 @@ const JOB_VIEW = { build: "record", test: "record", match: "match", sheet: "shee
 $("#job-mini").addEventListener("click", () => state.job && showView(JOB_VIEW[state.job.kind]));
 
 function renderJob(job) {
-  const running = job.status === "running";
+  const running = isActive(job);
   $("#job-mini").hidden = !running;
-  $("#job-mini-text").textContent = `${JOB_LABEL[job.kind]}${job.kind === "build" && job.total ? ` ${job.progress}/${job.total}` : ""}`;
+  $("#job-mini-text").textContent = job.status === "queued"
+    ? `順番待ち（${job.position}番目）`
+    : `${JOB_LABEL[job.kind]}${job.kind === "build" && job.total ? ` ${job.progress}/${job.total}` : ""}`;
   $("#build-btn").disabled = $("#test-btn").disabled = running;
   $("#match-btn").disabled = running || !songInput.files.length;
   orb.classList.toggle("busy", running && job.kind === "match");
@@ -955,13 +972,24 @@ function onJobEnd(job) {
 
 // ---------- 起動 ----------
 (async () => {
-  const hash = location.hash.slice(1);
-  const view = ["record", "library", "match", "sheet"].includes(hash) ? hash : store.get("view") || "record";
-  await loadInstruments();
-  showView(view);
+  const cfg = await api("/api/config").catch(() => ({ public: false }));
+  state.public = cfg.public;
+  if (cfg.public) {
+    document.body.classList.add("public");
+    $("#public-note").hidden = false;
+    $("#public-note").innerHTML = `アップロードしたファイルと作った楽譜は<b>あなたのブラウザからだけ</b>見られ、<b>${cfg.retention_hours}時間後に自動で削除</b>されます。
+      ファイルは ${cfg.max_upload_mb}MB・${cfg.max_minutes}分まで。混んでいるときは順番待ちになります。<br>
+      作った楽譜は個人の練習用にお使いください（他の人が作った曲の楽譜の配布・販売はしないでください）。`;
+    showView("sheet");
+  } else {
+    const hash = location.hash.slice(1);
+    const view = ["record", "library", "match", "sheet"].includes(hash) ? hash : store.get("view") || "record";
+    await loadInstruments();
+    showView(view);
+  }
   // ページを開き直したとき、実行中のジョブがあれば表示を再開
   const cur = await api("/api/jobs/current").catch(() => null);
-  if (cur && cur.status === "running") { state.job = cur; renderJob(cur); poll(); }
+  if (isActive(cur)) { state.job = cur; renderJob(cur); poll(); }
   else if (cur && cur.kind === "match" && cur.status === "done") renderMatch(cur.result);
   else if (cur && cur.kind === "sheet" && cur.status === "done") renderSheet(cur.result);
   const params = new URLSearchParams(location.search);

@@ -77,6 +77,21 @@ synthmatch ui        # ブラウザで http://127.0.0.1:8765/ が開く
 | 曲から探す | 曲（と任意で MIDI）をドロップ → 候補・調整案・原曲とのA/B比較。「探す範囲」で Bell だけ、などに絞れる |
 | 楽譜にする | ピアノの音声をドロップ → 楽譜の表示・PDF/MusicXML/MIDI・原曲と採譜のA/B比較・ピアノロール。拍子やテンポを変えて数秒で作り直せる |
 
+### 「楽譜にする」を他の人に使ってもらう
+
+```sh
+brew install cloudflared     # 最初に1回
+sh scripts/share_public.sh   # https://〜.trycloudflare.com の URL が表示される。止めるときは Ctrl+C
+```
+
+この Mac で公開用モード（`synthmatch ui --public`）を動かし、Cloudflare Tunnel で誰でも開ける URL を作る。
+公開用モードでは「楽譜にする」だけが使え、楽譜はブラウザごとに分かれ（他の人のものは見えない）、
+処理は1件ずつ順番待ちになり、24時間で自動削除される（ファイルは100MB・10分まで。データは `public-data/`）。
+URL は起動のたびに変わり、Mac を閉じたりスリープさせたりすると開けなくなる。
+
+常に公開したい場合は `deploy/hf-space/`（Hugging Face Spaces 用の Dockerfile）と `scripts/deploy_hf_space.py` を使う
+（Docker の Space は Hugging Face PRO が必要）。
+
 音色はカテゴリ単位ではなく、1音色ずつ録音・分析・照合する。
 照合結果は `report.html`（試聴・A/B比較・特徴の比較表つき。フォルダごと渡せば他の人も見られる）と `report.md` に出力される。
 
